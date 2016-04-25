@@ -11,7 +11,7 @@ class ET312FirmwareUtils(object):
     def __init__(self, input_file, output_file = None):
         self.iv = copy.copy(ET312FirmwareUtils.IV)
         with open(input_file, "rb") as f:
-            self.input_file = f.read()
+            self.input_file = map(ord, f.read())
         if output_file:
             self.output_file = open(output_file, "wb")
 
@@ -19,17 +19,22 @@ class ET312FirmwareUtils(object):
         xor = 0
         add = 0
         for c in range(len(self.input_file) - 16):
-            xor ^= ord(self.input_file[c])
-            add += ord(self.input_file[c])
+            xor ^= self.input_file[c]
+            add += self.input_file[c]
         return [xor, (add & 0xff), ((add >> 8) & 0xff)]
 
-    def encrypt(self):
+    def encrypt(self, write_crc=True):
         funcs = {0: lambda x: ((x - 0x41 if x >= 0x41 else ((x - 0x41) + 0x100)) ^ 0x62) & 0xff,
                  1: lambda x: (x >> 4) | ((x & 0x0f) << 4),
                  2: lambda x: x}
 
+        if write_crc:
+            crc = self.generate_crc()
+            for i in range(3):
+                self.input_file[-16 + i] = crc[i]
+
         for i in range(0, len(self.input_file)):
-            n = ord(self.input_file[i])
+            n = self.input_file[i]
             choice = i % 3
             output = funcs[choice](n ^ self.iv[choice] ^ self.KEYS[choice])
             self.output_file.write(chr(output))
@@ -41,7 +46,7 @@ class ET312FirmwareUtils(object):
                  2: lambda x: x}
 
         for i in range(0, len(self.input_file)):
-            n = ord(self.input_file[i])
+            n = self.input_file[i]
             choice = i % 3
             output = funcs[choice](n) ^ self.iv[choice] ^ self.KEYS[choice]
             self.output_file.write(chr(output))
