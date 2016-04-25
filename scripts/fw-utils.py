@@ -11,7 +11,7 @@ class ET312FirmwareUtils(object):
     def __init__(self, input_file, output_file = None):
         self.iv = copy.copy(ET312FirmwareUtils.IV)
         with open(input_file, "rb") as f:
-            self.input_file = map(ord, f.read())
+            self.input_file = bytearray(f.read())
         if output_file:
             self.output_file = open(output_file, "wb")
 
@@ -37,7 +37,7 @@ class ET312FirmwareUtils(object):
             n = self.input_file[i]
             choice = i % 3
             output = funcs[choice](n ^ self.iv[choice] ^ self.KEYS[choice])
-            self.output_file.write(chr(output))
+            self.output_file.write(bytes([output]))
             self.iv[choice] = output
 
     def decrypt(self):
@@ -49,7 +49,7 @@ class ET312FirmwareUtils(object):
             n = self.input_file[i]
             choice = i % 3
             output = funcs[choice](n) ^ self.iv[choice] ^ self.KEYS[choice]
-            self.output_file.write(chr(output))
+            self.output_file.write(bytes([output]))
             self.iv[choice] = n
 
     def upload():
@@ -74,12 +74,12 @@ def main():
     args = parser.parse_args()
 
     if not args.input_file:
-        print "ERROR: ET-312 Firmware Utility requires an input file to run."
+        print("ERROR: ET-312 Firmware Utility requires an input file to run.")
         parser.print_help()
         return 1
 
     if (args.decrypt or args.encrypt) and not args.output_file:
-        print "ERROR: ET-312 Firmware Utility requires an output file for encryption/decryption."
+        print("ERROR: ET-312 Firmware Utility requires an output file for encryption/decryption.")
         parser.print_help()
         return 1
 
