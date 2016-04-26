@@ -1,0 +1,152 @@
+0x0000	L		HeaderTable
+0x14a6	L		RESET
+0x0e66	L		IRQ0_Handler
+0x0e7c	L		IRQ1_Handler
+0x0e92	L		Timer1_CMP_A
+0x0f8a	L		Timer1_CMP_B
+0x0e5e	L		Timer0_Overflow
+0x106e	L		ADC_Conversion_Complete
+0x10f8	L		SPI_Transfer_Complete
+0x1178	L		USART_RX_Complete
+
+0x0352	L		CallTable_29			Parameter r28:r29
+0x05fe	L		CallTable_18			Parameter r28:r29
+0x0790	L		run_call_table			Parameter r30 (0-39) CallTable_31
+0x07bc	L		CallTable_1			noop
+0x07be	L		CallTable_0_5
+0x07e0	L		CallTable_2
+0x0820	L		CallTable_10
+0x083e	L		CallTable_8
+0x0852	L		CallTable_9
+0x0866	L		CallTable_16
+0x087c	L		CallTable_17
+0x0892	L		CallTable_3
+0x094e	L		CallTable_15
+0x0968	L		CallTable_11
+0x0988	L		CallTable_12
+0x099a	L		CallTable_6
+0x09a4	L		CallTable_7
+0x09e6	L		CallTable_32
+0x09fe	L		CallTable_33
+0x0a1c	L		CallTable_4
+0x0a66	L		CallTable_13
+0x0a94	L		CallTable_14
+0x0ab8	L		CallTable_26			Parameter r26
+0x0ac8	L		CallTable_27
+0x0ad8	L		CallTable_25
+0x0aee	L		CallTable_19
+0x0afa	L		CallTable_20
+0x0b06	L		CallTable_21
+0x0b0e	L		CallTable_35
+0x0b16	L		CallTable_36
+0x0b1e	L		enable_ADC_and_set_r17[3]	CallTable_34
+0x0b98	L		CallTable_22
+0x0cee	L		CallTable_30
+0x154c	L		CallTable_24
+0x157a	L		CallTable_28
+0x1676	L		error_handler			CallTable_23_37_38_39
+
+0x14b0	L		loop_clear_memory
+0x14bc	L		loop_clear_memory2
+
+0x0054	L		Main
+0x05e6	L		sleep				Parameter r26
+0x12dc	L		show_Text_on_Display2		Parameter r26
+0x12ec	L		show_Text_on_Display		Parameter r26
+0x1a2e	L		receive_from_USART
+0x154c	L		copy_flash_to_memory_0x80_0x188
+0x1590	L		copy_flash_to_memory_0x1f0
+0x19dc	L		read_from_eeprom		Parameter r26:r27, returns r0
+0x157a	L		copy_flash_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3
+0x16b8	L		unknown				Parameter r28:r29
+
+0x0080	M	W	32	Copied from 0x1f9c
+0x0188	M	W	28	Copied from 0x1fa4
+0x01f0	M	W	8	Copied from 0x1fdc
+0x0218	M	W	1	Unknown
+
+0x1b10	P	S	4	Unknown	
+0x1c36	P	W	4	FFFF
+0x1c3e	P	W	21	Unknown
+0x1c68	P	W	4	FFFF
+0x1c70	P	W	40 	CallTable
+0x1cc0	P	W	4	FFFF
+0x1cc8	P	6	1	Shut Off Power!!
+0x1cd8	P	6	1	SelfTest OK V1.6
+0x1ce8	P	6	1	Copyright
+0x1cf8	P	6	1	Product Name
+0x1d08	P	6	1	Press any key
+0x1d18	P	6	1	Selects Mode
+0x1d28	P	6	1	Press or OK
+0x1d38	P	6	1	Start Ramp Up
+0x1d48	P	6	1	Set Split Mode
+0x1d58	P	6	1	Set As Favorite
+0x1d68	P	6	1	Set Pwr Level
+0x1d78	P	6	1	Link Slave Unit
+0x1d88	P	6	1	Save Settings
+0x1d98	P	6	1	Reset Settings
+0x1da8	P	6	1	Adjust Advanced
+0x1db8	P	6	1	Ramp Mode
+0x1dc8	P	6	1	Space16
+0x1dd8	P	8	1	Space8
+0x1de0	P	8	1	Select
+0x1de8	P	8	1	Battery
+0x1df0	P	8	1	Failure
+0x1df8	P	8	1	Pwr Lev
+0x1e00	P	8	1	Adjust
+0x1e08	P	8	1	Menus
+0x1e10	P	8	1	Low
+0x1e18	P	8	1	Normal
+0x1e20	P	8	1	High
+0x1e28	P	8	1	RampLevl
+0x1e30	P	8	1	RampTime
+0x1e38	P	8	1	Depth
+0x1e40	P	8	1	Tempo
+0x1e48	P	8	1	Freq
+0x1e50	P	8	1	Effect
+0x1e58	P	8	1	Width
+0x1e60	P	8	1	Pace
+0x1e68	P	8	1	Waves
+0x1e70	P	8	1	Stroke
+0x1e78	P	8	1	Climb
+0x1e80	P	8	1	Combo
+0x1e88	P	8	1	Intense
+0x1e90	P	8	1	Rhythm
+0x1e98	P	8	1	Audio1
+0x1ea0	P	8	1	Audio2
+0x1ea8	P	8	1	Audio3
+0x1eb0	P	8	1	Split
+0x1eb8	P	8	1	Random1
+0x1ec0	P	8	1	Random2
+0x1ec8	P	8	1	Toggle
+0x1ed0	P	8	1	Orgasm
+0x1ed8	P	8	1	Torment
+0x1ee0	P	8	1	Phase1
+0x1ee8	P	8	1	Phase2
+0x1ef0	P	8	1	Phase3
+0x1ef8	P	8	1	User1
+0x1f00	P	8	1	User2
+0x1f08	P	8	1	User3
+0x1f10	P	8	1	User4
+0x1f18	P	8	1	User5
+0x1f20	P	8	1	User6
+0x1f28	P	8	1	User7
+0x1f30	P	8	1	SplitA
+0x1f38	P	8	1	SplitB
+0x1f40	P	8	1	Sel Fav
+0x1f48	P	8	1	Ramping
+0x1f50	P	8	1	Saved
+0x1f58	P	8	1	Linked
+0x1f60	P	8	1	Master
+0x1f68	P	8	1	Slave
+0x1f70	P	8	1	Percent
+0x1f78	P	8	1	A B
+0x1f80	P	8	1	Ramp
+0x1f88	P	8	1	Space8_2
+0x1f90	P	8	1	Space8_3
+0x1f98	P	W	2	FFFF
+0x1f9c	P	W	32	Unknown
+0x1fa4	P	W	28	Unknown
+0x1fdc	P	W	8	Unknown
+0x1fec	P	W	5	Unknown, ref from 0x3be
+0x1ff6	P	W	3846	Garbage
