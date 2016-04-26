@@ -19,17 +19,58 @@ This repo contains the following:
 - Copies of available firmware
 - Source code and build files for new firmware versions
 
-## erosoutsider Implementations
+## Firmware Utility
 
-If you are looking for a language specific version of the erosoutsider
-work, each language has a repo assigned to it:
+In the scripts directory, there is a python script named fw-utils.py.
+This utility allows users to encrypt/decrypt their own firmware, as
+well as handling checksum calcuation.
 
-- Python Library - http://github.com/metafetish/erosoutsider-py
-- Rust Library - http://github.com/metafetish/erosoutsider-rs
-- Javascript Library for Node, Chrome Apps, and possibly for a general
-  WebSerial API, should one ever exist -
-  http://github.com/metafetish/erosoutsider-js
-- Arduino Library - http://github.com/kinkyhacks/venerate
+For instance, to decrypt the .upg files in the firmware directory,
+simply run
+
+```
+scripts/fw-utils.py --decrypt -i firmware/312-16-encrypted.upg -o firmware/312-16-decrypted.bin
+```
+
+After the decrypted firmware has been changed, it can be encrypted
+again using a similar comment with the --encrypt action.
+
+```
+scripts/fw-utils.py --encrypt -i firmware/312-16-decrypted.upg -o firmware/312-16-new.bin
+```
+
+This file can then be uploaded to the ET-312.
+
+## Annotations
+
+We are now working on annotating the output from the flash. For
+disassembly, we are using a patched version of the avrdisas assembler
+(http://www.johannes-bauer.com/mcus/avrdisas/).
+
+The patched version of the assembler is available at
+
+https://github.com/metafetish/avrdisas
+
+Patches are on master, and include support for the 8/16-byte character
+strings that the ET-312 firmware uses, as well as more opcodes than
+are available in the 0.7.0 release of avrdisas.
+
+Annotation happens via additions to the tags file in the annotations/
+directory of this repo. To generate a new version of the annotated
+disassembly, use the following command, with paths changed as needed
+(this command assumes the avrdisas repo is next to this repo):
+
+```
+bin/avrdisas -a1 -o1 -c1 -p1 -l1 -mm16 -t../erosoutsider-et312-firmware/annotation/312-16-decrypted.tags ../erosoutsider-et312-firmware/firmware/312-16-decrypted.bin > 312-16-decrypted.hex
+```
+
+## Other Erosoutsider Projects
+
+For more information on other Erosoutsider projects, including serial
+control for various boxes and other firmware, please see the main
+erosoutsider repo README at
+
+https://github.com/metafetish/erosoutsider
 
 ## FAQ
 
