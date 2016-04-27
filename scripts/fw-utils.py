@@ -37,7 +37,7 @@ class ET312FirmwareUtils(object):
             n = self.input_file[i]
             choice = i % 3
             output = funcs[choice](n ^ self.iv[choice] ^ self.KEYS[choice])
-            self.output_file.write(bytes([output]))
+            self.output_file.write(bytearray([output]))
             self.iv[choice] = output
 
     def decrypt(self):
@@ -49,7 +49,7 @@ class ET312FirmwareUtils(object):
             n = self.input_file[i]
             choice = i % 3
             output = funcs[choice](n) ^ self.iv[choice] ^ self.KEYS[choice]
-            self.output_file.write(bytes([output]))
+            self.output_file.write(bytearray([output]))
             self.iv[choice] = n
 
     def upload():
