@@ -141,7 +141,7 @@
 0x01b9	M	B	1	channel_b_current_width_modulation_max
 0x01ba	M	B	1	channel_b_current_width_modulation_rate
 0x01be	M	B	1	channel_b_current_width_modulation_select
-0x01d0	M	B	32  space_for_user_routine_scratchpad_b
+0x01d0	M	B	32	space_for_user_routine_scratchpad_b
 0x01f0	M	B	3	unknown				Copied from 0x1fdc
 0x01f3	M	B	1	current_top_mode	Copied from 0x1fdc+3
 0x01f4	M	B	1	COMM_POWER_LEVEL	Copied from 0x1fdc+4, aka COMM_LMODE
