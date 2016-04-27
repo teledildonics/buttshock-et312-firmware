@@ -69,7 +69,7 @@ Label_0x64:
 ; Referenced from offset 0x7c <Main> by brcs
 Label_0x80:
   80:   7a 2e           r7 = r26;
-  82:   a0 93 a5 00     _hi8(mem_unknown_0x8a[13]) = r26;   ; 0x00a5
+  82:   a0 93 a5 00     channel_a_current_intensity_modulation_value = r26; ; 0x00a5
 
 ; Referenced from offset 0x74 <Main> by rjmp
 Label_0x86:
@@ -84,7 +84,7 @@ Label_0x86:
 ; Referenced from offset 0x90 <Main> by brcs
 Label_0x94:
   94:   ca 2e           r12 = r26;
-  96:   a0 93 a5 01     _hi8(mem_unknown_0x19e[3]) = r26;   ; 0x01a5
+  96:   a0 93 a5 01     channel_b_current_intensity_modulation_value = r26; ; 0x01a5
 
 ; Referenced from offset 0x88 <Main> by rjmp
 Label_0x9a:
@@ -599,7 +599,7 @@ Label_0x328:
  330:   b7 70           r27 &= 7;                           ; 0x07
  332:   b7 30           cmp(r27, 0x07);                     ; 7
  334:   61 f4           if (c1 != c2) goto Label_0x34e;
- 336:   b0 91 8b 00     r27 = _hi8(mem_unknown_0x8a[0]);    ; 0x008b
+ 336:   b0 91 8b 00     r27 = mem_unknown_0x8a[1];          ; 0x008b
  33a:   06 c0           goto Label_0x348;
 
 ; Referenced from offset 0x32a <set_routine_timer> by brne
@@ -1267,7 +1267,7 @@ Label_0x6b8:
  6ba:   10 fd           skipif (!r17[0])
  6bc:   a8 ab           Memory[[r28:r29]+48] = r26;
  6be:   11 fd           skipif (!r17[1])
- 6c0:   a0 93 90 01     _lo8(Copied from 0x1fa4[4]) = r26;  ; 0x0190
+ 6c0:   a0 93 90 01     channel_a_current_gate_value = r26; ; 0x0190
  6c4:   a7 e1           r26 = 23;                           ; 0x17
  6c6:   68 d2           CallTable_22();
  6c8:   4b c0           goto Label_0x760;
@@ -1286,7 +1286,7 @@ Label_0x6d0:
  6d6:   10 fd           skipif (!r17[0])
  6d8:   a8 ab           Memory[[r28:r29]+48] = r26;
  6da:   11 fd           skipif (!r17[1])
- 6dc:   a0 93 90 01     _lo8(Copied from 0x1fa4[4]) = r26;  ; 0x0190
+ 6dc:   a0 93 90 01     channel_a_current_gate_value = r26; ; 0x0190
  6e0:   a2 e2           r26 = 34;                           ; 0x22
  6e2:   5a d2           CallTable_22();
  6e4:   a4 e0           r26 = 4;                            ; 0x04
@@ -1832,14 +1832,14 @@ Label_0x9fc:
 ; Referenced from offset 0x898 <run_call_table> by rcall
 ; Referenced from offset 0x9fa <CallTable_32> by rcall
 CallTable_33:
- 9fe:   d0 93 a4 00     _lo8(mem_unknown_0x8a[13]) = r29;   ; 0x00a4
- a02:   d0 93 a4 01     _lo8(mem_unknown_0x19e[3]) = r29;   ; 0x01a4
+ 9fe:   d0 93 a4 00     mem_unknown_0xa4 = r29;             ; 0x00a4
+ a02:   d0 93 a4 01     mem_unknown_0x19e[6] = r29;         ; 0x01a4
  a06:   a7 e2           r26 = 39;                           ; 0x27
- a08:   a0 93 a3 00     _hi8(mem_unknown_0x8a[12]) = r26;   ; 0x00a3
- a0c:   a0 93 a3 01     _hi8(mem_unknown_0x19e[2]) = r26;   ; 0x01a3
+ a08:   a0 93 a3 00     mode_switch_ramp_select = r26;      ; 0x00a3
+ a0c:   a0 93 a3 01     mem_unknown_0x19e[5] = r26;         ; 0x01a3
  a10:   a0 91 f8 01     r26 = advanced_parameter_ramp_level; ; 0x01f8
  a14:   ac af           Memory[[r28:r29]+60] = r26;
- a16:   a0 93 9c 01     _lo8(mem_unknown_0x192[5]) = r26;   ; 0x019c
+ a16:   a0 93 9c 01     mem_unknown_0x19c = r26;            ; 0x019c
  a1a:   08 95           return;
 
 
