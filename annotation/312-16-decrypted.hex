@@ -45,10 +45,10 @@ main:
 Main:
   54:   c0 e6           r28 = 96;                           ; 0x60
   56:   a8 95           wdr
-  58:   a0 91 f1 01     r26 = mem_unknown_0x1f0[1];         ; 0x01f1
+  58:   a0 91 f1 01     r26 = counter_for_0x220;            ; 0x01f1
   5c:   ac 32           cmp(r26, 0x2c);                     ; 44
   5e:   11 f0           if (c1 == c2) goto Label_0x64;
-  60:   0e 94 17 0d     receive_from_USART();
+  60:   0e 94 17 0d     send_com_buffer_to_USART();         ; Skips the first 12 bytes of the buffer
 
 ; Referenced from offset 0x5e <Main> by breq
 Label_0x64:
@@ -626,7 +626,7 @@ Label_0x34e:
 
 ; Referenced from offset 0x2a0 <Main> by rcall
 ; Referenced from offset 0x778 <Function_0x604> by rcall
-; Referenced from offset 0x1574 <copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188> by call
+; Referenced from offset 0x1574 <copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29> by call
 CallTable_29:     ; Parameter r28:r29
  352:   4b a0           r4 = Memory[[r28:r29]+35];
  354:   ff 27           r31 = 0x00;                         ; 0
@@ -728,7 +728,7 @@ Label_0x3d2:
  3d6:   42 c0           goto Label_0x45c;
  3d8:   17 ff           skipif (bit(r17,7))
  3da:   2e c0           goto Label_0x438;
- 3dc:   a0 91 20 02     r26 = mem_unknown_0x220;            ; 0x0220
+ 3dc:   a0 91 20 02     r26 = com_buffer[0];                ; 0x0220
  3e0:   a6 30           cmp(r26, 0x06);                     ; 6
  3e2:   41 f0           if (c1 == c2) goto Label_0x3f4;
  3e4:   aa a1           r26 = Memory[[r28:r29]+34];
@@ -745,19 +745,19 @@ Label_0x3ee:
 ; Referenced from offset 0x3e2 <Function_0x3a8> by breq
 Label_0x3f4:
  3f4:   da a3           Memory[[r28:r29]+34] = r29;
- 3f6:   d0 93 20 02     mem_unknown_0x220 = r29;            ; 0x0220
- 3fa:   d0 93 14 02     mem_unknown_0x214 = r29;            ; 0x0214
+ 3f6:   d0 93 20 02     com_buffer[0] = r29;                ; 0x0220
+ 3fa:   d0 93 14 02     com_buffer_incrementer = r29;       ; 0x0214
  3fe:   ad e9           r26 = 157;                          ; 0x9d
- 400:   0e 94 03 0d     Function_0x1a06();
+ 400:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
  404:   a0 e4           r26 = 64;                           ; 0x40
- 406:   0e 94 03 0d     Function_0x1a06();
+ 406:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
  40a:   a4 e0           r26 = 4;                            ; 0x04
  40c:   06 fd           skipif (!bit(r16,6))
  40e:   aa e0           r26 = 10;                           ; 0x0a
  410:   2a 2e           r2 = r26;
  412:   2a 2f           r18 = r26;
  414:   2a 5f           r18 -= 250;                         ; 0xfa, no carry
- 416:   0e 94 03 0d     Function_0x1a06();
+ 416:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
  41a:   e2 2d           r30 = r2;
  41c:   f0 e0           r31 = 0;                            ; 0x00
 
@@ -766,11 +766,11 @@ Label_0x41e:
  41e:   a1 91           r26 = Memory[[r30:r31]++];
  420:   f2 fc           skipif (!bit(r15,2))
  422:   aa 27           r26 = 0x00;                         ; 0
- 424:   0e 94 03 0d     Function_0x1a06();
+ 424:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
  428:   e2 17           cmp(r30, r18);
  42a:   c8 f3           if (Carry) goto Label_0x41e;
- 42c:   a0 91 14 02     r26 = mem_unknown_0x214;            ; 0x0214
- 430:   0e 94 03 0d     Function_0x1a06();
+ 42c:   a0 91 14 02     r26 = com_buffer_incrementer;       ; 0x0214
+ 430:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
  434:   a0 e4           r26 = 64;                           ; 0x40
  436:   0a 27           r16 ^= r26;
 
@@ -1128,7 +1128,7 @@ CallTable_18:     ; Parameter r28:r29
 ; Referenced from offset 0x4b6 <Function_0x3a8> by rcall
 Function_0x604:
  604:   0c 7c           r16 &= 204;                         ; 0xcc
- 606:   a2 d7           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188();
+ 606:   a2 d7           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29(); ; CallTable_24
  608:   d7 d7           Function_0x15b8();
  60a:   45 d7           Function_0x1496();
  60c:   a2 e0           r26 = 2;                            ; 0x02
@@ -1673,13 +1673,13 @@ Label_0x8f4:
  8f4:   ab 30           cmp(r26, 0x0b);                     ; 11
  8f6:   a9 f4           if (c1 != c2) goto Label_0x922;
  8f8:   ae e0           r26 = 14;                           ; 0x0e
- 8fa:   0e 94 03 0d     Function_0x1a06();
- 8fe:   0e 94 17 0d     receive_from_USART();
+ 8fa:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
+ 8fe:   0e 94 17 0d     send_com_buffer_to_USART();         ; Skips the first 12 bytes of the buffer
  902:   aa e0           r26 = 10;                           ; 0x0a
  904:   70 de           sleep();                            ; Parameter r26
  906:   15 ff           skipif (bit(r17,5))
  908:   04 c0           goto Label_0x912;
- 90a:   e0 91 20 02     r30 = mem_unknown_0x220;            ; 0x0220
+ 90a:   e0 91 20 02     r30 = com_buffer[0];                ; 0x0220
  90e:   e5 30           cmp(r30, 0x05);                     ; 5
  910:   11 f0           if (c1 == c2) goto Label_0x916;
 
@@ -1691,7 +1691,7 @@ Label_0x912:
 ; Referenced from offset 0x910 <run_call_table> by breq
 Label_0x916:
  916:   a6 e0           r26 = 6;                            ; 0x06
- 918:   a0 93 20 02     mem_unknown_0x220 = r26;            ; 0x0220
+ 918:   a0 93 20 02     com_buffer[0] = r26;                ; 0x0220
  91c:   10 68           r17 |= 128;                         ; 0x80
  91e:   a8 ef           r26 = 248;                          ; 0xf8
  920:   04 c0           goto Label_0x92a;
@@ -3287,11 +3287,11 @@ USART_RX_Complete:
 118a:   80 91 13 02     r24 = cipher_key_box;               ; 0x0213
 118e:   78 27           r23 ^= r24;
 1190:   f2 e0           r31 = 2;                            ; 0x02
-1192:   e0 91 f2 01     r30 = mem_unknown_0x1f0[2];         ; 0x01f2
+1192:   e0 91 f2 01     r30 = mem_unknown_0x1f2;            ; 0x01f2
 1196:   ec 32           cmp(r30, 0x2c);                     ; 44
 1198:   98 f4           if (!Carry) goto Label_0x11c0;
 119a:   71 93           Memory[[r30:r31]++] = r23;
-119c:   e0 93 f2 01     mem_unknown_0x1f0[2] = r30;         ; 0x01f2
+119c:   e0 93 f2 01     mem_unknown_0x1f2 = r30;            ; 0x01f2
 11a0:   e1 32           cmp(r30, 0x21);                     ; 33
 11a2:   21 f4           if (c1 != c2) goto Label_0x11ac;
 11a4:   72 95           r23 = ((r23 & 0xf0) >> 4) | ((r23 & 0x0f) << 4); ; swap nibbles
@@ -4033,7 +4033,7 @@ loop_clear_memory2:
 150e:   a0 93 00 05     Memory[0x0500] = r26;               ; 1280
 1512:   78 94           Enable_Interrupts();
 1514:   59 de           Function_0x11c8();
-1516:   1a d0           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188();
+1516:   1a d0           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29(); ; CallTable_24
 1518:   3b d0           copy_flash_0x1fdc_to_memory_0x01f0();
 151a:   ce d0           fun_unknown_0x16b8();               ; Parameter r28:r29
 151c:   f8 94           Disable_Interrupts();
@@ -4050,7 +4050,7 @@ loop_clear_memory2:
 1532:   78 94           Enable_Interrupts();
 1534:   a1 e0           r26 = 1;                            ; 0x01
 1536:   ad 87           Memory[[r28:r29]+13] = r26;
-1538:   09 d0           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188();
+1538:   09 d0           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29(); ; CallTable_24
 153a:   1f d0           copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3(); ; CallTable_28
 153c:   af ef           r26 = 0xff;                         ; 255
 153e:   a8 8b           Memory[[r28:r29]+16] = r26;
@@ -4063,13 +4063,13 @@ loop_clear_memory2:
 ; Referenced from offset 0x606 <Function_0x604> by rcall
 ; Referenced from offset 0x1516 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x1538 <loop_clear_memory2> by rcall
-copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188:
+copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29:     ; CallTable_24
 154c:   ec e9           r30 = 156;                          ; 0x9c
 154e:   ff e1           r31 = 31;                           ; 0x1f
 1550:   bb 27           r27 = 0x00;                         ; 0
 1552:   a0 e8           r26 = 128;                          ; 0x80
 
-; Referenced from offset 0x155c <copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188> by brcs
+; Referenced from offset 0x155c <copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29> by brcs
 Label_0x1554:
 1554:   c8 95           r0 = Flash[r30:r31];
 1556:   0d 92           Memory[[r26:r27]++] = r0;
@@ -4081,7 +4081,7 @@ Label_0x1554:
 1562:   a8 e8           r26 = 136;                          ; 0x88
 1564:   b1 e0           r27 = 1;                            ; 0x01
 
-; Referenced from offset 0x156e <copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188> by brcs
+; Referenced from offset 0x156e <copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29> by brcs
 Label_0x1566:
 1566:   c8 95           r0 = Flash[r30:r31];
 1568:   0d 92           Memory[[r26:r27]++] = r0;
@@ -4213,7 +4213,7 @@ Function_0x15fc:
 
 ; Referenced from offset 0x1602 <Function_0x15fc> by breq
 Label_0x1608:
-1608:   a0 91 f0 01     r26 = mem_unknown_0x1f0[0];         ; 0x01f0
+1608:   a0 91 f0 01     r26 = mem_unknown_0x1f0;            ; 0x01f0
 160c:   b1 e0           r27 = 1;                            ; 0x01
 160e:   ed 93           Memory[[r26:r27]++] = r30;
 1610:   a0 3d           cmp(r26, 0xd0);                     ; 208
@@ -4222,7 +4222,7 @@ Label_0x1608:
 
 ; Referenced from offset 0x1612 <Function_0x15fc> by brcs
 Label_0x1616:
-1616:   a0 93 f0 01     mem_unknown_0x1f0[0] = r26;         ; 0x01f0
+1616:   a0 93 f0 01     mem_unknown_0x1f0 = r26;            ; 0x01f0
 161a:   ee 27           r30 = 0x00;                         ; 0
 161c:   ff 27           r31 = 0x00;                         ; 0
 161e:   a0 ed           r26 = 208;                          ; 0xd0
@@ -4296,7 +4296,7 @@ Label_0x1674:
 ; Referenced from offset 0x1494 <Function_0x1406> by rjmp
 ; Referenced from offset 0x15fa <Function_0x15b8> by rjmp
 ; Referenced from offset 0x16e4 <fun_unknown_0x16b8> by rjmp
-; Referenced from offset 0x1a1e <Function_0x1a06> by rjmp
+; Referenced from offset 0x1a1e <write_r26_to_com_buffer> by rjmp
 error_handler:     ; CallTable_23_37_38_39
 1676:   2a 2f           r18 = r26;
 1678:   a4 e6           r26 = 100;                          ; 0x64
@@ -4711,7 +4711,7 @@ Label_0x18d2:
 18d2:   cf 30           cmp(r28, 0x0f);                     ; 15
 18d4:   89 f4           if (c1 != c2) goto Label_0x18f8;
 18d6:   a1 e2           r26 = 33;                           ; 0x21
-18d8:   96 d0           Function_0x1a06();
+18d8:   96 d0           write_r26_to_com_buffer();          ; Parameters r26
 18da:   e1 e2           r30 = 33;                           ; 0x21
 
 ; Referenced from offset 0x18ea <Function_0x1858> by breq
@@ -4725,9 +4725,9 @@ Label_0x18dc:
 18e8:   bb 23           (r27 == 0) || (r27 < 0);            ; test r27
 18ea:   c1 f3           if (c1 == c2) goto Label_0x18dc;
 18ec:   b0 93 13 02     cipher_key_box = r27;               ; 0x0213
-18f0:   8a d0           Function_0x1a06();
+18f0:   8a d0           write_r26_to_com_buffer();          ; Parameters r26
 18f2:   af 5d           r26 -= 223;                         ; 0xdf, no carry
-18f4:   88 d0           Function_0x1a06();
+18f4:   88 d0           write_r26_to_com_buffer();          ; Parameters r26
 18f6:   45 c0           goto Label_0x1982;
 
 ; Referenced from offset 0x18d4 <Function_0x1858> by brne
@@ -4749,7 +4749,7 @@ Label_0x1908:
 1908:   cc 30           cmp(r28, 0x0c);                     ; 12
 190a:   b9 f4           if (c1 != c2) goto Label_0x193a;
 190c:   a2 e2           r26 = 34;                           ; 0x22
-190e:   7b d0           Function_0x1a06();
+190e:   7b d0           write_r26_to_com_buffer();          ; Parameters r26
 1910:   e1 e2           r30 = 33;                           ; 0x21
 1912:   b1 91           r27 = Memory[[r30:r31]++];
 1914:   a0 81           r26 = Memory[r30:r31];
@@ -4777,9 +4777,9 @@ Label_0x192c:
 ; Referenced from offset 0x192a <Function_0x1858> by rjmp
 Label_0x1930:
 1930:   a0 2d           r26 = r0;
-1932:   69 d0           Function_0x1a06();
+1932:   69 d0           write_r26_to_com_buffer();          ; Parameters r26
 1934:   ae 5d           r26 -= 222;                         ; 0xde, no carry
-1936:   67 d0           Function_0x1a06();
+1936:   67 d0           write_r26_to_com_buffer();          ; Parameters r26
 1938:   24 c0           goto Label_0x1982;
 
 ; Referenced from offset 0x190a <Function_0x1858> by brne
@@ -4840,7 +4840,7 @@ Label_0x1974:
 ; Referenced from offset 0x197c <Function_0x1858> by rjmp
 Label_0x197e:
 197e:   a6 e0           r26 = 6;                            ; 0x06
-1980:   42 d0           Function_0x1a06();
+1980:   42 d0           write_r26_to_com_buffer();          ; Parameters r26
 
 ; Referenced from offset 0x187c <Function_0x1858> by rjmp
 ; Referenced from offset 0x1898 <Function_0x1858> by rjmp
@@ -4850,7 +4850,7 @@ Label_0x197e:
 Label_0x1982:
 1982:   1f 79           r17 &= 159;                         ; 0x9f
 1984:   a0 e2           r26 = 32;                           ; 0x20
-1986:   a0 93 f2 01     mem_unknown_0x1f0[2] = r26;         ; 0x01f2
+1986:   a0 93 f2 01     mem_unknown_0x1f2 = r26;            ; 0x01f2
 198a:   cf 91           pop     r28
 198c:   c4 98           IO_BIT[PORTB,4] = false;            ; 0x10 = 16
 198e:   08 95           return;
@@ -4865,7 +4865,7 @@ Label_0x1982:
 ; Referenced from offset 0x1966 <Function_0x1858> by rjmp
 Label_0x1990:
 1990:   a7 e0           r26 = 7;                            ; 0x07
-1992:   39 d0           Function_0x1a06();
+1992:   39 d0           write_r26_to_com_buffer();          ; Parameters r26
 1994:   f6 cf           goto Label_0x1982;
 1996:   cf 91           pop     r28
 1998:   0c 94 2a 00     goto Main;
@@ -4978,23 +4978,23 @@ Label_0x19f4:
 ; Referenced from offset 0x1936 <Function_0x1858> by rcall
 ; Referenced from offset 0x1980 <Function_0x1858> by rcall
 ; Referenced from offset 0x1992 <Function_0x1858> by rcall
-Function_0x1a06:
+write_r26_to_com_buffer:     ; Parameters r26
 1a06:   ef 93           push    r30
 1a08:   ff 93           push    r31
-1a0a:   e0 91 14 02     r30 = mem_unknown_0x214;            ; 0x0214
+1a0a:   e0 91 14 02     r30 = com_buffer_incrementer;       ; 0x0214
 1a0e:   ea 0f           r30 += r26;                         ; No carry
-1a10:   e0 93 14 02     mem_unknown_0x214 = r30;            ; 0x0214
-1a14:   e0 91 f1 01     r30 = mem_unknown_0x1f0[1];         ; 0x01f1
+1a10:   e0 93 14 02     com_buffer_incrementer = r30;       ; 0x0214
+1a14:   e0 91 f1 01     r30 = counter_for_0x220;            ; 0x01f1
 1a18:   e8 33           cmp(r30, 0x38);                     ; 56
 1a1a:   10 f0           if (Carry) goto Label_0x1a20;
 1a1c:   a8 e4           r26 = 72;                           ; 0x48
 1a1e:   2b ce           goto error_handler;
 
-; Referenced from offset 0x1a1a <Function_0x1a06> by brcs
+; Referenced from offset 0x1a1a <write_r26_to_com_buffer> by brcs
 Label_0x1a20:
 1a20:   f2 e0           r31 = 2;                            ; 0x02
 1a22:   a1 93           Memory[[r30:r31]++] = r26;
-1a24:   e0 93 f1 01     mem_unknown_0x1f0[1] = r30;         ; 0x01f1
+1a24:   e0 93 f1 01     counter_for_0x220 = r30;            ; 0x01f1
 1a28:   ff 91           pop     r31
 1a2a:   ef 91           pop     r30
 1a2c:   08 95           return;
@@ -5002,7 +5002,7 @@ Label_0x1a20:
 
 ; Referenced from offset 0x60 <Main> by call
 ; Referenced from offset 0x8fe <run_call_table> by call
-receive_from_USART:
+send_com_buffer_to_USART:     ; Skips the first 12 bytes of the buffer
 1a2e:   5d 9b           skipif (IO_BIT[UCSRA,5])            ; 0x20 = 32
 1a30:   08 95           return;
 
@@ -5012,22 +5012,22 @@ receive_from_USART:
 1a38:   c4 9a           IO_BIT[PORTB,4] = true;             ; 0x10 = 16
 1a3a:   ac b9           IO[UDR] = r26;
 1a3c:   c4 98           IO_BIT[PORTB,4] = false;            ; 0x10 = 16
-1a3e:   a0 91 f1 01     r26 = mem_unknown_0x1f0[1];         ; 0x01f1
+1a3e:   a0 91 f1 01     r26 = counter_for_0x220;            ; 0x01f1
 1a42:   aa 95           r26--;
-1a44:   a0 93 f1 01     mem_unknown_0x1f0[1] = r26;         ; 0x01f1
+1a44:   a0 93 f1 01     counter_for_0x220 = r26;            ; 0x01f1
 1a48:   ad 32           cmp(r26, 0x2d);                     ; 45
 1a4a:   08 f4           if (!Carry) goto Label_0x1a4e;
 1a4c:   08 95           return;
 
 
-; Referenced from offset 0x1a4a <receive_from_USART> by brcc
+; Referenced from offset 0x1a4a <send_com_buffer_to_USART> by brcc
 Label_0x1a4e:
 1a4e:   ab e0           r26 = 11;                           ; 0x0b
 1a50:   2a 2e           r2 = r26;
 1a52:   ad e2           r26 = 45;                           ; 0x2d
 1a54:   b2 e0           r27 = 2;                            ; 0x02
 
-; Referenced from offset 0x1a5c <receive_from_USART> by brne
+; Referenced from offset 0x1a5c <send_com_buffer_to_USART> by brne
 Label_0x1a56:
 1a56:   2d 91           r18 = Memory[[r26:r27]++];
 1a58:   21 93           Memory[[r30:r31]++] = r18;

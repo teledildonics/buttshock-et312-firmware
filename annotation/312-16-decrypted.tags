@@ -55,7 +55,7 @@
 0x05e6	L		sleep							Parameter r26
 0x12dc	L		show_Text_on_Display2					Parameter r26
 0x12ec	L		show_Text_on_Display					Parameter r26
-0x1a2e	L		receive_from_USART
+0x1a2e	L		send_com_buffer_to_USART				Skips the first 12 bytes of the buffer
 0x1362	L		delay_0x1362						Parameter r30
 0x154c	L		copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188
 0x1590	L		copy_flash_0x1fdc_to_memory_0x01f0
@@ -67,6 +67,7 @@
 0x1a7c	L		fun_unknown_0x1a7c					Parameters r9,r8,r7
 0x1af2	L		store_z_pointer_at_0x020e_and_move_r13_to_r2_and_set_r18_to_negative_r30
 0x1b00	L		subtract_r31_from_r2_save_r18_at_memory_0x0210_and_r2_at_memory_0x0211
+0x1a06	L		write_r26_to_com_buffer					Parameters r26
 
 0x0060	M	B	1	COMM_MAIN_CBLOCK_BASE
 0x0061	M	B	1	CBLOCK_MULTI_A_OFFSET				Multi Adjust Offset
@@ -146,7 +147,9 @@
 0x01ba	M	B	1	channel_b_current_width_modulation_rate
 0x01be	M	B	1	channel_b_current_width_modulation_select
 0x01d0	M	B	32	space_for_user_routine_scratchpad_b
-0x01f0	M	B	3	mem_unknown_0x1f0				Copied from 0x1fdc
+0x01f0	M	B	1	mem_unknown_0x1f0				Copied from 0x1fdc
+0x01f1	M	B	1	counter_for_0x220				Copied from 0x1fdc+1
+0x01f2	M	B	1	mem_unknown_0x1f2				Copied from 0x1fdc+2
 0x01f3	M	B	1	current_top_mode				Copied from 0x1fdc+3
 0x01f4	M	B	1	COMM_POWER_LEVEL				Copied from 0x1fdc+4, aka COMM_LMODE
 0x01f5	M	B	1	split_mode_number_a				Copied from 0x1fdc+5
@@ -163,9 +166,9 @@
 0x020d	M	B	1	current_multi_adjust_value
 0x0212	M	B	1	cipher_key_host
 0x0213	M	B	1	cipher_key_box
-0x0214	M	B	1	mem_unknown_0x214
+0x0214	M	B	1	com_buffer_incrementer
 0x0218	M	B	1	mem_unknown_0x218
-0x0220	M	B	1	mem_unknown_0x220
+0x0220	M	B	24	com_buffer
 
 0x1b10	P	S	4	fla_unknown_0x1b10	
 0x1c36	P	W	4	FFFF
