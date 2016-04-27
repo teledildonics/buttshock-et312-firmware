@@ -45,8 +45,8 @@
 0x0b98	L		CallTable_22
 0x0bbe	L		compare_flash_0x1c3e_to_0
 0x0cee	L		CallTable_30
-0x154c	L		CallTable_24
-0x157a	L		copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3
+0x154c	L		copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29    CallTable_24
+0x157a	L		copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3         CallTable_28
 0x1676	L		error_handler			CallTable_23_37_38_39
 
 0x14b0	L		loop_clear_memory
@@ -62,7 +62,7 @@
 0x183e	L		delay					Parameter r26
 0x19dc	L		read_from_eeprom		Parameter r26:r27, returns r0
 0x16b8	L		unknown					Parameter r28:r29
-0x1a60	L		io_portc_output			Parameter r29
+0x1a60	L		lcd_putchar			Parameter r29
 0x1a76	L		reset_device
 0x1a7c	L		unknown
 0x1af2	L		store_z_pointer_at_0x020e_and_move_r13_to_r2_and_set_r18_to_negative_r30
