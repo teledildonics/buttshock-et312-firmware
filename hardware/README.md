@@ -3,3 +3,6 @@ Board size: 19cm x 16.6cm
 (designed as single PCB and broken into two parts)
 
 2 Layers, all through-hole components
+
+
+Current work is for Revision I
