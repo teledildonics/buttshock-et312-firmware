@@ -1,0 +1,124 @@
+Text on Silkscreen:
+  790-30012 Rev I (c) '01-14 ETP Pat. Pending
+  (c) 2001-2014 ETP
+  Patents Pending
+  IMAG 94V-0
+  BDO2 1429
+
+
+U1 Atmega16A
+  http://www.atmel.com/images/atmel-8154-8-bit-avr-atmega16a_datasheet.pdf
+
+U2 LM324N
+  Low-Power, Quad-Operational Amplifiers
+  http://www.ti.com/lit/ds/symlink/lm124-n.pdf
+
+U3 CD4066BE
+  CMOS Quad Bilateral Switch
+  http://www.ti.com/lit/ds/symlink/cd4066b.pdf
+
+U4 LM358N
+  Low-Power, Dual-Operational Amplifiers
+  http://www.ti.com/lit/ds/symlink/lm158-n.pdf
+
+U8 LTC1661CN8
+  Dual 10-Bit DAC
+  http://cds.linear.com/docs/en/datasheet/1661fb.pdf
+  
+U9 78MO5CT
+  3-Terminal 0.5A Positive Voltage Regulator
+  https://www.fairchildsemi.com/datasheets/LM/LM78M05.pdf
+
+U10 LM358N
+  Low-Power, Dual-Operational Amplifiers
+  http://www.ti.com/lit/ds/symlink/lm158-n.pdf
+  
+U11 78MO9CT
+U12 78MO9CT
+
+U13 LM2941CT
+  Low-Drop adjustable regulator
+  http://www.ti.com/lit/ds/symlink/lm2941.pdf
+
+Q1 2N 3906 331
+Q2 2N 3904 E100
+Q3 IRF9Z24N P252D DPF1
+Q4 IRF9Z24N P252D DPF1
+Q5 IRL520N P421P PO8Y
+Q6 IRL520N P421P PO8Y
+Q7 IRL520N P421P PO8Y
+Q8 IRL520N P421P PO8Y
+
+D1 glass diode with some numbers on it
+D2 glass diode with some numbers on it
+D4 1N5817
+
+R1 470
+R2 22k
+R3 3k3
+R4 20k
+R5 20k
+R6 5G0
+R7# 1k2
+R8# 12k
+R9 65k
+
+RP1 6A203G (black, 6 pin) - 20k bus
+RP2 8X-2-105LF (yellow, 8 pin)
+RP3 6A104G (black, 6 pin)
+RP4 6A104G (black, 6 pin)
+RP5 8X-2-391LF (yellow, 8 pin)
+RP6 10B104G (black, 10 pin)
+RP7 8X-2-103LF 1421 (yellow, 8 pin)
+RP8 10B104G (black, 10 pin)
+RP9 10B104G (black, 10 pin)
+RP10 8X-2-103LF 1421 (yellow, 8 pin)
+RP11 8X-2-472LF 1411 (yellow, 8 pin)
+
+VR1 99L - LCD Brightness Adjust
+VR2 - Multi Adjust, 6 Pin
+VR3 - Level A (EVU XV09)
+VR4 - Level B (EVU XV09)
+
+LED1 - Led Channel A
+LED2 - Led Channel B
+
+S1 - "OK"
+S2 - "Menu"
+S3 - "Down"
+S4 - "Up"
+S5 - Power Switch
+
+e-caps:
+C12 1000µF 16V
+C14 1µF 50V
+C16 470µF 10V
+C17 470µF 10V
+C19# 1000µF 16V
+C21 1µF 50V
+C26 1µF 50V
+
+Yellow shit
+C2, C3, C4, C5, C8, C9, C10, C11, C13, C15, C18, C20#, C37
+ probably all 104
+
+T1 LE114-H096 CEC 1111
+T2 LE114-H096 CEC 1111
+
+Ribbon Cable: 10 pin
+
+LCD: 1602H REV.0 (16 pin)
+
+J2 - JTAG 16 Header
+J3 - 3,5mm TRS jack "Link"
+J4 - 3,5mm TRS jack "Mic"
+J5 - 3,5mm TRS jack "Audio"
+J6 - "Output A"
+J6 - "Output B"
+J8 - Power Input
+
+F# U160 ZC8B - probably a fuse
+
+
+
+

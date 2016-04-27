@@ -1,0 +1,85 @@
+This is work in progress and used to map the schematics, by someone not familiar with Eagle...
+
+U1
+1 RP4 (6)
+  RP7 (7)
+2 RP4 (5)
+  RP7 (3)
+3 RP4 (4)
+4 RP4 (3)
+5 JTAG (7)
+6 U8 (3)
+  JTAG (9)
+7 JTAG (11)
+8 JTAG 13
+  U8 (2)
+9 JTAG (15)
+10 Vcc
+11 GND
+12 n/c
+13 n/c
+14 Q2 (3)
+15 RP1 (5)
+  RP6 (4)
+16 U2 (14)
+17 U2 (8)
+  dead via
+18 U8 (1)
+  dead via
+19 LED B (+)
+20 LED A (+)
+21 LCD (15 => 16)
+22 U3 (5)
+  U3 (6)
+  U3 (12)
+  U3 (13)
+23 LCD (10 => 5)
+24 LCD (9 => 6)
+25 LCD (11 => 4)
+26 U3 (10)
+27 U3 (9)
+28 U3 (3)
+  LCD (2 => 13)
+29 U3 (2)
+  LCD (1 => 14)
+30 Vcc
+31 GND
+32 Vcc
+33 RP3 (2)
+   D1 (-)
+   C26 (+)
+34 RP3 (6)
+  D2 (-)
+  C21 (+)
+35 Ribbon (7)
+36 Ribbon (8)
+  dead via
+37 RP7 (1)
+  R3 (left)
+  dead via
+38 RP1 (6)
+  RP6 (1)
+39 C5 (right)
+  C10 (down)
+  Ribbon (3)
+40 R6
+  Q5 (3)
+  Q6 (3)
+  Q7 (3)
+  Q8 (3)
+
+========== ========== ========== ========== ========== ========== ========== ==========
+Ribbon Cable
+1 U3 (4) => S4 Button "Up", to GND
+2 U3 (1) => S2 Button "Menu", to GND
+3 U1 (39) => VR2 (6)
+4 U2 (3) => VR2 (3)
+5 Vcc
+6 GND => VR2(4), VR2(5), S2, S4, VR3, VR4
+7 U1 (35) => VR3 "Level A" (~45k between GND + Vcc, "off" = GND)
+8 U1 (36) => VR4 "Level B" (~45k between GND + Vcc, "off" = GND)
+9 C9 (down) + RP11 (5) => VR2 (2)
+10 C11 (down) + RP6 (5) + R9 (up) => VR2 (1)
+
+========== ========== ========== ========== ========== ========== ========== ==========
+Ribbon (9) -> C9 -> R2 -> U4 (1) + U4 (6) + RP2 (1)
