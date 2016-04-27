@@ -2156,7 +2156,7 @@ CallTable_22:
 ; Referenced from offset 0xba4 <CallTable_22> by breq
 Label_0xbac:
  bac:   a0 38           cmp(r26, 0x80);                     ; 128
- bae:   38 f0           if (Carry) goto compare_flash_0x1c3e_to_0;
+ bae:   38 f0           if (Carry) goto Label_0xbbe;
  bb0:   a0 3c           cmp(r26, 0xc0);                     ; 192
  bb2:   c0 f1           if (Carry) goto Label_0xc24;
  bb4:   a0 3e           cmp(r26, 0xe0);                     ; 224
@@ -2169,7 +2169,7 @@ Label_0xbbc:
  bbc:   6a c0           goto Label_0xc92;
 
 ; Referenced from offset 0xbae <CallTable_22> by brcs
-compare_flash_0x1c3e_to_0:
+Label_0xbbe:
  bbe:   fc e1           r31 = 28;                           ; 0x1c
  bc0:   ee e3           r30 = 62;                           ; 0x3e
  bc2:   ea 0f           r30 += r26;                         ; No carry
@@ -2180,7 +2180,7 @@ compare_flash_0x1c3e_to_0:
  bcc:   08 f4           if (!Carry) goto Label_0xbd0;
  bce:   f2 e2           r31 = 34;                           ; 0x22
 
-; Referenced from offset 0xbcc <compare_flash_0x1c3e_to_0> by brcc
+; Referenced from offset 0xbcc <CallTable_22> by brcc
 Label_0xbd0:
  bd0:   e0 e0           r30 = 0;                            ; 0x00
  bd2:   22 27           r18 = 0x00;                         ; 0
@@ -2190,7 +2190,7 @@ Label_0xbd0:
  bda:   e0 0d           r30 += r0;                          ; No carry
  bdc:   f2 1f           r31 += r18;                         ; With carry
 
-; Referenced from offset 0xc22 <compare_flash_0x1c3e_to_0> by rjmp
+; Referenced from offset 0xc22 <CallTable_22> by rjmp
 Label_0xbde:
  bde:   b2 e0           r27 = 2;                            ; 0x02
  be0:   a8 e1           r26 = 24;                           ; 0x18
@@ -2202,7 +2202,7 @@ Label_0xbde:
  bec:   09 f4           if (c1 != c2) goto Label_0xbf0;
  bee:   7b c0           goto Label_0xce6;
 
-; Referenced from offset 0xbec <compare_flash_0x1c3e_to_0> by brne
+; Referenced from offset 0xbec <CallTable_22> by brne
 Label_0xbf0:
  bf0:   c0 2d           r28 = r0;
  bf2:   c0 7f           r28 &= 240;                         ; 0xf0
@@ -2220,18 +2220,18 @@ Label_0xbf0:
  c0a:   2c 2e           r2 = r28;
  c0c:   03 c0           goto Label_0xc14;
 
-; Referenced from offset 0xbfe <compare_flash_0x1c3e_to_0> by brne
+; Referenced from offset 0xbfe <CallTable_22> by brne
 Label_0xc0e:
  c0e:   c1 e0           r28 = 1;                            ; 0x01
  c10:   01 c0           goto Label_0xc14;
 
-; Referenced from offset 0xbf8 <compare_flash_0x1c3e_to_0> by breq
+; Referenced from offset 0xbf8 <CallTable_22> by breq
 Label_0xc12:
  c12:   c2 e0           r28 = 2;                            ; 0x02
 
-; Referenced from offset 0xc0c <compare_flash_0x1c3e_to_0> by rjmp
-; Referenced from offset 0xc10 <compare_flash_0x1c3e_to_0> by rjmp
-; Referenced from offset 0xc1c <compare_flash_0x1c3e_to_0> by brne
+; Referenced from offset 0xc0c <CallTable_22> by rjmp
+; Referenced from offset 0xc10 <CallTable_22> by rjmp
+; Referenced from offset 0xc1c <CallTable_22> by brne
 Label_0xc14:
  c14:   31 96           [r31:r30]++;
  c16:   c8 95           r0 = Flash[r30:r31];
@@ -2255,19 +2255,19 @@ Label_0xc24:
  c34:   a0 5a           r26 -= 160;                         ; 0xa0, no carry
  c36:   02 c0           goto Label_0xc3c;
 
-; Referenced from offset 0xc2a <compare_flash_0x1c3e_to_0> by brcs
+; Referenced from offset 0xc2a <CallTable_22> by brcs
 Label_0xc38:
  c38:   df bb           IO[EEARH] = r29;
  c3a:   a0 56           r26 -= 96;                          ; 0x60, no carry
 
-; Referenced from offset 0xc36 <compare_flash_0x1c3e_to_0> by rjmp
+; Referenced from offset 0xc36 <CallTable_22> by rjmp
 Label_0xc3c:
  c3c:   ae bb           IO[EEAR] = r26;
  c3e:   e0 9a           IO[EECR[0]] = true;                 ; 0x01 = 1
  c40:   ed b3           r30 = IO[EEDR];
  c42:   e0 0d           r30 += r0;                          ; No carry
 
-; Referenced from offset 0xc90 <compare_flash_0x1c3e_to_0> by rjmp
+; Referenced from offset 0xc90 <CallTable_22> by rjmp
 Label_0xc44:
  c44:   b2 e0           r27 = 2;                            ; 0x02
  c46:   a8 e1           r26 = 24;                           ; 0x18
@@ -2281,7 +2281,7 @@ Label_0xc44:
  c56:   09 f4           if (c1 != c2) goto Label_0xc5a;
  c58:   46 c0           goto Label_0xce6;
 
-; Referenced from offset 0xc56 <compare_flash_0x1c3e_to_0> by brne
+; Referenced from offset 0xc56 <CallTable_22> by brne
 Label_0xc5a:
  c5a:   c0 2d           r28 = r0;
  c5c:   c0 7f           r28 &= 240;                         ; 0xf0
@@ -2299,18 +2299,18 @@ Label_0xc5a:
  c74:   2c 2e           r2 = r28;
  c76:   03 c0           goto Label_0xc7e;
 
-; Referenced from offset 0xc68 <compare_flash_0x1c3e_to_0> by brne
+; Referenced from offset 0xc68 <CallTable_22> by brne
 Label_0xc78:
  c78:   c1 e0           r28 = 1;                            ; 0x01
  c7a:   01 c0           goto Label_0xc7e;
 
-; Referenced from offset 0xc62 <compare_flash_0x1c3e_to_0> by breq
+; Referenced from offset 0xc62 <CallTable_22> by breq
 Label_0xc7c:
  c7c:   c2 e0           r28 = 2;                            ; 0x02
 
-; Referenced from offset 0xc76 <compare_flash_0x1c3e_to_0> by rjmp
-; Referenced from offset 0xc7a <compare_flash_0x1c3e_to_0> by rjmp
-; Referenced from offset 0xc8a <compare_flash_0x1c3e_to_0> by brne
+; Referenced from offset 0xc76 <CallTable_22> by rjmp
+; Referenced from offset 0xc7a <CallTable_22> by rjmp
+; Referenced from offset 0xc8a <CallTable_22> by brne
 Label_0xc7e:
  c7e:   e3 95           r30++;
  c80:   ee bb           IO[EEAR] = r30;
@@ -2335,7 +2335,7 @@ Label_0xc92:
  ca0:   ec 0f           r30 += r28;                         ; No carry
  ca2:   fd 1f           r31 += r29;                         ; With carry
 
-; Referenced from offset 0xce4 <compare_flash_0x1c3e_to_0> by rjmp
+; Referenced from offset 0xce4 <CallTable_22> by rjmp
 Label_0xca4:
  ca4:   b2 e0           r27 = 2;                            ; 0x02
  ca6:   a8 e1           r26 = 24;                           ; 0x18
@@ -2361,21 +2361,21 @@ Label_0xca4:
  cce:   2c 2e           r2 = r28;
  cd0:   03 c0           goto Label_0xcd8;
 
-; Referenced from offset 0xcc2 <compare_flash_0x1c3e_to_0> by brne
+; Referenced from offset 0xcc2 <CallTable_22> by brne
 Label_0xcd2:
  cd2:   c1 e0           r28 = 1;                            ; 0x01
  cd4:   01 c0           goto Label_0xcd8;
 
-; Referenced from offset 0xcbc <compare_flash_0x1c3e_to_0> by breq
+; Referenced from offset 0xcbc <CallTable_22> by breq
 Label_0xcd6:
  cd6:   c2 e0           r28 = 2;                            ; 0x02
 
-; Referenced from offset 0xcd0 <compare_flash_0x1c3e_to_0> by rjmp
-; Referenced from offset 0xcd4 <compare_flash_0x1c3e_to_0> by rjmp
+; Referenced from offset 0xcd0 <CallTable_22> by rjmp
+; Referenced from offset 0xcd4 <CallTable_22> by rjmp
 Label_0xcd8:
  cd8:   31 96           [r31:r30]++;
 
-; Referenced from offset 0xce0 <compare_flash_0x1c3e_to_0> by brne
+; Referenced from offset 0xce0 <CallTable_22> by brne
 Label_0xcda:
  cda:   01 90           r0 = Memory[[r30:r31]++];
  cdc:   0d 92           Memory[[r26:r27]++] = r0;
@@ -2384,9 +2384,9 @@ Label_0xcda:
  ce2:   05 d0           CallTable_30();
  ce4:   df cf           goto Label_0xca4;
 
-; Referenced from offset 0xbee <compare_flash_0x1c3e_to_0> by rjmp
-; Referenced from offset 0xc58 <compare_flash_0x1c3e_to_0> by rjmp
-; Referenced from offset 0xcb2 <compare_flash_0x1c3e_to_0> by breq
+; Referenced from offset 0xbee <CallTable_22> by rjmp
+; Referenced from offset 0xc58 <CallTable_22> by rjmp
+; Referenced from offset 0xcb2 <CallTable_22> by breq
 Label_0xce6:
  ce6:   cf 91           pop     r28
  ce8:   ff 91           pop     r31
@@ -2394,9 +2394,9 @@ Label_0xce6:
  cec:   08 95           return;
 
 
-; Referenced from offset 0xc20 <compare_flash_0x1c3e_to_0> by rcall
-; Referenced from offset 0xc8c <compare_flash_0x1c3e_to_0> by rcall
-; Referenced from offset 0xce2 <compare_flash_0x1c3e_to_0> by rcall
+; Referenced from offset 0xc20 <CallTable_22> by rcall
+; Referenced from offset 0xc8c <CallTable_22> by rcall
+; Referenced from offset 0xce2 <CallTable_22> by rcall
 CallTable_30:
  cee:   ef 93           push    r30
  cf0:   ff 93           push    r31
