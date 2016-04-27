@@ -1646,7 +1646,7 @@ Label_0x8be:
  8c8:   0a 2e           r0 = r26;
  8ca:   bb 27           r27 = 0x00;                         ; 0
  8cc:   ab e0           r26 = 11;                           ; 0x0b
- 8ce:   0e 94 f9 0c     Function_0x19f2();
+ 8ce:   0e 94 f9 0c     write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
  8d2:   a4 c0           goto CallTable_4;
 
 ; Referenced from offset 0x8c0 <run_call_table> by brne
@@ -4147,7 +4147,7 @@ Function_0x15a4:
 ; Referenced from offset 0x15b4 <Function_0x15a4> by brne
 Label_0x15ac:
 15ac:   01 90           r0 = Memory[[r30:r31]++];
-15ae:   21 d2           Function_0x19f2();
+15ae:   21 d2           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
 15b0:   11 96           [r27:r26]++;
 15b2:   e0 30           cmp(r30, 0);
 15b4:   d9 f7           if (c1 != c2) goto Label_0x15ac;
@@ -4502,11 +4502,11 @@ Label_0x17a2:
 17a4:   0a 2e           r0 = r26;
 17a6:   b0 e0           r27 = 0;                            ; 0x00
 17a8:   a2 e0           r26 = 2;                            ; 0x02
-17aa:   23 d1           Function_0x19f2();
+17aa:   23 d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
 17ac:   be d9           Function_0xb2a();
 17ae:   0a 2e           r0 = r26;
 17b0:   a3 e0           r26 = 3;                            ; 0x03
-17b2:   1f d1           Function_0x19f2();
+17b2:   1f d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
 17b4:   91 98           IO_BIT[PORTD,1] = false;            ; 0x02 = 2
 17b6:   a4 e0           r26 = 4;                            ; 0x04
 17b8:   b0 e0           r27 = 0;                            ; 0x00
@@ -4514,7 +4514,7 @@ Label_0x17a2:
 ; Referenced from offset 0x17c2 <fun_unknown_0x16b8> by brcs
 Label_0x17ba:
 17ba:   0d 2e           r0 = r29;
-17bc:   1a d1           Function_0x19f2();
+17bc:   1a d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
 17be:   a3 95           r26++;
 17c0:   a0 32           cmp(r26, 0x20);                     ; 32
 17c2:   d8 f3           if (Carry) goto Label_0x17ba;
@@ -4522,13 +4522,13 @@ Label_0x17ba:
 17c6:   0a 2e           r0 = r26;
 17c8:   a1 e0           r26 = 1;                            ; 0x01
 17ca:   b0 e0           r27 = 0;                            ; 0x00
-17cc:   12 d1           Function_0x19f2();
+17cc:   12 d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
 17ce:   a1 e0           r26 = 1;                            ; 0x01
 17d0:   0a 2e           r0 = r26;
 17d2:   a6 e0           r26 = 6;                            ; 0x06
-17d4:   0e d1           Function_0x19f2();
+17d4:   0e d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
 17d6:   a7 e0           r26 = 7;                            ; 0x07
-17d8:   0c d1           Function_0x19f2();
+17d8:   0c d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
 17da:   da de           copy_flash_0x1fdc_to_memory_0x01f0();
 17dc:   e3 de           Function_0x15a4();
 
@@ -4819,7 +4819,7 @@ Label_0x1958:
 ; Referenced from offset 0x1970 <Function_0x1858> by brcs
 Label_0x1968:
 1968:   01 90           r0 = Memory[[r30:r31]++];
-196a:   43 d0           Function_0x19f2();
+196a:   43 d0           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
 196c:   11 96           [r27:r26]++;
 196e:   e2 15           cmp(r30, r2);
 1970:   d8 f3           if (Carry) goto Label_0x1968;
@@ -4948,10 +4948,10 @@ Label_0x19de:
 ; Referenced from offset 0x17d4 <fun_unknown_0x16b8> by rcall
 ; Referenced from offset 0x17d8 <fun_unknown_0x16b8> by rcall
 ; Referenced from offset 0x196a <Function_0x1858> by rcall
-Function_0x19f2:
+write_to_eeprom:     ; Parameter r26:r27 (address), r0 (value)
 19f2:   a8 95           wdr
 
-; Referenced from offset 0x19f8 <Function_0x19f2> by brne
+; Referenced from offset 0x19f8 <write_to_eeprom> by brne
 Label_0x19f4:
 19f4:   2c b3           r18 = IO[EECR];
 19f6:   23 70           r18 &= 3;                           ; 0x03

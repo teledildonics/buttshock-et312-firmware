@@ -57,10 +57,10 @@
 0x12ec	L		show_Text_on_Display					Parameter r26
 0x1a2e	L		send_com_buffer_to_USART				Skips the first 12 bytes of the buffer
 0x1362	L		delay_0x1362						Parameter r30
-0x154c	L		copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188
 0x1590	L		copy_flash_0x1fdc_to_memory_0x01f0
 0x183e	L		delay_0x183e						Parameter r26
 0x19dc	L		read_from_eeprom					Parameter r26:r27, returns r0
+0x19f2	L		write_to_eeprom						Parameter r26:r27 (address), r0 (value)
 0x16b8	L		fun_unknown_0x16b8					Parameter r28:r29
 0x1a60	L		lcd_putchar						Parameter r29
 0x1a76	L		reset_device
@@ -164,6 +164,7 @@
 0x01fe	M	B	1	advanced_parameter_width
 0x01ff	M	B	1	advanced_parameter_pace
 0x020d	M	B	1	current_multi_adjust_value
+0x0209
 0x0212	M	B	1	cipher_key_host
 0x0213	M	B	1	cipher_key_box
 0x0214	M	B	1	com_buffer_incrementer
