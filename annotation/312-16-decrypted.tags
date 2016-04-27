@@ -136,7 +136,7 @@
 0x01a7	M	B	1	channel_b_current_intensity_modulation_max
 0x01a8	M	B	1	channel_b_current_intensity_modulation_rate
 0x01ac	M	B	1	channel_b_current_intensity_modulation_select
-0x01ae	M	B	1	channel_b_current_frequency_modulation_select
+0x01ae	M	B	1	channel_b_current_frequency_modulation_value
 0x01af	M	B	1	channel_b_current_frequency_modulation_min
 0x01b0	M	B	1	channel_b_current_frequency_modulation_max
 0x01b1	M	B	1	channel_b_current_frequency_modulation_rate
