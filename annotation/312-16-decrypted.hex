@@ -45,7 +45,7 @@ main:
 Main:
   54:   c0 e6           r28 = 96;                           ; 0x60
   56:   a8 95           wdr
-  58:   a0 91 f1 01     r26 = _hi8(Copied from 0x1fdc[0]); ; 0x01f1
+  58:   a0 91 f1 01     r26 = unknown[1];                   ; 0x01f1
   5c:   ac 32           cmp(r26, 0x2c);                     ; 44
   5e:   11 f0           if (c1 == c2) goto Label_0x64;
   60:   0e 94 17 0d     receive_from_USART();
@@ -69,7 +69,7 @@ Label_0x64:
 ; Referenced from offset 0x7c by brcs
 Label_0x80:
   80:   7a 2e           r7 = r26;
-  82:   a0 93 a5 00     _hi8(Copied from 0x1f9c[18]) = r26; ; 0x00a5
+  82:   a0 93 a5 00     _hi8(unknown[13]) = r26;            ; 0x00a5
 
 ; Referenced from offset 0x74 by rjmp
 Label_0x86:
@@ -84,7 +84,7 @@ Label_0x86:
 ; Referenced from offset 0x90 by brcs
 Label_0x94:
   94:   ca 2e           r12 = r26;
-  96:   a0 93 a5 01     _hi8(Copied from 0x1fa4[14]) = r26; ; 0x01a5
+  96:   a0 93 a5 01     _hi8(unknown[3]) = r26;             ; 0x01a5
 
 ; Referenced from offset 0x88 by rjmp
 Label_0x9a:
@@ -142,7 +142,7 @@ Label_0xe2:
   e4:   a6 a9           r26 = Memory[[r30:r31]+54];
   e6:   aa 23           (r26 == 0) || (r26 < 0);            ; test r26
   e8:   91 f0           if (c1 == c2) goto Label_0x10e;
-  ea:   18 d1           Function_0x31c();
+  ea:   18 d1           set_t_flag_from_r26_r27_compared_to_memory_0x0080(); ; Parameter r26:r27, returns T flag
   ec:   86 f4           if (T == 0) goto Label_0x10e;
   ee:   a4 a9           r26 = Memory[[r30:r31]+52];
   f0:   ba 1b           r27 -= r26;                         ; No carry
@@ -178,9 +178,9 @@ Label_0x10e:
  11a:   0a c0           goto Label_0x130;
  11c:   21 ad           r18 = Memory[[r30:r31]+57];
  11e:   22 fc           skipif (!r2[2])
- 120:   20 91 fb 01     r18 = _hi8(Copied from 0x1fdc[5]); ; 0x01fb
+ 120:   20 91 fb 01     r18 = advanced_parameter_tempo;     ; 0x01fb
  124:   23 fc           skipif (!r2[3])
- 126:   20 91 0d 02     r18 = Memory[0x020d];               ; 525
+ 126:   20 91 0d 02     r18 = current_multi_adjust_value;   ; 0x020d
  12a:   22 23           (r18 == 0) || (r18 < 0);            ; test r18
  12c:   b9 f0           if (c1 == c2) goto Label_0x15c;
  12e:   07 c0           goto Label_0x13e;
@@ -189,14 +189,14 @@ Label_0x10e:
 Label_0x130:
  130:   20 ad           r18 = Memory[[r30:r31]+56];
  132:   25 fc           skipif (!r2[5])
- 134:   20 91 fd 01     r18 = _hi8(Copied from 0x1fdc[6]); ; 0x01fd
+ 134:   20 91 fd 01     r18 = advanced_parameter_effect;    ; 0x01fd
  138:   26 fc           skipif (!r2[6])
- 13a:   20 91 0d 02     r18 = Memory[0x020d];               ; 525
+ 13a:   20 91 0d 02     r18 = current_multi_adjust_value;   ; 0x020d
 
 ; Referenced from offset 0x12e by rjmp
 Label_0x13e:
  13e:   a2 2d           r26 = r2;
- 140:   ed d0           Function_0x31c();
+ 140:   ed d0           set_t_flag_from_r26_r27_compared_to_memory_0x0080(); ; Parameter r26:r27, returns T flag
  142:   7e f4           if (T == 0) goto Label_0x162;
  144:   a3 ad           r26 = Memory[[r30:r31]+59];
  146:   ba 1b           r27 -= r26;                         ; No carry
@@ -264,14 +264,14 @@ Label_0x16c:
 Label_0x186:
  186:   a8 30           cmp(r26, 0x08);                     ; 8
  188:   19 f4           if (c1 != c2) goto Label_0x190;
- 18a:   20 91 0d 02     r18 = Memory[0x020d];               ; 525
+ 18a:   20 91 0d 02     r18 = current_multi_adjust_value;   ; 0x020d
  18e:   03 c0           goto Label_0x196;
 
 ; Referenced from offset 0x188 by brne
 Label_0x190:
  190:   a4 30           cmp(r26, 0x04);                     ; 4
  192:   41 f7           if (c1 != c2) goto Label_0x164;
- 194:   fd d0           Function_0x390();
+ 194:   fd d0           read_flash_0x01[(r30/4)-47]_to_r18_r0();
 
 ; Referenced from offset 0x184 by rjmp
 ; Referenced from offset 0x18e by rjmp
@@ -297,14 +297,14 @@ Label_0x19e:
 Label_0x1b0:
  1b0:   a0 34           cmp(r26, 0x40);                     ; 64
  1b2:   19 f4           if (c1 != c2) goto Label_0x1ba;
- 1b4:   20 91 0d 02     r18 = Memory[0x020d];               ; 525
+ 1b4:   20 91 0d 02     r18 = current_multi_adjust_value;   ; 0x020d
  1b8:   06 c0           goto Label_0x1c6;
 
 ; Referenced from offset 0x1b2 by brne
 Label_0x1ba:
  1ba:   a0 32           cmp(r26, 0x20);                     ; 32
  1bc:   19 f4           if (c1 != c2) goto Label_0x1c4;
- 1be:   e8 d0           Function_0x390();
+ 1be:   e8 d0           read_flash_0x01[(r30/4)-47]_to_r18_r0();
  1c0:   20 2d           r18 = r0;
  1c2:   01 c0           goto Label_0x1c6;
 
@@ -319,7 +319,7 @@ Label_0x1c6:
  1c6:   27 fc           skipif (!r2[7])
  1c8:   ef d0           Function_0x3a8();
  1ca:   a2 2d           r26 = r2;
- 1cc:   a7 d0           Function_0x31c();
+ 1cc:   a7 d0           set_t_flag_from_r26_r27_compared_to_memory_0x0080(); ; Parameter r26:r27, returns T flag
  1ce:   56 f6           if (T == 0) goto Label_0x164;
  1d0:   a0 85           r26 = Memory[[r30:r31]+8];
  1d2:   ba 1b           r27 -= r26;                         ; No carry
@@ -341,14 +341,14 @@ Label_0x1c6:
 Label_0x1ee:
  1ee:   a8 30           cmp(r26, 0x08);                     ; 8
  1f0:   19 f4           if (c1 != c2) goto Label_0x1f8;
- 1f2:   20 91 0d 02     r18 = Memory[0x020d];               ; 525
+ 1f2:   20 91 0d 02     r18 = current_multi_adjust_value;   ; 0x020d
  1f6:   05 c0           goto Label_0x202;
 
 ; Referenced from offset 0x1f0 by brne
 Label_0x1f8:
  1f8:   a4 30           cmp(r26, 0x04);                     ; 4
  1fa:   11 f4           if (c1 != c2) goto Label_0x200;
- 1fc:   c9 d0           Function_0x390();
+ 1fc:   c9 d0           read_flash_0x01[(r30/4)-47]_to_r18_r0();
  1fe:   01 c0           goto Label_0x202;
 
 ; Referenced from offset 0x1fa by brne
@@ -576,7 +576,7 @@ Label_0x2f6:
 ; Referenced from offset 0x2f8 by rjmp
 ; Referenced from offset 0x2fe by brcs
 Label_0x30e:
- 30e:   0e 94 3e 0d     Function_0x1a7c();
+ 30e:   0e 94 3e 0d     unknown             Parameters r9,r8,r7();
  312:   0e 94 fe 0a     Function_0x15fc();
  316:   0e 94 dc 0a     Function_0x15b8();
  31a:   9c ce           goto Main;
@@ -584,30 +584,30 @@ Label_0x30e:
 ; Referenced from offset 0xea by rcall
 ; Referenced from offset 0x140 by rcall
 ; Referenced from offset 0x1cc by rcall
-Function_0x31c:
+set_t_flag_from_r26_r27_compared_to_memory_0x0080:     ; Parameter r26:r27, returns T flag
  31c:   a3 70           r26 &= 3;                           ; 0x03
  31e:   a1 30           cmp(r26, 0x01);                     ; 1
  320:   19 f4           if (c1 != c2) goto Label_0x328;
- 322:   b0 91 88 00     r27 = _lo8(Copied from 0x1f9c[4]); ; 0x0088
+ 322:   b0 91 88 00     r27 = routine_timer_low;            ; 0x0088
  326:   10 c0           goto Label_0x348;
 
 ; Referenced from offset 0x320 by brne
 Label_0x328:
  328:   a2 30           cmp(r26, 0x02);                     ; 2
  32a:   41 f4           if (c1 != c2) goto Label_0x33c;
- 32c:   b0 91 88 00     r27 = _lo8(Copied from 0x1f9c[4]); ; 0x0088
+ 32c:   b0 91 88 00     r27 = routine_timer_low;            ; 0x0088
  330:   b7 70           r27 &= 7;                           ; 0x07
  332:   b7 30           cmp(r27, 0x07);                     ; 7
  334:   61 f4           if (c1 != c2) goto Label_0x34e;
- 336:   b0 91 8b 00     r27 = _hi8(Copied from 0x1f9c[5]); ; 0x008b
+ 336:   b0 91 8b 00     r27 = _hi8(unknown[0]);             ; 0x008b
  33a:   06 c0           goto Label_0x348;
 
 ; Referenced from offset 0x32a by brne
 Label_0x33c:
- 33c:   b0 91 88 00     r27 = _lo8(Copied from 0x1f9c[4]); ; 0x0088
+ 33c:   b0 91 88 00     r27 = routine_timer_low;            ; 0x0088
  340:   bb 23           (r27 == 0) || (r27 < 0);            ; test r27
  342:   29 f4           if (c1 != c2) goto Label_0x34e;
- 344:   b0 91 89 00     r27 = _hi8(Copied from 0x1f9c[4]); ; 0x0089
+ 344:   b0 91 89 00     r27 = routine_timer_high;           ; 0x0089
 
 ; Referenced from offset 0x326 by rjmp
 ; Referenced from offset 0x33a by rjmp
@@ -676,7 +676,7 @@ Label_0x38c:
 ; Referenced from offset 0x194 by rcall
 ; Referenced from offset 0x1be by rcall
 ; Referenced from offset 0x1fc by rcall
-Function_0x390:
+read_flash_0x01[(r30/4)-47]_to_r18_r0:
  390:   ff 93           push    r31
  392:   ef 93           push    r30
  394:   ec 59           r30 -= 156;                         ; 0x9c, no carry
@@ -728,7 +728,7 @@ Label_0x3d2:
  3d6:   42 c0           goto Label_0x45c;
  3d8:   17 ff           skipif (r17[7])
  3da:   2e c0           goto Label_0x438;
- 3dc:   a0 91 20 02     r26 = Memory[0x0220];               ; 544
+ 3dc:   a0 91 20 02     r26 = Unknown;                      ; 0x0220
  3e0:   a6 30           cmp(r26, 0x06);                     ; 6
  3e2:   41 f0           if (c1 == c2) goto Label_0x3f4;
  3e4:   aa a1           r26 = Memory[[r28:r29]+34];
@@ -745,8 +745,8 @@ Label_0x3ee:
 ; Referenced from offset 0x3e2 by breq
 Label_0x3f4:
  3f4:   da a3           Memory[[r28:r29]+34] = r29;
- 3f6:   d0 93 20 02     Memory[0x0220] = r29;               ; 544
- 3fa:   d0 93 14 02     Memory[0x0214] = r29;               ; 532
+ 3f6:   d0 93 20 02     Unknown = r29;                      ; 0x0220
+ 3fa:   d0 93 14 02     unknown = r29;                      ; 0x0214
  3fe:   ad e9           r26 = 157;                          ; 0x9d
  400:   0e 94 03 0d     Function_0x1a06();
  404:   a0 e4           r26 = 64;                           ; 0x40
@@ -769,7 +769,7 @@ Label_0x41e:
  424:   0e 94 03 0d     Function_0x1a06();
  428:   e2 17           cmp(r30, r18);
  42a:   c8 f3           if (Carry) goto Label_0x41e;
- 42c:   a0 91 14 02     r26 = Memory[0x0214];               ; 532
+ 42c:   a0 91 14 02     r26 = unknown;                      ; 0x0214
  430:   0e 94 03 0d     Function_0x1a06();
  434:   a0 e4           r26 = 64;                           ; 0x40
  436:   0a 27           r16 ^= r26;
@@ -955,7 +955,7 @@ Label_0x528:
 
 ; Referenced from offset 0x532 by brcc
 Label_0x536:
- 536:   15 d7           Function_0x1362();
+ 536:   15 d7           delay                   Parameter r30();
  538:   a4 e0           r26 = 4;                            ; 0x04
  53a:   b5 2d           r27 = r5;
  53c:   b7 70           r27 &= 7;                           ; 0x07
@@ -984,7 +984,7 @@ Label_0x552:
 
 ; Referenced from offset 0x55c by brcc
 Label_0x560:
- 560:   00 d7           Function_0x1362();
+ 560:   00 d7           delay                   Parameter r30();
  562:   a4 e0           r26 = 4;                            ; 0x04
  564:   ba 2d           r27 = r10;
  566:   b7 70           r27 &= 7;                           ; 0x07
@@ -1064,7 +1064,7 @@ Label_0x5c0:
  5c0:   a0 e1           r26 = 16;                           ; 0x10
  5c2:   1a 27           r17 ^= r26;
  5c4:   a6 e9           r26 = 150;                          ; 0x96
- 5c6:   b0 91 0d 02     r27 = Memory[0x020d];               ; 525
+ 5c6:   b0 91 0d 02     r27 = current_multi_adjust_value;   ; 0x020d
  5ca:   ba 0f           r27 += r26;                         ; No carry
  5cc:   9e 14           cmp(r9, r14);
  5ce:   18 f0           if (Carry) goto Label_0x5d6;
@@ -1079,8 +1079,8 @@ Label_0x5d6:
 
 ; Referenced from offset 0x5d4 by rjmp
 Label_0x5da:
- 5da:   90 92 b7 00     _hi8(Copied from 0x1f9c[27]) = r9; ; 0x00b7
- 5de:   e0 92 b7 01     _hi8(Copied from 0x1fa4[23]) = r14; ; 0x01b7
+ 5da:   90 92 b7 00     channel_a_current_width_modulation_value = r9; ; 0x00b7
+ 5de:   e0 92 b7 01     channel_b_current_width_modulation_value = r14; ; 0x01b7
  5e2:   08 95           return;
 
 
@@ -1128,7 +1128,7 @@ CallTable_18:     ; Parameter r28:r29
 ; Referenced from offset 0x4b6 by rcall
 Function_0x604:
  604:   0c 7c           r16 &= 204;                         ; 0xcc
- 606:   a2 d7           copy_flash_to_memory_0x80_0x188();
+ 606:   a2 d7           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29    CallTable_24();
  608:   d7 d7           Function_0x15b8();
  60a:   45 d7           Function_0x1496();
  60c:   a2 e0           r26 = 2;                            ; 0x02
@@ -1158,7 +1158,7 @@ Label_0x622:
 Label_0x632:
  632:   b0 e1           r27 = 16;                           ; 0x10
  634:   4b 2a           r4 |= r27;
- 636:   a0 91 f5 01     r26 = _hi8(Copied from 0x1fdc[2]); ; 0x01f5
+ 636:   a0 91 f5 01     r26 = split_mode_number_a;          ; 0x01f5
  63a:   1d 7f           r17 &= 253;                         ; 0xfd
 
 ; Referenced from offset 0x620 by rjmp
@@ -1267,7 +1267,7 @@ Label_0x6b8:
  6ba:   10 fd           skipif (!r17[0])
  6bc:   a8 ab           Memory[[r28:r29]+48] = r26;
  6be:   11 fd           skipif (!r17[1])
- 6c0:   a0 93 90 01     _lo8(Copied from 0x1fa4[4]) = r26; ; 0x0190
+ 6c0:   a0 93 90 01     _lo8(Copied from 0x1fa4[4]) = r26;  ; 0x0190
  6c4:   a7 e1           r26 = 23;                           ; 0x17
  6c6:   68 d2           CallTable_22();
  6c8:   4b c0           goto Label_0x760;
@@ -1286,7 +1286,7 @@ Label_0x6d0:
  6d6:   10 fd           skipif (!r17[0])
  6d8:   a8 ab           Memory[[r28:r29]+48] = r26;
  6da:   11 fd           skipif (!r17[1])
- 6dc:   a0 93 90 01     _lo8(Copied from 0x1fa4[4]) = r26; ; 0x0190
+ 6dc:   a0 93 90 01     _lo8(Copied from 0x1fa4[4]) = r26;  ; 0x0190
  6e0:   a2 e2           r26 = 34;                           ; 0x22
  6e2:   5a d2           CallTable_22();
  6e4:   a4 e0           r26 = 4;                            ; 0x04
@@ -1404,7 +1404,7 @@ Label_0x760:
  766:   1b 27           r17 ^= r27;
  768:   ab 8d           r26 = Memory[[r28:r29]+27];
  76a:   44 fc           skipif (!r4[4])
- 76c:   a0 91 f6 01     r26 = _lo8(Copied from 0x1fdc[3]); ; 0x01f6
+ 76c:   a0 91 f6 01     r26 = split_mode_number_b;          ; 0x01f6
  770:   65 cf           goto Label_0x63c;
 
 ; Referenced from offset 0x762 by rjmp
@@ -1471,9 +1471,9 @@ Label_0x798:
 
  7be:   a6 e7           r26 = 118;                          ; 0x76
  7c0:   a9 8f           Memory[[r28:r29]+25] = r26;
- 7c2:   a0 91 f3 01     r26 = _hi8(Copied from 0x1fdc[1]); ; 0x01f3
+ 7c2:   a0 91 f3 01     r26 = current_top_mode;             ; 0x01f3
  7c6:   aa 8f           Memory[[r28:r29]+26] = r26;
- 7c8:   a0 91 f7 01     r26 = _hi8(Copied from 0x1fdc[3]); ; 0x01f7
+ 7c8:   a0 91 f7 01     r26 = favourite_mode;               ; 0x01f7
  7cc:   a8 8f           Memory[[r28:r29]+24] = r26;
  7ce:   8e d5           show_Text_on_Display();             ; Parameter r26
  7d0:   a5 e0           r26 = 5;                            ; 0x05
@@ -1627,7 +1627,7 @@ Label_0x8a0:
  8a6:   22 d5           show_Text_on_Display();             ; Parameter r26
  8a8:   a6 e7           r26 = 118;                          ; 0x76
  8aa:   a9 8f           Memory[[r28:r29]+25] = r26;
- 8ac:   a0 91 f5 01     r26 = _hi8(Copied from 0x1fdc[2]); ; 0x01f5
+ 8ac:   a0 91 f5 01     r26 = split_mode_number_a;          ; 0x01f5
  8b0:   a8 8f           Memory[[r28:r29]+24] = r26;
  8b2:   1c d5           show_Text_on_Display();             ; Parameter r26
  8b4:   ae e7           r26 = 126;                          ; 0x7e
@@ -1642,7 +1642,7 @@ Label_0x8be:
  8be:   a9 30           cmp(r26, 0x09);                     ; 9
  8c0:   49 f4           if (c1 != c2) goto Label_0x8d4;
  8c2:   ab 8d           r26 = Memory[[r28:r29]+27];
- 8c4:   a0 93 f7 01     _hi8(Copied from 0x1fdc[3]) = r26; ; 0x01f7
+ 8c4:   a0 93 f7 01     favourite_mode = r26;               ; 0x01f7
  8c8:   0a 2e           r0 = r26;
  8ca:   bb 27           r27 = 0x00;                         ; 0
  8cc:   ab e0           r26 = 11;                           ; 0x0b
@@ -1657,7 +1657,7 @@ Label_0x8d4:
  8da:   08 d5           show_Text_on_Display();             ; Parameter r26
  8dc:   ab e6           r26 = 107;                          ; 0x6b
  8de:   a9 8f           Memory[[r28:r29]+25] = r26;
- 8e0:   a0 91 f4 01     r26 = _lo8(Copied from 0x1fdc[2]); ; 0x01f4
+ 8e0:   a0 91 f4 01     r26 = COMM_POWER_LEVEL;             ; 0x01f4
  8e4:   a6 59           r26 -= 150;                         ; 0x96, no carry
  8e6:   a8 8f           Memory[[r28:r29]+24] = r26;
  8e8:   01 d5           show_Text_on_Display();             ; Parameter r26
@@ -1679,7 +1679,7 @@ Label_0x8f4:
  904:   70 de           sleep();                            ; Parameter r26
  906:   15 ff           skipif (r17[5])
  908:   04 c0           goto Label_0x912;
- 90a:   e0 91 20 02     r30 = Memory[0x0220];               ; 544
+ 90a:   e0 91 20 02     r30 = Unknown;                      ; 0x0220
  90e:   e5 30           cmp(r30, 0x05);                     ; 5
  910:   11 f0           if (c1 == c2) goto Label_0x916;
 
@@ -1691,7 +1691,7 @@ Label_0x912:
 ; Referenced from offset 0x910 by breq
 Label_0x916:
  916:   a6 e0           r26 = 6;                            ; 0x06
- 918:   a0 93 20 02     Memory[0x0220] = r26;               ; 544
+ 918:   a0 93 20 02     Unknown = r26;                      ; 0x0220
  91c:   10 68           r17 |= 128;                         ; 0x80
  91e:   a8 ef           r26 = 248;                          ; 0xf8
  920:   04 c0           goto Label_0x92a;
@@ -1720,9 +1720,9 @@ Label_0x92a:
 Label_0x93e:
  93e:   ad 30           cmp(r26, 0x0d);                     ; 13
  940:   21 f4           if (c1 != c2) goto Label_0x94a;
- 942:   26 d6           copy_flash_to_memory_0x1f0();
+ 942:   26 d6           copy_flash_0x1fdc_to_memory_0x01f0();
  944:   2f d6           Function_0x15a4();
- 946:   0c 94 3b 0d     goto Label_0x1a76;
+ 946:   0c 94 3b 0d     goto reset_device;
 
 ; Referenced from offset 0x940 by brne
 Label_0x94a:
@@ -1748,12 +1748,12 @@ Label_0x966:
  966:   08 95           return;
 
  968:   a8 8d           r26 = Memory[[r28:r29]+24];
- 96a:   a0 93 f5 01     _hi8(Copied from 0x1fdc[2]) = r26; ; 0x01f5
+ 96a:   a0 93 f5 01     split_mode_number_a = r26;          ; 0x01f5
  96e:   a4 ef           r26 = 244;                          ; 0xf4
  970:   bd d4           show_Text_on_Display();             ; Parameter r26
  972:   a6 e7           r26 = 118;                          ; 0x76
  974:   a9 8f           Memory[[r28:r29]+25] = r26;
- 976:   a0 91 f6 01     r26 = _lo8(Copied from 0x1fdc[3]); ; 0x01f6
+ 976:   a0 91 f6 01     r26 = split_mode_number_b;          ; 0x01f6
  97a:   a8 8f           Memory[[r28:r29]+24] = r26;
  97c:   b7 d4           show_Text_on_Display();             ; Parameter r26
  97e:   ae e7           r26 = 126;                          ; 0x7e
@@ -1763,7 +1763,7 @@ Label_0x966:
  986:   08 95           return;
 
  988:   a8 8d           r26 = Memory[[r28:r29]+24];
- 98a:   a0 93 f6 01     _lo8(Copied from 0x1fdc[3]) = r26; ; 0x01f6
+ 98a:   a0 93 f6 01     split_mode_number_b = r26;          ; 0x01f6
  98e:   af e7           r26 = 127;                          ; 0x7f
  990:   a8 8f           Memory[[r28:r29]+24] = r26;
  992:   ab 8f           Memory[[r28:r29]+27] = r26;
@@ -1773,7 +1773,7 @@ Label_0x966:
 
  99a:   a8 8d           r26 = Memory[[r28:r29]+24];
  99c:   aa 56           r26 -= 106;                         ; 0x6a, no carry
- 99e:   a0 93 f4 01     _lo8(Copied from 0x1fdc[2]) = r26; ; 0x01f4
+ 99e:   a0 93 f4 01     COMM_POWER_LEVEL = r26;             ; 0x01f4
  9a2:   3c c0           goto CallTable_4;
  9a4:   a4 e6           r26 = 100;                          ; 0x64
  9a6:   a2 d4           show_Text_on_Display();             ; Parameter r26
@@ -1832,14 +1832,14 @@ Label_0x9fc:
 ; Referenced from offset 0x898 by rcall
 ; Referenced from offset 0x9fa by rcall
 CallTable_33:
- 9fe:   d0 93 a4 00     _lo8(Copied from 0x1f9c[18]) = r29; ; 0x00a4
- a02:   d0 93 a4 01     _lo8(Copied from 0x1fa4[14]) = r29; ; 0x01a4
+ 9fe:   d0 93 a4 00     _lo8(unknown[13]) = r29;            ; 0x00a4
+ a02:   d0 93 a4 01     _lo8(unknown[3]) = r29;             ; 0x01a4
  a06:   a7 e2           r26 = 39;                           ; 0x27
- a08:   a0 93 a3 00     _hi8(Copied from 0x1f9c[17]) = r26; ; 0x00a3
- a0c:   a0 93 a3 01     _hi8(Copied from 0x1fa4[13]) = r26; ; 0x01a3
- a10:   a0 91 f8 01     r26 = _lo8(Copied from 0x1fdc[4]); ; 0x01f8
+ a08:   a0 93 a3 00     _hi8(unknown[12]) = r26;            ; 0x00a3
+ a0c:   a0 93 a3 01     _hi8(unknown[2]) = r26;             ; 0x01a3
+ a10:   a0 91 f8 01     r26 = advanced_parameter_ramp_level; ; 0x01f8
  a14:   ac af           Memory[[r28:r29]+60] = r26;
- a16:   a0 93 9c 01     _lo8(Copied from 0x1fa4[10]) = r26; ; 0x019c
+ a16:   a0 93 9c 01     _lo8(unknown[5]) = r26;             ; 0x019c
  a1a:   08 95           return;
 
 
@@ -1854,7 +1854,7 @@ CallTable_4:
  a22:   64 d4           show_Text_on_Display();             ; Parameter r26
  a24:   a5 e0           r26 = 5;                            ; 0x05
  a26:   5a d4           show_Text_on_Display2();            ; Parameter r26
- a28:   a0 91 f3 01     r26 = _hi8(Copied from 0x1fdc[1]); ; 0x01f3
+ a28:   a0 91 f3 01     r26 = current_top_mode;             ; 0x01f3
  a2c:   aa 8f           Memory[[r28:r29]+26] = r26;
  a2e:   a6 e7           r26 = 118;                          ; 0x76
  a30:   a9 8f           Memory[[r28:r29]+25] = r26;
@@ -1994,25 +1994,25 @@ Label_0xadc:
  aea:   c0 f3           if (Carry) goto Label_0xadc;
  aec:   08 95           return;
 
- aee:   e0 91 80 01     r30 = Memory[0x0180];               ; 384
- af2:   f0 91 81 01     r31 = Memory[0x0181];               ; 385
+ aee:   e0 91 80 01     r30 = write_lcd_parameter;          ; 0x0180
+ af2:   f0 91 81 01     r31 = write_lcd_position;           ; 0x0181
  af6:   c0 d3           Function_0x1278();
  af8:   08 95           return;
 
- afa:   e0 91 80 01     r30 = Memory[0x0180];               ; 384
- afe:   f0 91 81 01     r31 = Memory[0x0181];               ; 385
+ afa:   e0 91 80 01     r30 = write_lcd_parameter;          ; 0x0180
+ afe:   f0 91 81 01     r31 = write_lcd_position;           ; 0x0181
  b02:   da d3           Function_0x12b8();
  b04:   08 95           return;
 
- b06:   a0 91 80 01     r26 = Memory[0x0180];               ; 384
+ b06:   a0 91 80 01     r26 = write_lcd_parameter;          ; 0x0180
  b0a:   f0 d3           show_Text_on_Display();             ; Parameter r26
  b0c:   08 95           return;
 
- b0e:   f0 91 80 01     r31 = Memory[0x0180];               ; 384
+ b0e:   f0 91 80 01     r31 = write_lcd_parameter;          ; 0x0180
  b12:   72 d3           Function_0x11f8();
  b14:   08 95           return;
 
- b16:   e0 91 80 01     r30 = Memory[0x0180];               ; 384
+ b16:   e0 91 80 01     r30 = write_lcd_parameter;          ; 0x0180
  b1a:   6e d3           Function_0x11f8();
  b1c:   08 95           return;
 
@@ -2156,7 +2156,7 @@ CallTable_22:
 ; Referenced from offset 0xba4 by breq
 Label_0xbac:
  bac:   a0 38           cmp(r26, 0x80);                     ; 128
- bae:   38 f0           if (Carry) goto Label_0xbbe;
+ bae:   38 f0           if (Carry) goto compare_flash_0x1c3e_to_0;
  bb0:   a0 3c           cmp(r26, 0xc0);                     ; 192
  bb2:   c0 f1           if (Carry) goto Label_0xc24;
  bb4:   a0 3e           cmp(r26, 0xe0);                     ; 224
@@ -2169,7 +2169,7 @@ Label_0xbbc:
  bbc:   6a c0           goto Label_0xc92;
 
 ; Referenced from offset 0xbae by brcs
-Label_0xbbe:
+compare_flash_0x1c3e_to_0:
  bbe:   fc e1           r31 = 28;                           ; 0x1c
  bc0:   ee e3           r30 = 62;                           ; 0x3e
  bc2:   ea 0f           r30 += r26;                         ; No carry
@@ -2403,7 +2403,7 @@ CallTable_30:
  cf2:   2f 93           push    r18
  cf4:   2f 92           push    r2
  cf6:   e8 94           clt
- cf8:   e0 91 85 00     r30 = _hi8(Copied from 0x1f9c[2]); ; 0x0085
+ cf8:   e0 91 85 00     r30 = unknown;                      ; 0x0085
  cfc:   ee 23           (r30 == 0) || (r30 < 0);            ; test r30
  cfe:   09 f4           if (c1 != c2) goto Label_0xd02;
  d00:   a0 c0           goto Label_0xe42;
@@ -2667,7 +2667,7 @@ Label_0xe2e:
 ; Referenced from offset 0xe32 by rjmp
 Label_0xe34:
  e34:   36 f0           if (T == 1) goto Label_0xe42;
- e36:   c0 91 85 00     r28 = _hi8(Copied from 0x1f9c[2]); ; 0x0085
+ e36:   c0 91 85 00     r28 = unknown;                      ; 0x0085
  e3a:   c1 ff           skipif (r28[1])
  e3c:   02 c0           goto Label_0xe42;
  e3e:   68 94           set
@@ -3284,23 +3284,23 @@ USART_RX_Complete:
 1184:   88 71           r24 &= 24;                          ; 0x18
 1186:   e1 f4           if (c1 != c2) goto Label_0x11c0;
 1188:   7c b1           r23 = IO[UDR];
-118a:   80 91 13 02     r24 = Memory[0x0213];               ; 531
+118a:   80 91 13 02     r24 = cipher_key_box;               ; 0x0213
 118e:   78 27           r23 ^= r24;
 1190:   f2 e0           r31 = 2;                            ; 0x02
-1192:   e0 91 f2 01     r30 = _lo8(Copied from 0x1fdc[1]); ; 0x01f2
+1192:   e0 91 f2 01     r30 = unknown[2];                   ; 0x01f2
 1196:   ec 32           cmp(r30, 0x2c);                     ; 44
 1198:   98 f4           if (!Carry) goto Label_0x11c0;
 119a:   71 93           Memory[[r30:r31]++] = r23;
-119c:   e0 93 f2 01     _lo8(Copied from 0x1fdc[1]) = r30; ; 0x01f2
+119c:   e0 93 f2 01     unknown[2] = r30;                   ; 0x01f2
 11a0:   e1 32           cmp(r30, 0x21);                     ; 33
 11a2:   21 f4           if (c1 != c2) goto Label_0x11ac;
 11a4:   72 95           r23 = ((r23 & 0xf0) >> 4) | ((r23 & 0x0f) << 4); ; swap nibbles
 11a6:   7f 70           r23 &= 15;                          ; 0x0f
-11a8:   70 93 12 02     Memory[0x0212] = r23;               ; 530
+11a8:   70 93 12 02     cipher_key_host = r23;              ; 0x0212
 
 ; Referenced from offset 0x11a2 by brne
 Label_0x11ac:
-11ac:   70 91 12 02     r23 = Memory[0x0212];               ; 530
+11ac:   70 91 12 02     r23 = cipher_key_host;              ; 0x0212
 11b0:   7f 5d           r23 -= 223;                         ; 0xdf, no carry
 11b2:   e7 17           cmp(r30, r23);
 11b4:   08 f0           if (Carry) goto Label_0x11b8;
@@ -3679,7 +3679,7 @@ Label_0x1356:
 ; Referenced from offset 0x1630 by rcall
 ; Referenced from offset 0x1714 by rcall
 ; Referenced from offset 0x1a98 by rcall
-Function_0x1362:
+delay                   Parameter r30:
 1362:   af 93           push    r26
 1364:   bf 93           push    r27
 1366:   bb 27           r27 = 0x00;                         ; 0
@@ -4043,8 +4043,8 @@ Function_0x1502:
 150e:   a0 93 00 05     Memory[0x0500] = r26;               ; 1280
 1512:   78 94           Enable_Interrupts();
 1514:   59 de           Function_0x11c8();
-1516:   1a d0           copy_flash_to_memory_0x80_0x188();
-1518:   3b d0           copy_flash_to_memory_0x1f0();
+1516:   1a d0           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29    CallTable_24();
+1518:   3b d0           copy_flash_0x1fdc_to_memory_0x01f0();
 151a:   ce d0           unknown();                          ; Parameter r28:r29
 151c:   f8 94           Disable_Interrupts();
 151e:   af e0           r26 = 15;                           ; 0x0f
@@ -4060,8 +4060,8 @@ Function_0x1502:
 1532:   78 94           Enable_Interrupts();
 1534:   a1 e0           r26 = 1;                            ; 0x01
 1536:   ad 87           Memory[[r28:r29]+13] = r26;
-1538:   09 d0           copy_flash_to_memory_0x80_0x188();
-153a:   1f d0           CallTable_28();
+1538:   09 d0           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29    CallTable_24();
+153a:   1f d0           copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3         CallTable_28();
 153c:   af ef           r26 = 0xff;                         ; 255
 153e:   a8 8b           Memory[[r28:r29]+16] = r26;
 1540:   a9 8b           Memory[[r28:r29]+17] = r26;
@@ -4073,7 +4073,7 @@ Function_0x1502:
 ; Referenced from offset 0x606 by rcall
 ; Referenced from offset 0x1516 by rcall
 ; Referenced from offset 0x1538 by rcall
-copy_flash_to_memory_0x80_0x188:
+copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29    CallTable_24:
 154c:   ec e9           r30 = 156;                          ; 0x9c
 154e:   ff e1           r31 = 31;                           ; 0x1f
 1550:   bb 27           r27 = 0x00;                         ; 0
@@ -4106,8 +4106,8 @@ Label_0x1566:
 
 
 ; Referenced from offset 0x153a by rcall
-CallTable_28:
-157a:   0a d0           copy_flash_to_memory_0x1f0();
+copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3         CallTable_28:
+157a:   0a d0           copy_flash_0x1fdc_to_memory_0x01f0();
 157c:   e3 ef           r30 = 243;                          ; 0xf3
 157e:   f1 e0           r31 = 1;                            ; 0x01
 1580:   a8 e0           r26 = 8;                            ; 0x08
@@ -4129,7 +4129,7 @@ Label_0x1584:
 ; Referenced from offset 0x17da by rcall
 ; Referenced from offset 0x17e4 by rcall
 ; Referenced from offset 0x1896 by rcall
-copy_flash_to_memory_0x1f0:
+copy_flash_0x1fdc_to_memory_0x01f0:
 1590:   a0 ef           r26 = 240;                          ; 0xf0
 1592:   b1 e0           r27 = 1;                            ; 0x01
 1594:   ec ed           r30 = 220;                          ; 0xdc
@@ -4181,7 +4181,7 @@ Function_0x15b8:
 
 ; Referenced from offset 0x15ec by rjmp
 Label_0x15c4:
-15c4:   a0 91 f4 01     r26 = _lo8(Copied from 0x1fdc[2]); ; 0x01f4
+15c4:   a0 91 f4 01     r26 = COMM_POWER_LEVEL;             ; 0x01f4
 15c8:   a4 30           cmp(r26, 0x04);                     ; 4
 15ca:   b0 f4           if (!Carry) goto Label_0x15f8;
 15cc:   f5 e0           r31 = 5;                            ; 0x05
@@ -4189,7 +4189,7 @@ Label_0x15c4:
 15d0:   dd de           Function_0x138c();
 15d2:   e2 0d           r30 += r2;                          ; No carry
 15d4:   f2 2f           r31 = r18;
-15d6:   c5 de           Function_0x1362();
+15d6:   c5 de           delay                   Parameter r30();
 15d8:   a8 e0           r26 = 8;                            ; 0x08
 15da:   0f df           Function_0x13fa();
 15dc:   00 20           (r0 == 0) || (r0 < 0);              ; test r0
@@ -4224,7 +4224,7 @@ Function_0x15fc:
 
 ; Referenced from offset 0x1602 by breq
 Label_0x1608:
-1608:   a0 91 f0 01     r26 = _lo8(Copied from 0x1fdc[0]); ; 0x01f0
+1608:   a0 91 f0 01     r26 = unknown[0];                   ; 0x01f0
 160c:   b1 e0           r27 = 1;                            ; 0x01
 160e:   ed 93           Memory[[r26:r27]++] = r30;
 1610:   a0 3d           cmp(r26, 0xd0);                     ; 208
@@ -4233,7 +4233,7 @@ Label_0x1608:
 
 ; Referenced from offset 0x1612 by brcs
 Label_0x1616:
-1616:   a0 93 f0 01     _lo8(Copied from 0x1fdc[0]) = r26; ; 0x01f0
+1616:   a0 93 f0 01     unknown[0] = r26;                   ; 0x01f0
 161a:   ee 27           r30 = 0x00;                         ; 0
 161c:   ff 27           r31 = 0x00;                         ; 0
 161e:   a0 ed           r26 = 208;                          ; 0xd0
@@ -4248,7 +4248,7 @@ Label_0x1620:
 162a:   a4 e0           r26 = 4;                            ; 0x04
 162c:   e6 de           Function_0x13fa();
 162e:   f0 e3           r31 = 48;                           ; 0x30
-1630:   98 de           Function_0x1362();
+1630:   98 de           delay                   Parameter r30();
 1632:   a4 e0           r26 = 4;                            ; 0x04
 1634:   e2 de           Function_0x13fa();
 1636:   ff 23           (r31 == 0) || (r31 < 0);            ; test r31
@@ -4267,7 +4267,7 @@ Label_0x163e:
 1644:   af a1           r26 = Memory[[r28:r29]+39];
 1646:   04 d0           Function_0x1650();
 1648:   f0 fe           skipif (r15[0])
-164a:   e0 93 0d 02     Memory[0x020d] = r30;               ; 525
+164a:   e0 93 0d 02     current_multi_adjust_value = r30;   ; 0x020d
 164e:   08 95           return;
 
 
@@ -4342,12 +4342,12 @@ Label_0x16a2:
 ; Referenced from offset 0x16aa by brne
 Label_0x16a4:
 16a4:   af ef           r26 = 0xff;                         ; 255
-16a6:   cb d0           Function_0x183e();
+16a6:   cb d0           delay();                            ; Parameter r26
 16a8:   2a 95           r18--;
 16aa:   e1 f7           if (c1 != c2) goto Label_0x16a4;
 16ac:   d2 bb           IO[PORTD] = r29;
 16ae:   a4 e0           r26 = 4;                            ; 0x04
-16b0:   c6 d0           Function_0x183e();
+16b0:   c6 d0           delay();                            ; Parameter r26
 16b2:   a0 ee           r26 = 224;                          ; 0xe0
 16b4:   a2 bb           IO[PORTD] = r26;
 16b6:   f5 cf           goto Label_0x16a2;
@@ -4421,7 +4421,7 @@ Label_0x170e:
 170e:   e3 31           cmp(r30, 0x13);                     ; 19
 1710:   18 f4           if (!Carry) goto Label_0x1718;
 1712:   fe e0           r31 = 14;                           ; 0x0e
-1714:   26 de           Function_0x1362();
+1714:   26 de           delay                   Parameter r30();
 1716:   01 c0           goto Label_0x171a;
 
 ; Referenced from offset 0x1710 by brcc
@@ -4434,7 +4434,7 @@ Label_0x171a:
 171e:   a0 e1           r26 = 16;                           ; 0x10
 1720:   a2 bb           IO[PORTD] = r26;
 1722:   71 de           Function_0x1406();
-1724:   9d d1           Function_0x1a60();
+1724:   9d d1           lcd_putchar();                      ; Parameter r29
 1726:   b1 3c           cmp(r27, 0xc1);                     ; 193
 1728:   39 f0           if (c1 == c2) goto Label_0x1738;
 172a:   a1 e0           r26 = 1;                            ; 0x01
@@ -4450,7 +4450,7 @@ Label_0x171a:
 Label_0x1738:
 1738:   91 9a           IO[PORTD[1]] = true;                ; 0x02 = 2
 173a:   a2 e0           r26 = 2;                            ; 0x02
-173c:   80 d0           Function_0x183e();
+173c:   80 d0           delay();                            ; Parameter r26
 173e:   80 9b           skipif (IO[PIND[0]])                ; 0x01 = 1
 1740:   30 c0           goto Label_0x17a2;
 
@@ -4458,13 +4458,13 @@ Label_0x1738:
 Function_0x1742:
 1742:   91 98           IO[PORTD[1]] = false;               ; 0x02 = 2
 1744:   a2 e0           r26 = 2;                            ; 0x02
-1746:   7b d0           Function_0x183e();
+1746:   7b d0           delay();                            ; Parameter r26
 1748:   80 99           skipif (!IO[PIND[0]])               ; 0x01 = 1
 174a:   2b c0           goto Label_0x17a2;
 
 ; Referenced from offset 0x17a0 by rjmp
 Label_0x174c:
-174c:   89 d1           Function_0x1a60();
+174c:   89 d1           lcd_putchar();                      ; Parameter r29
 174e:   b1 3a           cmp(r27, 0xa1);                     ; 161
 1750:   41 f1           if (c1 == c2) goto Label_0x17a2;
 1752:   e8 b3           r30 = IO[PORTB];
@@ -4508,7 +4508,7 @@ Function_0x176a:
 1798:   0f df           Function_0x15b8();
 179a:   7d de           Function_0x1496();
 179c:   aa e0           r26 = 10;                           ; 0x0a
-179e:   4f d0           Function_0x183e();
+179e:   4f d0           delay();                            ; Parameter r26
 17a0:   d5 cf           goto Label_0x174c;
 
 ; Referenced from offset 0x1740 by rjmp
@@ -4546,15 +4546,15 @@ Label_0x17ba:
 17d4:   0e d1           Function_0x19f2();
 17d6:   a7 e0           r26 = 7;                            ; 0x07
 17d8:   0c d1           Function_0x19f2();
-17da:   da de           copy_flash_to_memory_0x1f0();
+17da:   da de           copy_flash_0x1fdc_to_memory_0x01f0();
 17dc:   e3 de           Function_0x15a4();
 
 ; Referenced from offset 0x1736 by rjmp
 Label_0x17de:
-17de:   40 d1           Function_0x1a60();
+17de:   40 d1           lcd_putchar();                      ; Parameter r29
 17e0:   b1 3a           cmp(r27, 0xa1);                     ; 161
 17e2:   11 f4           if (c1 != c2) goto Label_0x17e8;
-17e4:   d5 de           copy_flash_to_memory_0x1f0();
+17e4:   d5 de           copy_flash_0x1fdc_to_memory_0x01f0();
 17e6:   de de           Function_0x15a4();
 
 ; Referenced from offset 0x17e2 by brne
@@ -4573,7 +4573,7 @@ Label_0x17f2:
 ; Referenced from offset 0x230e by rjmp
 Label_0x17f6:
 17f6:   a6 e0           r26 = 6;                            ; 0x06
-17f8:   22 d0           Function_0x183e();
+17f8:   22 d0           delay();                            ; Parameter r26
 17fa:   f3 95           r31++;
 17fc:   f0 35           cmp(r31, 0x50);                     ; 80
 17fe:   c8 f3           if (Carry) goto Label_0x17f2;
@@ -4591,7 +4591,7 @@ Label_0x1812:
 1812:   a1 e0           r26 = 1;                            ; 0x01
 1814:   63 dd           show_Text_on_Display2();            ; Parameter r26
 1816:   af e7           r26 = 127;                          ; 0x7f
-1818:   12 d0           Function_0x183e();
+1818:   12 d0           delay();                            ; Parameter r26
 181a:   a0 91 15 02     r26 = Memory[0x0215];               ; 533
 181e:   a1 70           r26 &= 1;                           ; 0x01
 1820:   59 f0           if (c1 == c2) goto Label_0x1838;
@@ -4620,7 +4620,7 @@ Label_0x1838:
 ; Referenced from offset 0x179e by rcall
 ; Referenced from offset 0x17f8 by rcall
 ; Referenced from offset 0x1818 by rcall
-Function_0x183e:
+delay:     ; Parameter r26
 183e:   bf 93           push    r27
 1840:   cf 93           push    r28
 
@@ -4656,7 +4656,7 @@ Function_0x1858:
 1864:   c1 91           r28 = Memory[[r30:r31]++];
 1866:   0c 2e           r0 = r28;
 1868:   cf 70           r28 &= 15;                          ; 0x0f
-186a:   b0 91 12 02     r27 = Memory[0x0212];               ; 530
+186a:   b0 91 12 02     r27 = cipher_key_host;              ; 0x0212
 186e:   bb 23           (r27 == 0) || (r27 < 0);            ; test r27
 1870:   31 f5           if (c1 != c2) goto Label_0x18be;
 1872:   c6 30           cmp(r28, 0x06);                     ; 6
@@ -4687,7 +4687,7 @@ Label_0x187e:
 ; Referenced from offset 0x1880 by brne
 ; Referenced from offset 0x247c by rcall
 Function_0x1896:
-1896:   7c de           copy_flash_to_memory_0x1f0();
+1896:   7c de           copy_flash_0x1fdc_to_memory_0x01f0();
 1898:   74 c0           goto Label_0x1982;
 189a:   01 fe           skipif (r0[1])
 189c:   06 c0           goto Label_0x18aa;
@@ -4745,7 +4745,7 @@ Label_0x18dc:
 18e6:   bc 27           r27 ^= r28;
 18e8:   bb 23           (r27 == 0) || (r27 < 0);            ; test r27
 18ea:   c1 f3           if (c1 == c2) goto Label_0x18dc;
-18ec:   b0 93 13 02     Memory[0x0213] = r27;               ; 531
+18ec:   b0 93 13 02     cipher_key_box = r27;               ; 0x0213
 18f0:   8a d0           Function_0x1a06();
 18f2:   af 5d           r26 -= 223;                         ; 0xdf, no carry
 18f4:   88 d0           Function_0x1a06();
@@ -4759,7 +4759,7 @@ Label_0x18f8:
 18fe:   b0 81           r27 = Memory[r30:r31];
 1900:   ba 3a           cmp(r27, 0xaa);                     ; 170
 1902:   09 f4           if (c1 != c2) goto Label_0x1906;
-1904:   b8 c0           goto Label_0x1a76;
+1904:   b8 c0           goto reset_device;
 
 ; Referenced from offset 0x1902 by brne
 Label_0x1906:
@@ -4824,7 +4824,7 @@ Label_0x1940:
 Function_0x194a:
 194a:   aa 30           cmp(r26, 0x0a);                     ; 10
 194c:   29 f0           if (c1 == c2) goto Label_0x1958;
-194e:   c0 91 13 02     r28 = Memory[0x0213];               ; 531
+194e:   c0 91 13 02     r28 = cipher_key_box;               ; 0x0213
 1952:   cc 23           (r28 == 0) || (r28 < 0);            ; test r28
 1954:   09 f4           if (c1 != c2) goto Label_0x1958;
 1956:   1c c0           goto Label_0x1990;
@@ -4877,7 +4877,7 @@ Label_0x197e:
 Label_0x1982:
 1982:   1f 79           r17 &= 159;                         ; 0x9f
 1984:   a0 e2           r26 = 32;                           ; 0x20
-1986:   a0 93 f2 01     _lo8(Copied from 0x1fdc[1]) = r26; ; 0x01f2
+1986:   a0 93 f2 01     unknown[2] = r26;                   ; 0x01f2
 198a:   cf 91           pop     r28
 198c:   c4 98           IO[PORTB[4]] = false;               ; 0x10 = 16
 198e:   08 95           return;
@@ -4914,7 +4914,7 @@ Label_0x19aa:
 19b0:   08 95           return;
 
 19b2:   af 93           push    r26
-19b4:   a0 91 13 02     r26 = Memory[0x0213];               ; 531
+19b4:   a0 91 13 02     r26 = cipher_key_box;               ; 0x0213
 19b8:   ca 27           r28 ^= r26;
 19ba:   ac 2f           r26 = r28;
 19bc:   a1 71           r26 &= 17;                          ; 0x11
@@ -5011,10 +5011,10 @@ Label_0x19fc:
 Function_0x1a06:
 1a06:   ef 93           push    r30
 1a08:   ff 93           push    r31
-1a0a:   e0 91 14 02     r30 = Memory[0x0214];               ; 532
+1a0a:   e0 91 14 02     r30 = unknown;                      ; 0x0214
 1a0e:   ea 0f           r30 += r26;                         ; No carry
-1a10:   e0 93 14 02     Memory[0x0214] = r30;               ; 532
-1a14:   e0 91 f1 01     r30 = _hi8(Copied from 0x1fdc[0]); ; 0x01f1
+1a10:   e0 93 14 02     unknown = r30;                      ; 0x0214
+1a14:   e0 91 f1 01     r30 = unknown[1];                   ; 0x01f1
 1a18:   e8 33           cmp(r30, 0x38);                     ; 56
 1a1a:   10 f0           if (Carry) goto Label_0x1a20;
 1a1c:   a8 e4           r26 = 72;                           ; 0x48
@@ -5024,7 +5024,7 @@ Function_0x1a06:
 Label_0x1a20:
 1a20:   f2 e0           r31 = 2;                            ; 0x02
 1a22:   a1 93           Memory[[r30:r31]++] = r26;
-1a24:   e0 93 f1 01     _hi8(Copied from 0x1fdc[0]) = r30; ; 0x01f1
+1a24:   e0 93 f1 01     unknown[1] = r30;                   ; 0x01f1
 1a28:   ff 91           pop     r31
 1a2a:   ef 91           pop     r30
 1a2c:   08 95           return;
@@ -5042,9 +5042,9 @@ receive_from_USART:
 1a38:   c4 9a           IO[PORTB[4]] = true;                ; 0x10 = 16
 1a3a:   ac b9           IO[UDR] = r26;
 1a3c:   c4 98           IO[PORTB[4]] = false;               ; 0x10 = 16
-1a3e:   a0 91 f1 01     r26 = _hi8(Copied from 0x1fdc[0]); ; 0x01f1
+1a3e:   a0 91 f1 01     r26 = unknown[1];                   ; 0x01f1
 1a42:   aa 95           r26--;
-1a44:   a0 93 f1 01     _hi8(Copied from 0x1fdc[0]) = r26; ; 0x01f1
+1a44:   a0 93 f1 01     unknown[1] = r26;                   ; 0x01f1
 1a48:   ad 32           cmp(r26, 0x2d);                     ; 45
 1a4a:   08 f4           if (!Carry) goto Label_0x1a4e;
 1a4c:   08 95           return;
@@ -5072,7 +5072,7 @@ Label_0x1a5e:
 ; Referenced from offset 0x1724 by rcall
 ; Referenced from offset 0x174c by rcall
 ; Referenced from offset 0x17de by rcall
-Function_0x1a60:
+lcd_putchar:     ; Parameter r29
 1a60:   a1 ef           r26 = 241;                          ; 0xf1
 1a62:   a5 bb           IO[PORTC] = r26;
 1a64:   af e0           r26 = 15;                           ; 0x0f
@@ -5088,13 +5088,13 @@ Function_0x1a60:
 
 ; Referenced from offset 0x946 by jmp
 ; Referenced from offset 0x1904 by rjmp
-Label_0x1a76:
+reset_device:
 1a76:   f8 94           Disable_Interrupts();
 1a78:   d8 bb           IO[PORTB] = r29;
 1a7a:   15 cd           goto RESET;
 
 ; Referenced from offset 0x30e by call
-Function_0x1a7c:
+unknown             Parameters r9,r8,r7:
 1a7c:   e8 94           clt
 1a7e:   aa 27           r26 = 0x00;                         ; 0
 1a80:   b8 2d           r27 = r8;
@@ -5121,7 +5121,7 @@ Label_0x1a92:
 
 ; Referenced from offset 0x1a94 by brcs
 Label_0x1a98:
-1a98:   64 dc           Function_0x1362();
+1a98:   64 dc           delay                   Parameter r30();
 1a9a:   00 24           r0 = 0x00;                          ; 0
 1a9c:   22 24           r2 = 0x00;                          ; 0
 1a9e:   20 e1           r18 = 16;                           ; 0x10
@@ -5156,7 +5156,7 @@ Label_0x1ab8:
 1ac6:   29 e1           r18 = 25;                           ; 0x19
 1ac8:   e2 0f           r30 += r18;                         ; No carry
 1aca:   fd 1f           r31 += r29;                         ; With carry
-1acc:   96 f0           if (T == 1) goto Function_0x1af2;
+1acc:   96 f0           if (T == 1) goto store_z_pointer_at_0x020e_and_move_r13_to_r2_and_set_r18_to_negative_r30;
 1ace:   e0 93 09 02     Memory[0x0209] = r30;               ; 521
 1ad2:   f0 93 0a 02     Memory[0x020a] = r31;               ; 522
 1ad6:   22 27           r18 = 0x00;                         ; 0
@@ -5174,7 +5174,7 @@ Label_0x1ab8:
 
 ; Referenced from offset 0x1acc by brts
 ; Referenced from offset 0x28a0 by rcall
-Function_0x1af2:
+store_z_pointer_at_0x020e_and_move_r13_to_r2_and_set_r18_to_negative_r30:
 1af2:   e0 93 0e 02     Memory[0x020e] = r30;               ; 526
 1af6:   f0 93 0f 02     Memory[0x020f] = r31;               ; 527
 1afa:   22 27           r18 = 0x00;                         ; 0
@@ -5182,7 +5182,7 @@ Function_0x1af2:
 1afe:   2e 1b           r18 -= r30;                         ; No carry
 
 ; Referenced from offset 0x21d4 by rcall
-Function_0x1b00:
+subtract_r31_from_r2_save_r18_at_memory_0x0210_and_r2_at_memory_0x0211:
 1b00:   2f 0a           r2 += r31;                          ; With carry
 1b02:   20 93 10 02     Memory[0x0210] = r18;               ; 528
 1b06:   20 92 11 02     Memory[0x0211] = r2;                ; 529
@@ -5288,34 +5288,34 @@ String_0x1b10_Unknown_3:    ; Address 0x1be2 (7138)
 .word 0xffff
 
 ; Inline PGM data: 1 string starting at 0x1cc8 (Shut Off Power!!)
-String_0x1cc8_Shut_Off_Power____0:    ; Address 0x1cc8 (7368)
+String_0x1cc8_Shut_Off_Power___0:    ; Address 0x1cc8 (7368)
 .ascii "Shut Off Power!!"
 
 ; Inline PGM data: 1 string starting at 0x1cd8 (SelfTest OK V1.6)
-String_0x1cd8_SelfTest_OK_V1_6__0:    ; Address 0x1cd8 (7384)
+String_0x1cd8_SelfTest_OK_V1_6_0:    ; Address 0x1cd8 (7384)
 .ascii "SelfTest OK V1.6"
 
 ; Inline PGM data: 1 string starting at 0x1ce8 (Copyright)
-String_0x1ce8_Copyright__0:    ; Address 0x1ce8 (7400)
+String_0x1ce8_Copyright_0:    ; Address 0x1ce8 (7400)
 .ascii "(c) '04 Eros Tek"
 
 ; Inline PGM data: 1 string starting at 0x1cf8 (Product Name)
-String_0x1cf8_Product_Name__0:    ; Address 0x1cf8 (7416)
+String_0x1cf8_Product_Name_0:    ; Address 0x1cf8 (7416)
 .ascii "Eros Tek ET-312 "
 
 ; Inline PGM data: 1 string starting at 0x1d08 (Press any key)
-String_0x1d08_Press_any_key__0:    ; Address 0x1d08 (7432)
+String_0x1d08_Press_any_key_0:    ; Address 0x1d08 (7432)
 .ascii "Press Any Key..."
 
 ; Inline PGM data: 1 string starting at 0x1d18 (Selects Mode)
-String_0x1d18_Selects_Mode__0:    ; Address 0x1d18 (7448)
+String_0x1d18_Selects_Mode_0:    ; Address 0x1d18 (7448)
 .byte 0xb3
 .ascii " "
 .byte 0xb4
 .ascii " Selects Mode"
 
 ; Inline PGM data: 1 string starting at 0x1d28 (Press or OK)
-String_0x1d28_Press_or_OK__0:    ; Address 0x1d28 (7464)
+String_0x1d28_Press_or_OK_0:    ; Address 0x1d28 (7464)
 .ascii "Press "
 .byte 0xb3
 .ascii " "
@@ -5323,270 +5323,270 @@ String_0x1d28_Press_or_OK__0:    ; Address 0x1d28 (7464)
 .ascii " or OK "
 
 ; Inline PGM data: 1 string starting at 0x1d38 (Start Ramp Up)
-String_0x1d38_Start_Ramp_Up__0:    ; Address 0x1d38 (7480)
+String_0x1d38_Start_Ramp_Up_0:    ; Address 0x1d38 (7480)
 .ascii "Start Ramp Up?  "
 
 ; Inline PGM data: 1 string starting at 0x1d48 (Set Split Mode)
-String_0x1d48_Set_Split_Mode__0:    ; Address 0x1d48 (7496)
+String_0x1d48_Set_Split_Mode_0:    ; Address 0x1d48 (7496)
 .ascii "Set Split Mode? "
 
 ; Inline PGM data: 1 string starting at 0x1d58 (Set As Favorite)
-String_0x1d58_Set_As_Favorite__0:    ; Address 0x1d58 (7512)
+String_0x1d58_Set_As_Favorite_0:    ; Address 0x1d58 (7512)
 .ascii "Set As Favorite?"
 
 ; Inline PGM data: 1 string starting at 0x1d68 (Set Pwr Level)
-String_0x1d68_Set_Pwr_Level__0:    ; Address 0x1d68 (7528)
+String_0x1d68_Set_Pwr_Level_0:    ; Address 0x1d68 (7528)
 .ascii "Set Pwr Level?  "
 
 ; Inline PGM data: 1 string starting at 0x1d78 (Link Slave Unit)
-String_0x1d78_Link_Slave_Unit__0:    ; Address 0x1d78 (7544)
+String_0x1d78_Link_Slave_Unit_0:    ; Address 0x1d78 (7544)
 .ascii "Link Slave Unit?"
 
 ; Inline PGM data: 1 string starting at 0x1d88 (Save Settings)
-String_0x1d88_Save_Settings__0:    ; Address 0x1d88 (7560)
+String_0x1d88_Save_Settings_0:    ; Address 0x1d88 (7560)
 .ascii "Save Settings?  "
 
 ; Inline PGM data: 1 string starting at 0x1d98 (Reset Settings)
-String_0x1d98_Reset_Settings__0:    ; Address 0x1d98 (7576)
+String_0x1d98_Reset_Settings_0:    ; Address 0x1d98 (7576)
 .ascii "Reset Settings? "
 
 ; Inline PGM data: 1 string starting at 0x1da8 (Adjust Advanced)
-String_0x1da8_Adjust_Advanced__0:    ; Address 0x1da8 (7592)
+String_0x1da8_Adjust_Advanced_0:    ; Address 0x1da8 (7592)
 .ascii "Adjust Advanced?"
 
 ; Inline PGM data: 1 string starting at 0x1db8 (Ramp Mode)
-String_0x1db8_Ramp_Mode__0:    ; Address 0x1db8 (7608)
+String_0x1db8_Ramp_Mode_0:    ; Address 0x1db8 (7608)
 .ascii "Ramp:    "
 .byte 0xb3
 .byte 0xb4
 .ascii "=Mode"
 
 ; Inline PGM data: 1 string starting at 0x1dc8 (Space16)
-String_0x1dc8_Space16__0:    ; Address 0x1dc8 (7624)
+String_0x1dc8_Space16_0:    ; Address 0x1dc8 (7624)
 .ascii "                "
 
 ; Inline PGM data: 1 string starting at 0x1dd8 (Space8)
-String_0x1dd8_Space8__0:    ; Address 0x1dd8 (7640)
+String_0x1dd8_Space8_0:    ; Address 0x1dd8 (7640)
 .ascii "        "
 
 ; Inline PGM data: 1 string starting at 0x1de0 (Select)
-String_0x1de0_Select__0:    ; Address 0x1de0 (7648)
+String_0x1de0_Select_0:    ; Address 0x1de0 (7648)
 .ascii "Select: "
 
 ; Inline PGM data: 1 string starting at 0x1de8 (Battery)
-String_0x1de8_Battery__0:    ; Address 0x1de8 (7656)
+String_0x1de8_Battery_0:    ; Address 0x1de8 (7656)
 .ascii "Battery:"
 
 ; Inline PGM data: 1 string starting at 0x1df0 (Failure)
-String_0x1df0_Failure__0:    ; Address 0x1df0 (7664)
+String_0x1df0_Failure_0:    ; Address 0x1df0 (7664)
 .ascii "Failure "
 
 ; Inline PGM data: 1 string starting at 0x1df8 (Pwr Lev)
-String_0x1df8_Pwr_Lev__0:    ; Address 0x1df8 (7672)
+String_0x1df8_Pwr_Lev_0:    ; Address 0x1df8 (7672)
 .ascii "Pwr Lev:"
 
 ; Inline PGM data: 1 string starting at 0x1e00 (Adjust)
-String_0x1e00_Adjust__0:    ; Address 0x1e00 (7680)
+String_0x1e00_Adjust_0:    ; Address 0x1e00 (7680)
 .ascii " Adjust?"
 
 ; Inline PGM data: 1 string starting at 0x1e08 (Menus)
-String_0x1e08_Menus__0:    ; Address 0x1e08 (7688)
+String_0x1e08_Menus_0:    ; Address 0x1e08 (7688)
 .ascii "Menus:  "
 
 ; Inline PGM data: 1 string starting at 0x1e10 (Low)
-String_0x1e10_Low__0:    ; Address 0x1e10 (7696)
+String_0x1e10_Low_0:    ; Address 0x1e10 (7696)
 .ascii " Low    "
 
 ; Inline PGM data: 1 string starting at 0x1e18 (Normal)
-String_0x1e18_Normal__0:    ; Address 0x1e18 (7704)
+String_0x1e18_Normal_0:    ; Address 0x1e18 (7704)
 .ascii " Normal "
 
 ; Inline PGM data: 1 string starting at 0x1e20 (High)
-String_0x1e20_High__0:    ; Address 0x1e20 (7712)
+String_0x1e20_High_0:    ; Address 0x1e20 (7712)
 .ascii " High   "
 
 ; Inline PGM data: 1 string starting at 0x1e28 (RampLevl)
-String_0x1e28_RampLevl__0:    ; Address 0x1e28 (7720)
+String_0x1e28_RampLevl_0:    ; Address 0x1e28 (7720)
 .ascii "RampLevl"
 
 ; Inline PGM data: 1 string starting at 0x1e30 (RampTime)
-String_0x1e30_RampTime__0:    ; Address 0x1e30 (7728)
+String_0x1e30_RampTime_0:    ; Address 0x1e30 (7728)
 .ascii "RampTime"
 
 ; Inline PGM data: 1 string starting at 0x1e38 (Depth)
-String_0x1e38_Depth__0:    ; Address 0x1e38 (7736)
+String_0x1e38_Depth_0:    ; Address 0x1e38 (7736)
 .ascii "   Depth"
 
 ; Inline PGM data: 1 string starting at 0x1e40 (Tempo)
-String_0x1e40_Tempo__0:    ; Address 0x1e40 (7744)
+String_0x1e40_Tempo_0:    ; Address 0x1e40 (7744)
 .ascii "   Tempo"
 
 ; Inline PGM data: 1 string starting at 0x1e48 (Freq)
-String_0x1e48_Freq__0:    ; Address 0x1e48 (7752)
+String_0x1e48_Freq_0:    ; Address 0x1e48 (7752)
 .ascii "   Freq."
 
 ; Inline PGM data: 1 string starting at 0x1e50 (Effect)
-String_0x1e50_Effect__0:    ; Address 0x1e50 (7760)
+String_0x1e50_Effect_0:    ; Address 0x1e50 (7760)
 .ascii "  Effect"
 
 ; Inline PGM data: 1 string starting at 0x1e58 (Width)
-String_0x1e58_Width__0:    ; Address 0x1e58 (7768)
+String_0x1e58_Width_0:    ; Address 0x1e58 (7768)
 .ascii "   Width"
 
 ; Inline PGM data: 1 string starting at 0x1e60 (Pace)
-String_0x1e60_Pace__0:    ; Address 0x1e60 (7776)
+String_0x1e60_Pace_0:    ; Address 0x1e60 (7776)
 .ascii "    Pace"
 
 ; Inline PGM data: 1 string starting at 0x1e68 (Waves)
-String_0x1e68_Waves__0:    ; Address 0x1e68 (7784)
+String_0x1e68_Waves_0:    ; Address 0x1e68 (7784)
 .ascii " Waves  "
 
 ; Inline PGM data: 1 string starting at 0x1e70 (Stroke)
-String_0x1e70_Stroke__0:    ; Address 0x1e70 (7792)
+String_0x1e70_Stroke_0:    ; Address 0x1e70 (7792)
 .ascii " Stroke "
 
 ; Inline PGM data: 1 string starting at 0x1e78 (Climb)
-String_0x1e78_Climb__0:    ; Address 0x1e78 (7800)
+String_0x1e78_Climb_0:    ; Address 0x1e78 (7800)
 .ascii " Climb  "
 
 ; Inline PGM data: 1 string starting at 0x1e80 (Combo)
-String_0x1e80_Combo__0:    ; Address 0x1e80 (7808)
+String_0x1e80_Combo_0:    ; Address 0x1e80 (7808)
 .ascii " Combo  "
 
 ; Inline PGM data: 1 string starting at 0x1e88 (Intense)
-String_0x1e88_Intense__0:    ; Address 0x1e88 (7816)
+String_0x1e88_Intense_0:    ; Address 0x1e88 (7816)
 .ascii " Intense"
 
 ; Inline PGM data: 1 string starting at 0x1e90 (Rhythm)
-String_0x1e90_Rhythm__0:    ; Address 0x1e90 (7824)
+String_0x1e90_Rhythm_0:    ; Address 0x1e90 (7824)
 .ascii " Rhythm "
 
 ; Inline PGM data: 1 string starting at 0x1e98 (Audio1)
-String_0x1e98_Audio1__0:    ; Address 0x1e98 (7832)
+String_0x1e98_Audio1_0:    ; Address 0x1e98 (7832)
 .ascii " Audio 1"
 
 ; Inline PGM data: 1 string starting at 0x1ea0 (Audio2)
-String_0x1ea0_Audio2__0:    ; Address 0x1ea0 (7840)
+String_0x1ea0_Audio2_0:    ; Address 0x1ea0 (7840)
 .ascii " Audio 2"
 
 ; Inline PGM data: 1 string starting at 0x1ea8 (Audio3)
-String_0x1ea8_Audio3__0:    ; Address 0x1ea8 (7848)
+String_0x1ea8_Audio3_0:    ; Address 0x1ea8 (7848)
 .ascii " Audio 3"
 
 ; Inline PGM data: 1 string starting at 0x1eb0 (Split)
-String_0x1eb0_Split__0:    ; Address 0x1eb0 (7856)
+String_0x1eb0_Split_0:    ; Address 0x1eb0 (7856)
 .ascii " Split  "
 
 ; Inline PGM data: 1 string starting at 0x1eb8 (Random1)
-String_0x1eb8_Random1__0:    ; Address 0x1eb8 (7864)
+String_0x1eb8_Random1_0:    ; Address 0x1eb8 (7864)
 .ascii " Random1"
 
 ; Inline PGM data: 1 string starting at 0x1ec0 (Random2)
-String_0x1ec0_Random2__0:    ; Address 0x1ec0 (7872)
+String_0x1ec0_Random2_0:    ; Address 0x1ec0 (7872)
 .ascii " Random2"
 
 ; Inline PGM data: 1 string starting at 0x1ec8 (Toggle)
-String_0x1ec8_Toggle__0:    ; Address 0x1ec8 (7880)
+String_0x1ec8_Toggle_0:    ; Address 0x1ec8 (7880)
 .ascii " Toggle "
 
 ; Inline PGM data: 1 string starting at 0x1ed0 (Orgasm)
-String_0x1ed0_Orgasm__0:    ; Address 0x1ed0 (7888)
+String_0x1ed0_Orgasm_0:    ; Address 0x1ed0 (7888)
 .ascii " Orgasm "
 
 ; Inline PGM data: 1 string starting at 0x1ed8 (Torment)
-String_0x1ed8_Torment__0:    ; Address 0x1ed8 (7896)
+String_0x1ed8_Torment_0:    ; Address 0x1ed8 (7896)
 .ascii " Torment"
 
 ; Inline PGM data: 1 string starting at 0x1ee0 (Phase1)
-String_0x1ee0_Phase1__0:    ; Address 0x1ee0 (7904)
+String_0x1ee0_Phase1_0:    ; Address 0x1ee0 (7904)
 .ascii " Phase 1"
 
 ; Inline PGM data: 1 string starting at 0x1ee8 (Phase2)
-String_0x1ee8_Phase2__0:    ; Address 0x1ee8 (7912)
+String_0x1ee8_Phase2_0:    ; Address 0x1ee8 (7912)
 .ascii " Phase 2"
 
 ; Inline PGM data: 1 string starting at 0x1ef0 (Phase3)
-String_0x1ef0_Phase3__0:    ; Address 0x1ef0 (7920)
+String_0x1ef0_Phase3_0:    ; Address 0x1ef0 (7920)
 .ascii " Phase 3"
 
 ; Inline PGM data: 1 string starting at 0x1ef8 (User1)
-String_0x1ef8_User1__0:    ; Address 0x1ef8 (7928)
+String_0x1ef8_User1_0:    ; Address 0x1ef8 (7928)
 .ascii " User 1 "
 
 ; Inline PGM data: 1 string starting at 0x1f00 (User2)
-String_0x1f00_User2__0:    ; Address 0x1f00 (7936)
+String_0x1f00_User2_0:    ; Address 0x1f00 (7936)
 .ascii " User 2 "
 
 ; Inline PGM data: 1 string starting at 0x1f08 (User3)
-String_0x1f08_User3__0:    ; Address 0x1f08 (7944)
+String_0x1f08_User3_0:    ; Address 0x1f08 (7944)
 .ascii " User 3 "
 
 ; Inline PGM data: 1 string starting at 0x1f10 (User4)
-String_0x1f10_User4__0:    ; Address 0x1f10 (7952)
+String_0x1f10_User4_0:    ; Address 0x1f10 (7952)
 .ascii " User 4 "
 
 ; Inline PGM data: 1 string starting at 0x1f18 (User5)
-String_0x1f18_User5__0:    ; Address 0x1f18 (7960)
+String_0x1f18_User5_0:    ; Address 0x1f18 (7960)
 .ascii " User 5 "
 
 ; Inline PGM data: 1 string starting at 0x1f20 (User6)
-String_0x1f20_User6__0:    ; Address 0x1f20 (7968)
+String_0x1f20_User6_0:    ; Address 0x1f20 (7968)
 .ascii " User 6 "
 
 ; Inline PGM data: 1 string starting at 0x1f28 (User7)
-String_0x1f28_User7__0:    ; Address 0x1f28 (7976)
+String_0x1f28_User7_0:    ; Address 0x1f28 (7976)
 .ascii " User 7 "
 
 ; Inline PGM data: 1 string starting at 0x1f30 (SplitA)
-String_0x1f30_SplitA__0:    ; Address 0x1f30 (7984)
+String_0x1f30_SplitA_0:    ; Address 0x1f30 (7984)
 .ascii "Split A:"
 
 ; Inline PGM data: 1 string starting at 0x1f38 (SplitB)
-String_0x1f38_SplitB__0:    ; Address 0x1f38 (7992)
+String_0x1f38_SplitB_0:    ; Address 0x1f38 (7992)
 .ascii "Split B:"
 
 ; Inline PGM data: 1 string starting at 0x1f40 (Sel Fav)
-String_0x1f40_Sel_Fav__0:    ; Address 0x1f40 (8000)
+String_0x1f40_Sel_Fav_0:    ; Address 0x1f40 (8000)
 .ascii "Sel Fav:"
 
 ; Inline PGM data: 1 string starting at 0x1f48 (Ramping)
-String_0x1f48_Ramping__0:    ; Address 0x1f48 (8008)
+String_0x1f48_Ramping_0:    ; Address 0x1f48 (8008)
 .ascii "Ramping "
 
 ; Inline PGM data: 1 string starting at 0x1f50 (Saved)
-String_0x1f50_Saved__0:    ; Address 0x1f50 (8016)
+String_0x1f50_Saved_0:    ; Address 0x1f50 (8016)
 .ascii "Saved!  "
 
 ; Inline PGM data: 1 string starting at 0x1f58 (Linked)
-String_0x1f58_Linked__0:    ; Address 0x1f58 (8024)
+String_0x1f58_Linked_0:    ; Address 0x1f58 (8024)
 .ascii "Linked! "
 
 ; Inline PGM data: 1 string starting at 0x1f60 (Master)
-String_0x1f60_Master__0:    ; Address 0x1f60 (8032)
+String_0x1f60_Master_0:    ; Address 0x1f60 (8032)
 .ascii "Master  "
 
 ; Inline PGM data: 1 string starting at 0x1f68 (Slave)
-String_0x1f68_Slave__0:    ; Address 0x1f68 (8040)
+String_0x1f68_Slave_0:    ; Address 0x1f68 (8040)
 .ascii "Slave   "
 
 ; Inline PGM data: 1 string starting at 0x1f70 (Percent)
-String_0x1f70_Percent__0:    ; Address 0x1f70 (8048)
+String_0x1f70_Percent_0:    ; Address 0x1f70 (8048)
 .ascii "    %   "
 
 ; Inline PGM data: 1 string starting at 0x1f78 (A B)
-String_0x1f78_A_B__0:    ; Address 0x1f78 (8056)
+String_0x1f78_A_B_0:    ; Address 0x1f78 (8056)
 .ascii "A   B   "
 
 ; Inline PGM data: 1 string starting at 0x1f80 (Ramp)
-String_0x1f80_Ramp__0:    ; Address 0x1f80 (8064)
+String_0x1f80_Ramp_0:    ; Address 0x1f80 (8064)
 .ascii "Ramp:   "
 
 ; Inline PGM data: 1 string starting at 0x1f88 (Space8_2)
-String_0x1f88_Space8_2__0:    ; Address 0x1f88 (8072)
+String_0x1f88_Space8_2_0:    ; Address 0x1f88 (8072)
 .ascii "        "
 
 ; Inline PGM data: 1 string starting at 0x1f90 (Space8_3)
-String_0x1f90_Space8_3__0:    ; Address 0x1f90 (8080)
+String_0x1f90_Space8_3_0:    ; Address 0x1f90 (8080)
 .ascii "        "
 
 ; Inline PGM data: 2 words starting at 0x1f98 (FFFF)
