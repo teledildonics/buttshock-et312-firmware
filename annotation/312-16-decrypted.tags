@@ -9,7 +9,7 @@
 0x10f8	L		SPI_Transfer_Complete
 0x1178	L		USART_RX_Complete
 
-0x031c	L		set_t_flag_from_r26_r27_compared_to_memory_0x0080	Parameter r26:r27, returns T flag
+0x031c	L		set_routine_timer	Parameter r26:r27, returns r0, sets T flag
 0x0352	L		CallTable_29			Parameter r28:r29
 0x0390	L		read_flash_0x01[(r30/4)-47]_to_r18_r0
 0x05fe	L		CallTable_18			Parameter r28:r29
@@ -65,7 +65,7 @@
 0x16b8	L		unknown					Parameter r28:r29
 0x1a60	L		lcd_putchar			Parameter r29
 0x1a76	L		reset_device
-0x1a7c	L		unknown             Parameters r9,r8,r7
+0x1a7c	L		unknown				Parameters r9,r8,r7
 0x1af2	L		store_z_pointer_at_0x020e_and_move_r13_to_r2_and_set_r18_to_negative_r30
 0x1b00	L		subtract_r31_from_r2_save_r18_at_memory_0x0210_and_r2_at_memory_0x0211
 
