@@ -45,8 +45,8 @@
 0x0b98	L		CallTable_22
 0x0bbe	L		compare_flash_0x1c3e_to_0
 0x0cee	L		CallTable_30
-0x154c	L		copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29    CallTable_24
-0x157a	L		copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3         CallTable_28
+0x154c	L		copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29	CallTable_24
+0x157a	L		copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3			CallTable_28
 0x1676	L		error_handler			CallTable_23_37_38_39
 
 0x14b0	L		loop_clear_memory
@@ -57,7 +57,7 @@
 0x12dc	L		show_Text_on_Display2		Parameter r26
 0x12ec	L		show_Text_on_Display		Parameter r26
 0x1a2e	L		receive_from_USART
-0x1362	L		delay                   Parameter r30
+0x1362	L		delay						Parameter r30
 0x154c	L		copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188
 0x1590	L		copy_flash_0x1fdc_to_memory_0x01f0
 0x183e	L		delay					Parameter r26
