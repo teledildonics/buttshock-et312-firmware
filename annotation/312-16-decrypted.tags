@@ -62,10 +62,8 @@
 0x1590	L		copy_flash_0x1fdc_to_memory_0x01f0
 0x183e	L		delay					Parameter r26
 0x19dc	L		read_from_eeprom		Parameter r26:r27, returns r0
-0x16b8	L		unknown					Parameter r28:r29
 0x1a60	L		lcd_putchar			Parameter r29
 0x1a76	L		reset_device
-0x1a7c	L		unknown				Parameters r9,r8,r7
 0x1af2	L		store_z_pointer_at_0x020e_and_move_r13_to_r2_and_set_r18_to_negative_r30
 0x1b00	L		subtract_r31_from_r2_save_r18_at_memory_0x0210_and_r2_at_memory_0x0211
 
