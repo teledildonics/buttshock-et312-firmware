@@ -45,10 +45,10 @@ main:
 Main:
   54:   c0 e6           r28 = 96;                           ; 0x60
   56:   a8 95           wdr
-  58:   a0 91 f1 01     r26 = counter_for_0x220;            ; 0x01f1
+  58:   a0 91 f1 01     r26 = counter_for_0x22C;            ; 0x01f1
   5c:   ac 32           cmp(r26, 0x2c);                     ; 44
   5e:   11 f0           if (c1 == c2) goto Label_0x64;
-  60:   0e 94 17 0d     send_com_buffer_to_USART();         ; Skips the first 12 bytes of the buffer
+  60:   0e 94 17 0d     send_com_buffer_to_USART();
 
 ; Referenced from offset 0x5e <Main> by breq
 Label_0x64:
@@ -728,7 +728,7 @@ Label_0x3d2:
  3d6:   42 c0           goto Label_0x45c;
  3d8:   17 ff           skipif (bit(r17,7))
  3da:   2e c0           goto Label_0x438;
- 3dc:   a0 91 20 02     r26 = com_buffer[0];                ; 0x0220
+ 3dc:   a0 91 20 02     r26 = com_input_buffer[0];          ; 0x0220
  3e0:   a6 30           cmp(r26, 0x06);                     ; 6
  3e2:   41 f0           if (c1 == c2) goto Label_0x3f4;
  3e4:   aa a1           r26 = Memory[[r28:r29]+34];
@@ -745,7 +745,7 @@ Label_0x3ee:
 ; Referenced from offset 0x3e2 <Function_0x3a8> by breq
 Label_0x3f4:
  3f4:   da a3           Memory[[r28:r29]+34] = r29;
- 3f6:   d0 93 20 02     com_buffer[0] = r29;                ; 0x0220
+ 3f6:   d0 93 20 02     com_input_buffer[0] = r29;          ; 0x0220
  3fa:   d0 93 14 02     com_buffer_incrementer = r29;       ; 0x0214
  3fe:   ad e9           r26 = 157;                          ; 0x9d
  400:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
@@ -1674,12 +1674,12 @@ Label_0x8f4:
  8f6:   a9 f4           if (c1 != c2) goto Label_0x922;
  8f8:   ae e0           r26 = 14;                           ; 0x0e
  8fa:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
- 8fe:   0e 94 17 0d     send_com_buffer_to_USART();         ; Skips the first 12 bytes of the buffer
+ 8fe:   0e 94 17 0d     send_com_buffer_to_USART();
  902:   aa e0           r26 = 10;                           ; 0x0a
  904:   70 de           sleep();                            ; Parameter r26
  906:   15 ff           skipif (bit(r17,5))
  908:   04 c0           goto Label_0x912;
- 90a:   e0 91 20 02     r30 = com_buffer[0];                ; 0x0220
+ 90a:   e0 91 20 02     r30 = com_input_buffer[0];          ; 0x0220
  90e:   e5 30           cmp(r30, 0x05);                     ; 5
  910:   11 f0           if (c1 == c2) goto Label_0x916;
 
@@ -1691,7 +1691,7 @@ Label_0x912:
 ; Referenced from offset 0x910 <run_call_table> by breq
 Label_0x916:
  916:   a6 e0           r26 = 6;                            ; 0x06
- 918:   a0 93 20 02     com_buffer[0] = r26;                ; 0x0220
+ 918:   a0 93 20 02     com_input_buffer[0] = r26;          ; 0x0220
  91c:   10 68           r17 |= 128;                         ; 0x80
  91e:   a8 ef           r26 = 248;                          ; 0xf8
  920:   04 c0           goto Label_0x92a;
@@ -3287,11 +3287,11 @@ USART_RX_Complete:
 118a:   80 91 13 02     r24 = cipher_key_box;               ; 0x0213
 118e:   78 27           r23 ^= r24;
 1190:   f2 e0           r31 = 2;                            ; 0x02
-1192:   e0 91 f2 01     r30 = mem_unknown_0x1f2;            ; 0x01f2
+1192:   e0 91 f2 01     r30 = counter_for_0x220;            ; 0x01f2
 1196:   ec 32           cmp(r30, 0x2c);                     ; 44
 1198:   98 f4           if (!Carry) goto Label_0x11c0;
 119a:   71 93           Memory[[r30:r31]++] = r23;
-119c:   e0 93 f2 01     mem_unknown_0x1f2 = r30;            ; 0x01f2
+119c:   e0 93 f2 01     counter_for_0x220 = r30;            ; 0x01f2
 11a0:   e1 32           cmp(r30, 0x21);                     ; 33
 11a2:   21 f4           if (c1 != c2) goto Label_0x11ac;
 11a4:   72 95           r23 = ((r23 & 0xf0) >> 4) | ((r23 & 0x0f) << 4); ; swap nibbles
@@ -4850,7 +4850,7 @@ Label_0x197e:
 Label_0x1982:
 1982:   1f 79           r17 &= 159;                         ; 0x9f
 1984:   a0 e2           r26 = 32;                           ; 0x20
-1986:   a0 93 f2 01     mem_unknown_0x1f2 = r26;            ; 0x01f2
+1986:   a0 93 f2 01     counter_for_0x220 = r26;            ; 0x01f2
 198a:   cf 91           pop     r28
 198c:   c4 98           IO_BIT[PORTB,4] = false;            ; 0x10 = 16
 198e:   08 95           return;
@@ -4984,7 +4984,7 @@ write_r26_to_com_buffer:     ; Parameters r26
 1a0a:   e0 91 14 02     r30 = com_buffer_incrementer;       ; 0x0214
 1a0e:   ea 0f           r30 += r26;                         ; No carry
 1a10:   e0 93 14 02     com_buffer_incrementer = r30;       ; 0x0214
-1a14:   e0 91 f1 01     r30 = counter_for_0x220;            ; 0x01f1
+1a14:   e0 91 f1 01     r30 = counter_for_0x22C;            ; 0x01f1
 1a18:   e8 33           cmp(r30, 0x38);                     ; 56
 1a1a:   10 f0           if (Carry) goto Label_0x1a20;
 1a1c:   a8 e4           r26 = 72;                           ; 0x48
@@ -4994,7 +4994,7 @@ write_r26_to_com_buffer:     ; Parameters r26
 Label_0x1a20:
 1a20:   f2 e0           r31 = 2;                            ; 0x02
 1a22:   a1 93           Memory[[r30:r31]++] = r26;
-1a24:   e0 93 f1 01     counter_for_0x220 = r30;            ; 0x01f1
+1a24:   e0 93 f1 01     counter_for_0x22C = r30;            ; 0x01f1
 1a28:   ff 91           pop     r31
 1a2a:   ef 91           pop     r30
 1a2c:   08 95           return;
@@ -5002,7 +5002,7 @@ Label_0x1a20:
 
 ; Referenced from offset 0x60 <Main> by call
 ; Referenced from offset 0x8fe <run_call_table> by call
-send_com_buffer_to_USART:     ; Skips the first 12 bytes of the buffer
+send_com_buffer_to_USART:
 1a2e:   5d 9b           skipif (IO_BIT[UCSRA,5])            ; 0x20 = 32
 1a30:   08 95           return;
 
@@ -5012,9 +5012,9 @@ send_com_buffer_to_USART:     ; Skips the first 12 bytes of the buffer
 1a38:   c4 9a           IO_BIT[PORTB,4] = true;             ; 0x10 = 16
 1a3a:   ac b9           IO[UDR] = r26;
 1a3c:   c4 98           IO_BIT[PORTB,4] = false;            ; 0x10 = 16
-1a3e:   a0 91 f1 01     r26 = counter_for_0x220;            ; 0x01f1
+1a3e:   a0 91 f1 01     r26 = counter_for_0x22C;            ; 0x01f1
 1a42:   aa 95           r26--;
-1a44:   a0 93 f1 01     counter_for_0x220 = r26;            ; 0x01f1
+1a44:   a0 93 f1 01     counter_for_0x22C = r26;            ; 0x01f1
 1a48:   ad 32           cmp(r26, 0x2d);                     ; 45
 1a4a:   08 f4           if (!Carry) goto Label_0x1a4e;
 1a4c:   08 95           return;

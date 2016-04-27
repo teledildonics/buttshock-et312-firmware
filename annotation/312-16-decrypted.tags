@@ -55,7 +55,7 @@
 0x05e6	L		sleep							Parameter r26
 0x12dc	L		show_Text_on_Display2					Parameter r26
 0x12ec	L		show_Text_on_Display					Parameter r26
-0x1a2e	L		send_com_buffer_to_USART				Skips the first 12 bytes of the buffer
+0x1a2e	L		send_com_buffer_to_USART				
 0x1362	L		delay_0x1362						Parameter r30
 0x1590	L		copy_flash_0x1fdc_to_memory_0x01f0
 0x183e	L		delay_0x183e						Parameter r26
@@ -148,8 +148,8 @@
 0x01be	M	B	1	channel_b_current_width_modulation_select
 0x01d0	M	B	32	space_for_user_routine_scratchpad_b
 0x01f0	M	B	1	mem_unknown_0x1f0				Copied from 0x1fdc
-0x01f1	M	B	1	counter_for_0x220				Copied from 0x1fdc+1
-0x01f2	M	B	1	mem_unknown_0x1f2				Copied from 0x1fdc+2
+0x01f1	M	B	1	counter_for_0x22C				Copied from 0x1fdc+1
+0x01f2	M	B	1	counter_for_0x220				Copied from 0x1fdc+2
 0x01f3	M	B	1	current_top_mode				Copied from 0x1fdc+3
 0x01f4	M	B	1	COMM_POWER_LEVEL				Copied from 0x1fdc+4, aka COMM_LMODE
 0x01f5	M	B	1	split_mode_number_a				Copied from 0x1fdc+5
@@ -164,12 +164,13 @@
 0x01fe	M	B	1	advanced_parameter_width
 0x01ff	M	B	1	advanced_parameter_pace
 0x020d	M	B	1	current_multi_adjust_value
-0x0209
 0x0212	M	B	1	cipher_key_host
 0x0213	M	B	1	cipher_key_box
 0x0214	M	B	1	com_buffer_incrementer
 0x0218	M	B	1	mem_unknown_0x218
-0x0220	M	B	24	com_buffer
+0x0220	M	B	12	com_input_buffer
+0x022C	M	B	12	com_output_buffer
+
 
 0x1b10	P	S	4	fla_unknown_0x1b10	
 0x1c36	P	W	4	FFFF
