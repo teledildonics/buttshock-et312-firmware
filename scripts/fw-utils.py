@@ -8,7 +8,7 @@ class ET312FirmwareUtils(object):
     KEYS = [0x65, 0xed, 0x83]
     IV = [0xb9, 0xfe, 0x8f]
 
-    def __init__(self, input_file, output_file = None):
+    def __init__(self, input_file, output_file=None):
         self.iv = copy.copy(ET312FirmwareUtils.IV)
         with open(input_file, "rb") as f:
             self.input_file = bytearray(f.read())
