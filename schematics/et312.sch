@@ -1363,6 +1363,159 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </deviceset>
 </devicesets>
 </library>
+<library name="Panasonic-Trimmer_Potentiometers">
+<description>&lt;b&gt; Developed By element14 &lt;/b&gt;&lt;p&gt; 
+
+For feedback and Technical support please contact reach from below:
+&lt;br&gt; Tech Support e-mail  : &lt;a href="mailto:CAD_Tech@element14.com"&gt;CAD_Tech@element14.com&lt;/a&gt;
+&lt;br&gt;Community website: &lt;a href=http://www.element14.com/community/community/knode/cad_tools/cadsoft_eagle/eagle_cad_libraries&gt;
+EAGLE CAD Libraries on element14&lt;/a&gt;</description>
+<packages>
+<package name="POT_EVJC20">
+<text x="-4.11" y="6.23" size="2" layer="25" ratio="10">&gt;Name</text>
+<text x="-3.91" y="-27.07" size="2" layer="27" ratio="10">&gt;Value</text>
+<hole x="-7.1" y="3.3" drill="3"/>
+<hole x="7.1" y="3.3" drill="3"/>
+<pad name="1" x="-3" y="0" drill="0.8" diameter="1.6"/>
+<pad name="2" x="-5" y="0" drill="0.8" diameter="1.6"/>
+<pad name="3" x="5" y="0" drill="0.8" diameter="1.6"/>
+<pad name="1'" x="-1" y="0" drill="0.8" diameter="1.6"/>
+<pad name="2'" x="1" y="0" drill="0.8" diameter="1.6"/>
+<pad name="3'" x="3" y="0" drill="0.8" diameter="1.6"/>
+<wire x1="-6.1" y1="5.8" x2="6.1" y2="5.8" width="0.127" layer="51"/>
+<wire x1="6.1" y1="5.8" x2="6.1" y2="-4.2" width="0.127" layer="51"/>
+<wire x1="6.1" y1="-4.2" x2="4" y2="-4.2" width="0.127" layer="51"/>
+<wire x1="4" y1="-4.2" x2="-4" y2="-4.2" width="0.127" layer="51"/>
+<wire x1="-4" y1="-4.2" x2="-6.1" y2="-4.2" width="0.127" layer="51"/>
+<wire x1="-6.1" y1="-4.2" x2="-6.1" y2="5.8" width="0.127" layer="51"/>
+<wire x1="-4" y1="-4.2" x2="-4" y2="-24.2" width="0.127" layer="51"/>
+<wire x1="-4" y1="-24.2" x2="4" y2="-24.2" width="0.127" layer="51"/>
+<wire x1="4" y1="-24.2" x2="4" y2="-4.2" width="0.127" layer="51"/>
+<wire x1="6.1" y1="5.8" x2="6.1" y2="-4.2" width="0.127" layer="21"/>
+<wire x1="6.1" y1="-4.2" x2="4" y2="-4.2" width="0.127" layer="21"/>
+<wire x1="4" y1="-4.2" x2="-4" y2="-4.2" width="0.127" layer="21"/>
+<wire x1="-4" y1="-4.2" x2="-6.1" y2="-4.2" width="0.127" layer="21"/>
+<wire x1="-6.1" y1="-4.2" x2="-6.1" y2="5.8" width="0.127" layer="21"/>
+<wire x1="-4" y1="-4.2" x2="-4" y2="-24.2" width="0.127" layer="21"/>
+<wire x1="-4" y1="-24.2" x2="4" y2="-24.2" width="0.127" layer="21"/>
+<wire x1="4" y1="-24.2" x2="4" y2="-4.2" width="0.127" layer="21"/>
+<wire x1="-6.1" y1="5.8" x2="6.1" y2="5.8" width="0.127" layer="21"/>
+</package>
+<package name="POT_EVJY91">
+<text x="-4.11" y="19.23" size="2" layer="25" ratio="10">&gt;Name</text>
+<text x="-4.91" y="-4.07" size="2" layer="27" ratio="10">&gt;Value</text>
+<hole x="-5.5" y="11" drill="3"/>
+<hole x="5.5" y="11" drill="3"/>
+<pad name="1" x="-3" y="0" drill="0.8" diameter="1.6"/>
+<pad name="2" x="-5" y="0" drill="0.8" diameter="1.6"/>
+<pad name="3" x="5" y="0" drill="0.8" diameter="1.6"/>
+<pad name="1'" x="-1" y="0" drill="0.8" diameter="1.6"/>
+<pad name="2'" x="1" y="0" drill="0.8" diameter="1.6"/>
+<pad name="3'" x="3" y="0" drill="0.8" diameter="1.6"/>
+<wire x1="-6.55" y1="17.8" x2="6.55" y2="17.8" width="0.127" layer="51"/>
+<wire x1="6.55" y1="17.8" x2="6.55" y2="2.3" width="0.127" layer="51"/>
+<wire x1="6.55" y1="2.3" x2="-6.55" y2="2.3" width="0.127" layer="51"/>
+<wire x1="-6.55" y1="2.3" x2="-6.55" y2="17.8" width="0.127" layer="51"/>
+<wire x1="-6.55" y1="12.7" x2="-6.55" y2="17.8" width="0.127" layer="21"/>
+<wire x1="-6.55" y1="17.8" x2="6.6" y2="17.8" width="0.127" layer="21"/>
+<wire x1="6.6" y1="17.8" x2="6.6" y2="17.1" width="0.127" layer="21"/>
+<wire x1="6.6" y1="17.1" x2="6.6" y2="12.5" width="0.127" layer="21"/>
+<wire x1="-6.55" y1="9.4" x2="-6.55" y2="2.3" width="0.127" layer="21"/>
+<wire x1="-6.55" y1="2.3" x2="6.55" y2="2.3" width="0.127" layer="21"/>
+<wire x1="6.55" y1="2.3" x2="6.55" y2="9.5" width="0.127" layer="21"/>
+</package>
+</packages>
+<symbols>
+<symbol name="POT_ROTARY">
+<pin name="1" x="-5.08" y="-10.16" visible="off" length="short" direction="pas" rot="R90"/>
+<pin name="2" x="-12.7" y="0" visible="off" length="short" direction="pas"/>
+<pin name="3" x="-5.08" y="10.16" visible="off" length="short" direction="pas" rot="R270"/>
+<wire x1="-8.89" y1="-0.635" x2="-6.985" y2="0" width="0.2032" layer="94"/>
+<wire x1="-8.89" y1="0.635" x2="-6.985" y2="0" width="0.2032" layer="94"/>
+<wire x1="-8.89" y1="-0.635" x2="-8.89" y2="0" width="0.2032" layer="94"/>
+<wire x1="-8.89" y1="0" x2="-8.89" y2="0.635" width="0.2032" layer="94"/>
+<wire x1="-8.89" y1="0" x2="-10.16" y2="0" width="0.2032" layer="94"/>
+<wire x1="-5.08" y1="-3.81" x2="-6.35" y2="-3.175" width="0.2032" layer="94"/>
+<wire x1="-6.35" y1="-0.635" x2="-3.81" y2="0.635" width="0.2032" layer="94"/>
+<wire x1="-3.81" y1="0.635" x2="-6.35" y2="1.905" width="0.2032" layer="94"/>
+<wire x1="-3.81" y1="-1.905" x2="-6.35" y2="-0.635" width="0.2032" layer="94"/>
+<wire x1="-6.35" y1="-3.175" x2="-3.81" y2="-1.905" width="0.2032" layer="94"/>
+<wire x1="-3.81" y1="3.175" x2="-5.08" y2="3.81" width="0.2032" layer="94"/>
+<wire x1="-5.08" y1="3.81" x2="-5.08" y2="7.62" width="0.2032" layer="94"/>
+<wire x1="-5.08" y1="-7.62" x2="-5.08" y2="-3.81" width="0.2032" layer="94"/>
+<wire x1="-6.35" y1="1.905" x2="-3.81" y2="3.175" width="0.2032" layer="94"/>
+<text x="-5.08" y="15.24" size="2.032" layer="95">&gt;Name</text>
+<text x="-5.08" y="-20.32" size="2.032" layer="96">&gt;Value</text>
+<pin name="3'" x="5.08" y="10.16" visible="off" length="short" direction="pas" rot="R270"/>
+<pin name="2'" x="12.7" y="0" visible="off" length="short" direction="pas" rot="R180"/>
+<pin name="1'" x="5.08" y="-10.16" visible="off" length="short" direction="pas" rot="R90"/>
+<wire x1="8.89" y1="0.635" x2="6.985" y2="0" width="0.2032" layer="94"/>
+<wire x1="8.89" y1="-0.635" x2="6.985" y2="0" width="0.2032" layer="94"/>
+<wire x1="8.89" y1="0.635" x2="8.89" y2="0" width="0.2032" layer="94"/>
+<wire x1="8.89" y1="0" x2="8.89" y2="-0.635" width="0.2032" layer="94"/>
+<wire x1="8.89" y1="0" x2="10.16" y2="0" width="0.2032" layer="94"/>
+<wire x1="5.08" y1="3.81" x2="6.35" y2="3.175" width="0.2032" layer="94"/>
+<wire x1="6.35" y1="0.635" x2="3.81" y2="-0.635" width="0.2032" layer="94"/>
+<wire x1="3.81" y1="-0.635" x2="6.35" y2="-1.905" width="0.2032" layer="94"/>
+<wire x1="3.81" y1="1.905" x2="6.35" y2="0.635" width="0.2032" layer="94"/>
+<wire x1="6.35" y1="3.175" x2="3.81" y2="1.905" width="0.2032" layer="94"/>
+<wire x1="3.81" y1="-3.175" x2="5.08" y2="-3.81" width="0.2032" layer="94"/>
+<wire x1="5.08" y1="-3.81" x2="5.08" y2="-7.62" width="0.2032" layer="94"/>
+<wire x1="5.08" y1="7.62" x2="5.08" y2="3.81" width="0.2032" layer="94"/>
+<wire x1="6.35" y1="-1.905" x2="3.81" y2="-3.175" width="0.2032" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="EVJ" prefix="R">
+<description>12 mm Square Two-in-One Rotary Potentiometers (Dual Type)</description>
+<gates>
+<gate name="A" symbol="POT_ROTARY" x="0" y="0"/>
+</gates>
+<devices>
+<device name="-JC2" package="POT_EVJC20">
+<connects>
+<connect gate="A" pin="1" pad="1"/>
+<connect gate="A" pin="1'" pad="1'"/>
+<connect gate="A" pin="2" pad="2"/>
+<connect gate="A" pin="2'" pad="2'"/>
+<connect gate="A" pin="3" pad="3"/>
+<connect gate="A" pin="3'" pad="3'"/>
+</connects>
+<technologies>
+<technology name="C20F02A14">
+<attribute name="MPN" value="EVJC20F02A14" constant="no"/>
+<attribute name="OC_FARNELL" value="2284569  " constant="no"/>
+<attribute name="OC_NEWARK" value="52W2256" constant="no"/>
+<attribute name="PACKAGE" value="TH-POT" constant="no"/>
+<attribute name="SUPPLIER" value="PANASONIC" constant="no"/>
+<attribute name="VALUE" value="500KOHM, 50mW" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="-JY9" package="POT_EVJY91">
+<connects>
+<connect gate="A" pin="1" pad="1"/>
+<connect gate="A" pin="1'" pad="1'"/>
+<connect gate="A" pin="2" pad="2"/>
+<connect gate="A" pin="2'" pad="2'"/>
+<connect gate="A" pin="3" pad="3"/>
+<connect gate="A" pin="3'" pad="3'"/>
+</connects>
+<technologies>
+<technology name="Y91F03B14">
+<attribute name="MPN" value="EVJY91F03B14" constant="no"/>
+<attribute name="OC_FARNELL" value="2284570  " constant="no"/>
+<attribute name="OC_NEWARK" value="52W2276" constant="no"/>
+<attribute name="PACKAGE" value="TH-POT" constant="no"/>
+<attribute name="SUPPLIER" value="PANASONIC" constant="no"/>
+<attribute name="VALUE" value="500KOHM, 50mW" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -1390,6 +1543,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="10WAY_RIBBON1" library="SparkFun-Connectors" deviceset="M10" device="SILK_FEMALE_PTH"/>
 <part name="RV1" library="SparkFun-Electromechanical" deviceset="POT" device=""/>
 <part name="RV2" library="SparkFun-Electromechanical" deviceset="POT" device=""/>
+<part name="R1" library="Panasonic-Trimmer_Potentiometers" deviceset="EVJ" device="-JC2" technology="C20F02A14" value="500KOHM, 50mW"/>
+<part name="GND2" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="GND3" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="GND4" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="GND5" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -1446,8 +1604,9 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <instance part="S2" gate="G$1" x="86.36" y="142.24" rot="R270"/>
 <instance part="S4" gate="G$1" x="86.36" y="111.76" rot="R270"/>
 <instance part="10WAY_RIBBON" gate="G$1" x="12.7" y="157.48"/>
-<instance part="RV1" gate="G$1" x="83.82" y="63.5"/>
-<instance part="RV2" gate="G$1" x="83.82" y="33.02"/>
+<instance part="RV1" gate="G$1" x="83.82" y="40.64"/>
+<instance part="RV2" gate="G$1" x="83.82" y="20.32"/>
+<instance part="R1" gate="A" x="86.36" y="76.2"/>
 </instances>
 <busses>
 </busses>
@@ -1464,10 +1623,40 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <instance part="IC2" gate="C" x="83.82" y="96.52"/>
 <instance part="IC2" gate="D" x="157.48" y="96.52"/>
 <instance part="10WAY_RIBBON1" gate="G$1" x="10.922" y="159.004"/>
+<instance part="GND2" gate="1" x="68.58" y="86.36"/>
+<instance part="GND3" gate="1" x="68.58" y="129.54"/>
+<instance part="GND4" gate="1" x="142.24" y="129.54"/>
+<instance part="GND5" gate="1" x="142.24" y="86.36"/>
 </instances>
 <busses>
 </busses>
 <nets>
+<net name="GND" class="0">
+<segment>
+<pinref part="GND2" gate="1" pin="GND"/>
+<pinref part="IC2" gate="C" pin="C"/>
+<wire x1="68.58" y1="88.9" x2="68.58" y2="93.98" width="0.1524" layer="91"/>
+<wire x1="68.58" y1="93.98" x2="71.12" y2="93.98" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="IC2" gate="A" pin="C"/>
+<wire x1="71.12" y1="137.16" x2="68.58" y2="137.16" width="0.1524" layer="91"/>
+<pinref part="GND3" gate="1" pin="GND"/>
+<wire x1="68.58" y1="137.16" x2="68.58" y2="132.08" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="GND4" gate="1" pin="GND"/>
+<wire x1="142.24" y1="132.08" x2="142.24" y2="137.16" width="0.1524" layer="91"/>
+<pinref part="IC2" gate="B" pin="C"/>
+<wire x1="142.24" y1="137.16" x2="144.78" y2="137.16" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="IC2" gate="D" pin="C"/>
+<wire x1="144.78" y1="93.98" x2="142.24" y2="93.98" width="0.1524" layer="91"/>
+<pinref part="GND5" gate="1" pin="GND"/>
+<wire x1="142.24" y1="93.98" x2="142.24" y2="88.9" width="0.1524" layer="91"/>
+</segment>
+</net>
 </nets>
 </sheet>
 </sheets>
