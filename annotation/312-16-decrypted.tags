@@ -164,8 +164,8 @@
 0x01fe	M	B	1	advanced_parameter_width
 0x01ff	M	B	1	advanced_parameter_pace
 0x020d	M	B	1	current_multi_adjust_value
-0x0212	M	B	1	cipher_key_host
-0x0213	M	B	1	cipher_key_box
+0x0212	M	B	1	mem_unknown_0x212
+0x0213	M	B	1	cipher_key
 0x0214	M	B	1	com_buffer_incrementer
 0x0218	M	B	1	mem_unknown_0x218
 0x0220	M	B	24	com_buffer
@@ -217,7 +217,7 @@
 0x1e80	P	8	1	Combo
 0x1e88	P	8	1	Intense
 0x1e90	P	8	1	Rhythm
-0x1e98	P	8	1	Audio1
+<0x1e98	P	8	1	Audio1
 0x1ea0	P	8	1	Audio2
 0x1ea8	P	8	1	Audio3
 0x1eb0	P	8	1	Split
