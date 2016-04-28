@@ -1582,10 +1582,6 @@ Source: avr.lbr</description>
 <part name="RV1" library="SparkFun-Electromechanical" deviceset="POT" device=""/>
 <part name="RV2" library="SparkFun-Electromechanical" deviceset="POT" device=""/>
 <part name="R1" library="Panasonic-Trimmer_Potentiometers" deviceset="EVJ" device="-JC2" technology="C20F02A14" value="500KOHM, 50mW"/>
-<part name="GND2" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
-<part name="GND3" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
-<part name="GND4" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
-<part name="GND5" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="IC1" library="atmel" deviceset="MEGA16-P" device=""/>
 </parts>
 <sheets>
@@ -1630,6 +1626,50 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 </sheet>
 <sheet>
 <plain>
+</plain>
+<instances>
+<instance part="FRAME4" gate="G$1" x="0" y="0"/>
+<instance part="IC2" gate="A" x="83.82" y="139.7"/>
+<instance part="IC2" gate="B" x="157.48" y="139.7"/>
+<instance part="IC2" gate="C" x="83.82" y="96.52"/>
+<instance part="IC2" gate="D" x="157.48" y="96.52"/>
+<instance part="10WAY_RIBBON1" gate="G$1" x="10.922" y="159.004"/>
+</instances>
+<busses>
+</busses>
+<nets>
+<net name="N$1" class="0">
+<segment>
+<pinref part="IC2" gate="A" pin="C"/>
+<wire x1="71.12" y1="137.16" x2="68.58" y2="137.16" width="0.1524" layer="91"/>
+<label x="68.58" y="137.16" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="IC2" gate="B" pin="C"/>
+<wire x1="142.24" y1="137.16" x2="144.78" y2="137.16" width="0.1524" layer="91"/>
+<label x="142.24" y="137.16" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="IC2" gate="D" pin="C"/>
+<wire x1="144.78" y1="93.98" x2="142.24" y2="93.98" width="0.1524" layer="91"/>
+<label x="142.24" y="93.98" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="N$4" class="0">
+<segment>
+<pinref part="IC2" gate="C" pin="C"/>
+<wire x1="68.58" y1="93.98" x2="71.12" y2="93.98" width="0.1524" layer="91"/>
+<label x="68.58" y="93.98" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+</nets>
+</sheet>
+<sheet>
+<plain>
 <text x="162.56" y="20.32" size="1.778" layer="91">Small PCB</text>
 <text x="86.36" y="134.62" size="1.778" layer="91">Menu</text>
 <text x="86.36" y="104.14" size="1.778" layer="91">Up</text>
@@ -1646,52 +1686,6 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <busses>
 </busses>
 <nets>
-</nets>
-</sheet>
-<sheet>
-<plain>
-</plain>
-<instances>
-<instance part="FRAME4" gate="G$1" x="0" y="0"/>
-<instance part="IC2" gate="A" x="83.82" y="139.7"/>
-<instance part="IC2" gate="B" x="157.48" y="139.7"/>
-<instance part="IC2" gate="C" x="83.82" y="96.52"/>
-<instance part="IC2" gate="D" x="157.48" y="96.52"/>
-<instance part="10WAY_RIBBON1" gate="G$1" x="10.922" y="159.004"/>
-<instance part="GND2" gate="1" x="68.58" y="86.36"/>
-<instance part="GND3" gate="1" x="68.58" y="129.54"/>
-<instance part="GND4" gate="1" x="142.24" y="129.54"/>
-<instance part="GND5" gate="1" x="142.24" y="86.36"/>
-</instances>
-<busses>
-</busses>
-<nets>
-<net name="GND" class="0">
-<segment>
-<pinref part="GND2" gate="1" pin="GND"/>
-<pinref part="IC2" gate="C" pin="C"/>
-<wire x1="68.58" y1="88.9" x2="68.58" y2="93.98" width="0.1524" layer="91"/>
-<wire x1="68.58" y1="93.98" x2="71.12" y2="93.98" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="IC2" gate="A" pin="C"/>
-<wire x1="71.12" y1="137.16" x2="68.58" y2="137.16" width="0.1524" layer="91"/>
-<pinref part="GND3" gate="1" pin="GND"/>
-<wire x1="68.58" y1="137.16" x2="68.58" y2="132.08" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="GND4" gate="1" pin="GND"/>
-<wire x1="142.24" y1="132.08" x2="142.24" y2="137.16" width="0.1524" layer="91"/>
-<pinref part="IC2" gate="B" pin="C"/>
-<wire x1="142.24" y1="137.16" x2="144.78" y2="137.16" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="IC2" gate="D" pin="C"/>
-<wire x1="144.78" y1="93.98" x2="142.24" y2="93.98" width="0.1524" layer="91"/>
-<pinref part="GND5" gate="1" pin="GND"/>
-<wire x1="142.24" y1="93.98" x2="142.24" y2="88.9" width="0.1524" layer="91"/>
-</segment>
-</net>
 </nets>
 </sheet>
 </sheets>
