@@ -34,14 +34,14 @@ main:
 
 ; Referenced from offset 0x9a <Main> by rjmp
 ; Referenced from offset 0x31a <Main> by rjmp
-; Referenced from offset 0x468 <Main> by rjmp
-; Referenced from offset 0x4ba <Main> by rjmp
-; Referenced from offset 0x512 <Main> by rjmp
-; Referenced from offset 0x584 <Main> by rjmp
-; Referenced from offset 0x58e <Main> by rjmp
+; Referenced from offset 0x468 <CallTable_29> by rjmp
+; Referenced from offset 0x4ba <CallTable_29> by rjmp
+; Referenced from offset 0x512 <CallTable_29> by rjmp
+; Referenced from offset 0x584 <CallTable_29> by rjmp
+; Referenced from offset 0x58e <CallTable_29> by rjmp
 ; Referenced from offset 0xb96 <rjmp_main> by rjmp
 ; Referenced from offset 0x1548 <loop_clear_memory2> by jmp
-; Referenced from offset 0x1998 <loop_clear_memory2> by jmp
+; Referenced from offset 0x1998 <Function_0x1858> by jmp
 Main:
   54:   c0 e6           r28 = 96;                           ; 0x60
   56:   a8 95           wdr
@@ -52,13 +52,13 @@ Main:
 
 ; Referenced from offset 0x5e <Main> by breq
 Label_0x64:
-  64:   15 fd           skipif (!r17[5])
+  64:   15 fd           skipif (!bit(r17,5))
   66:   0e 94 2c 0c     Function_0x1858();
-  6a:   40 fc           skipif (!r4[0])
+  6a:   40 fc           skipif (!bit(r4,0))
   6c:   97 d2           Function_0x59c();
-  6e:   12 fd           skipif (!r17[2])
+  6e:   12 fd           skipif (!bit(r17,2))
   70:   15 c0           goto Label_0x9c;
-  72:   56 fe           skipif (r5[6])
+  72:   56 fe           skipif (bit(r5,6))
   74:   08 c0           goto Label_0x86;
   76:   af 81           r26 = Memory[[r28:r29]+7];
   78:   a6 95           r26 >>= 1;                          ; _BV(7) = 0, Carry = _BV(0) (logical shift)
@@ -73,7 +73,7 @@ Label_0x80:
 
 ; Referenced from offset 0x74 <Main> by rjmp
 Label_0x86:
-  86:   a6 fe           skipif (r10[6])
+  86:   a6 fe           skipif (bit(r10,6))
   88:   08 c0           goto Label_0x9a;
   8a:   ae 81           r26 = Memory[[r28:r29]+6];
   8c:   a6 95           r26 >>= 1;                          ; _BV(7) = 0, Carry = _BV(0) (logical shift)
@@ -105,9 +105,9 @@ Label_0x9c:
 
 ; Referenced from offset 0xa8 <Main> by brvc
 Label_0xb0:
-  b0:   20 ff           skipif (r18[0])
+  b0:   20 ff           skipif (bit(r18,0))
   b2:   8f c1           goto Label_0x3d2;
-  b4:   02 fd           skipif (!r16[2])
+  b4:   02 fd           skipif (!bit(r16,2))
   b6:   f5 c0           goto Label_0x2a2;
   b8:   ff 27           r31 = 0x00;                         ; 0
   ba:   e0 e6           r30 = 96;                           ; 0x60
@@ -174,12 +174,12 @@ Label_0x10e:
  112:   a3 70           r26 &= 3;                           ; 0x03
  114:   31 f1           if (c1 == c2) goto Label_0x162;
  116:   a0 a9           r26 = Memory[[r30:r31]+48];
- 118:   a0 fd           skipif (!r26[0])
+ 118:   a0 fd           skipif (!bit(r26,0))
  11a:   0a c0           goto Label_0x130;
  11c:   21 ad           r18 = Memory[[r30:r31]+57];
- 11e:   22 fc           skipif (!r2[2])
+ 11e:   22 fc           skipif (!bit(r2,2))
  120:   20 91 fb 01     r18 = advanced_parameter_tempo;     ; 0x01fb
- 124:   23 fc           skipif (!r2[3])
+ 124:   23 fc           skipif (!bit(r2,3))
  126:   20 91 0d 02     r18 = current_multi_adjust_value;   ; 0x020d
  12a:   22 23           (r18 == 0) || (r18 < 0);            ; test r18
  12c:   b9 f0           if (c1 == c2) goto Label_0x15c;
@@ -188,9 +188,9 @@ Label_0x10e:
 ; Referenced from offset 0x11a <Main> by rjmp
 Label_0x130:
  130:   20 ad           r18 = Memory[[r30:r31]+56];
- 132:   25 fc           skipif (!r2[5])
+ 132:   25 fc           skipif (!bit(r2,5))
  134:   20 91 fd 01     r18 = advanced_parameter_effect;    ; 0x01fd
- 138:   26 fc           skipif (!r2[6])
+ 138:   26 fc           skipif (!bit(r2,6))
  13a:   20 91 0d 02     r18 = current_multi_adjust_value;   ; 0x020d
 
 ; Referenced from offset 0x12e <Main> by rjmp
@@ -205,7 +205,7 @@ Label_0x13e:
  14c:   03 94           r0++;
  14e:   03 ae           Memory[[r30:r31]+59] = r0;
  150:   a0 a9           r26 = Memory[[r30:r31]+48];
- 152:   a0 ff           skipif (r26[0])
+ 152:   a0 ff           skipif (bit(r26,0))
  154:   03 c0           goto Label_0x15c;
  156:   a0 a9           r26 = Memory[[r30:r31]+48];
  158:   ae 7f           r26 &= 254;                         ; 0xfe
@@ -271,12 +271,12 @@ Label_0x186:
 Label_0x190:
  190:   a4 30           cmp(r26, 0x04);                     ; 4
  192:   41 f7           if (c1 != c2) goto Label_0x164;
- 194:   fd d0           read_flash_0x01[(r30/4)-47]_to_r18_r0();
+ 194:   fd d0           Function_0x390();
 
 ; Referenced from offset 0x184 <Main> by rjmp
 ; Referenced from offset 0x18e <Main> by rjmp
 Label_0x196:
- 196:   24 fc           skipif (!r2[4])
+ 196:   24 fc           skipif (!bit(r2,4))
  198:   07 d1           Function_0x3a8();
  19a:   20 83           Memory[r30:r31] = r18;
  19c:   e3 cf           goto Label_0x164;
@@ -304,7 +304,7 @@ Label_0x1b0:
 Label_0x1ba:
  1ba:   a0 32           cmp(r26, 0x20);                     ; 32
  1bc:   19 f4           if (c1 != c2) goto Label_0x1c4;
- 1be:   e8 d0           read_flash_0x01[(r30/4)-47]_to_r18_r0();
+ 1be:   e8 d0           Function_0x390();
  1c0:   20 2d           r18 = r0;
  1c2:   01 c0           goto Label_0x1c6;
 
@@ -316,7 +316,7 @@ Label_0x1c4:
 ; Referenced from offset 0x1b8 <Main> by rjmp
 ; Referenced from offset 0x1c2 <Main> by rjmp
 Label_0x1c6:
- 1c6:   27 fc           skipif (!r2[7])
+ 1c6:   27 fc           skipif (!bit(r2,7))
  1c8:   ef d0           Function_0x3a8();
  1ca:   a2 2d           r26 = r2;
  1cc:   a7 d0           set_routine_timer();                ; Parameter r26:r27, returns r0, sets T flag
@@ -348,7 +348,7 @@ Label_0x1ee:
 Label_0x1f8:
  1f8:   a4 30           cmp(r26, 0x04);                     ; 4
  1fa:   11 f4           if (c1 != c2) goto Label_0x200;
- 1fc:   c9 d0           read_flash_0x01[(r30/4)-47]_to_r18_r0();
+ 1fc:   c9 d0           Function_0x390();
  1fe:   01 c0           goto Label_0x202;
 
 ; Referenced from offset 0x1fa <Main> by brne
@@ -359,7 +359,7 @@ Label_0x200:
 ; Referenced from offset 0x1f6 <Main> by rjmp
 ; Referenced from offset 0x1fe <Main> by rjmp
 Label_0x202:
- 202:   24 fc           skipif (!r2[4])
+ 202:   24 fc           skipif (!bit(r2,4))
  204:   d1 d0           Function_0x3a8();
  206:   21 83           Memory[[r30:r31]+1] = r18;
  208:   a0 81           r26 = Memory[r30:r31];
@@ -496,7 +496,7 @@ Label_0x2a2:
  2a6:   be 70           r27 &= 14;                          ; 0x0e
  2a8:   ab 17           cmp(r26, r27);
  2aa:   79 f0           if (c1 == c2) goto Label_0x2ca;
- 2ac:   53 fe           skipif (r5[3])
+ 2ac:   53 fe           skipif (bit(r5,3))
  2ae:   02 c0           goto Label_0x2b4;
  2b0:   a1 e0           r26 = 1;                            ; 0x01
  2b2:   03 c0           goto Label_0x2ba;
@@ -532,7 +532,7 @@ Label_0x2ca:
 
 ; Referenced from offset 0x2d2 <Main> by brne
 Label_0x2d6:
- 2d6:   a3 fe           skipif (r10[3])
+ 2d6:   a3 fe           skipif (bit(r10,3))
  2d8:   02 c0           goto Label_0x2de;
  2da:   a1 e0           r26 = 1;                            ; 0x01
  2dc:   03 c0           goto Label_0x2e4;
@@ -560,7 +560,7 @@ Label_0x2f4:
 
 ; Referenced from offset 0x2d4 <Main> by rjmp
 Label_0x2f6:
- 2f6:   41 fe           skipif (r4[1])
+ 2f6:   41 fe           skipif (bit(r4,1))
  2f8:   0a c0           goto Label_0x30e;
  2fa:   ae 81           r26 = Memory[[r28:r29]+6];
  2fc:   ae 31           cmp(r26, 0x1e);                     ; 30
@@ -591,7 +591,7 @@ set_routine_timer:     ; Parameter r26:r27, returns r0, sets T flag
  322:   b0 91 88 00     r27 = routine_timer_low;            ; 0x0088
  326:   10 c0           goto Label_0x348;
 
-; Referenced from offset 0x320 <Main> by brne
+; Referenced from offset 0x320 <set_routine_timer> by brne
 Label_0x328:
  328:   a2 30           cmp(r26, 0x02);                     ; 2
  32a:   41 f4           if (c1 != c2) goto Label_0x33c;
@@ -602,30 +602,30 @@ Label_0x328:
  336:   b0 91 8b 00     r27 = mem_unknown_0x8a[1];          ; 0x008b
  33a:   06 c0           goto Label_0x348;
 
-; Referenced from offset 0x32a <Main> by brne
+; Referenced from offset 0x32a <set_routine_timer> by brne
 Label_0x33c:
  33c:   b0 91 88 00     r27 = routine_timer_low;            ; 0x0088
  340:   bb 23           (r27 == 0) || (r27 < 0);            ; test r27
  342:   29 f4           if (c1 != c2) goto Label_0x34e;
  344:   b0 91 89 00     r27 = routine_timer_high;           ; 0x0089
 
-; Referenced from offset 0x326 <Main> by rjmp
-; Referenced from offset 0x33a <Main> by rjmp
+; Referenced from offset 0x326 <set_routine_timer> by rjmp
+; Referenced from offset 0x33a <set_routine_timer> by rjmp
 Label_0x348:
  348:   68 94           set
  34a:   0b 2e           r0 = r27;
  34c:   08 95           return;
 
 
-; Referenced from offset 0x334 <Main> by brne
-; Referenced from offset 0x342 <Main> by brne
+; Referenced from offset 0x334 <set_routine_timer> by brne
+; Referenced from offset 0x342 <set_routine_timer> by brne
 Label_0x34e:
  34e:   e8 94           clt
  350:   08 95           return;
 
 
 ; Referenced from offset 0x2a0 <Main> by rcall
-; Referenced from offset 0x778 <IVT_RESET> by rcall
+; Referenced from offset 0x778 <CallTable_18> by rcall
 ; Referenced from offset 0x1574 <loop_clear_memory2> by call
 CallTable_29:     ; Parameter r28:r29
  352:   4b a0           r4 = Memory[[r28:r29]+35];
@@ -639,7 +639,7 @@ CallTable_29:     ; Parameter r28:r29
  362:   08 f4           if (!Carry) goto Label_0x366;
  364:   29 e0           r18 = 9;                            ; 0x09
 
-; Referenced from offset 0x362 <Main> by brcc
+; Referenced from offset 0x362 <CallTable_29> by brcc
 Label_0x366:
  366:   82 2e           r8 = r18;
  368:   27 a9           r18 = Memory[[r30:r31]+55];
@@ -647,7 +647,7 @@ Label_0x366:
  36c:   08 f4           if (!Carry) goto Label_0x370;
  36e:   22 e3           r18 = 50;                           ; 0x32
 
-; Referenced from offset 0x36c <Main> by brcc
+; Referenced from offset 0x36c <CallTable_29> by brcc
 Label_0x370:
  370:   92 2e           r9 = r18;
  372:   f3 95           r31++;
@@ -659,7 +659,7 @@ Label_0x370:
  37e:   08 f4           if (!Carry) goto Label_0x382;
  380:   29 e0           r18 = 9;                            ; 0x09
 
-; Referenced from offset 0x37e <Main> by brcc
+; Referenced from offset 0x37e <CallTable_29> by brcc
 Label_0x382:
  382:   d2 2e           r13 = r18;
  384:   27 a9           r18 = Memory[[r30:r31]+55];
@@ -667,7 +667,7 @@ Label_0x382:
  388:   08 f4           if (!Carry) goto Label_0x38c;
  38a:   22 e3           r18 = 50;                           ; 0x32
 
-; Referenced from offset 0x388 <Main> by brcc
+; Referenced from offset 0x388 <CallTable_29> by brcc
 Label_0x38c:
  38c:   e2 2e           r14 = r18;
  38e:   08 95           return;
@@ -676,7 +676,7 @@ Label_0x38c:
 ; Referenced from offset 0x194 <Main> by rcall
 ; Referenced from offset 0x1be <Main> by rcall
 ; Referenced from offset 0x1fc <Main> by rcall
-read_flash_0x01[(r30/4)-47]_to_r18_r0:
+Function_0x390:
  390:   ff 93           push    r31
  392:   ef 93           push    r30
  394:   ec 59           r30 -= 156;                         ; 0x9c, no carry
@@ -703,7 +703,7 @@ Function_0x3a8:
  3b2:   08 f0           if (Carry) goto Label_0x3b6;
  3b4:   ea 95           r30--;
 
-; Referenced from offset 0x3b2 <Main> by brcs
+; Referenced from offset 0x3b2 <CallTable_29> by brcs
 Label_0x3b6:
  3b6:   be 2f           r27 = r30;
  3b8:   ec ee           r30 = 236;                          ; 0xec
@@ -724,9 +724,9 @@ Label_0x3b6:
 ; Referenced from offset 0xb2 <Main> by rjmp
 Label_0x3d2:
  3d2:   ab 89           r26 = Memory[[r28:r29]+19];
- 3d4:   a1 ff           skipif (r26[1])
+ 3d4:   a1 ff           skipif (bit(r26,1))
  3d6:   42 c0           goto Label_0x45c;
- 3d8:   17 ff           skipif (r17[7])
+ 3d8:   17 ff           skipif (bit(r17,7))
  3da:   2e c0           goto Label_0x438;
  3dc:   a0 91 20 02     r26 = com_input_buffer[0];          ; 0x0220
  3e0:   a6 30           cmp(r26, 0x06);                     ; 6
@@ -736,13 +736,13 @@ Label_0x3d2:
  3e8:   10 f0           if (Carry) goto Label_0x3ee;
  3ea:   0c 94 3b 0b     goto error_handler;
 
-; Referenced from offset 0x3e8 <Main> by brcs
+; Referenced from offset 0x3e8 <CallTable_29> by brcs
 Label_0x3ee:
  3ee:   a3 95           r26++;
  3f0:   aa a3           Memory[[r28:r29]+34] = r26;
  3f2:   22 c0           goto Label_0x438;
 
-; Referenced from offset 0x3e2 <Main> by breq
+; Referenced from offset 0x3e2 <CallTable_29> by breq
 Label_0x3f4:
  3f4:   da a3           Memory[[r28:r29]+34] = r29;
  3f6:   d0 93 20 02     com_input_buffer[0] = r29;          ; 0x0220
@@ -752,7 +752,7 @@ Label_0x3f4:
  404:   a0 e4           r26 = 64;                           ; 0x40
  406:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
  40a:   a4 e0           r26 = 4;                            ; 0x04
- 40c:   06 fd           skipif (!r16[6])
+ 40c:   06 fd           skipif (!bit(r16,6))
  40e:   aa e0           r26 = 10;                           ; 0x0a
  410:   2a 2e           r2 = r26;
  412:   2a 2f           r18 = r26;
@@ -761,10 +761,10 @@ Label_0x3f4:
  41a:   e2 2d           r30 = r2;
  41c:   f0 e0           r31 = 0;                            ; 0x00
 
-; Referenced from offset 0x42a <Main> by brcs
+; Referenced from offset 0x42a <CallTable_29> by brcs
 Label_0x41e:
  41e:   a1 91           r26 = Memory[[r30:r31]++];
- 420:   f2 fc           skipif (!r15[2])
+ 420:   f2 fc           skipif (!bit(r15,2))
  422:   aa 27           r26 = 0x00;                         ; 0
  424:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
  428:   e2 17           cmp(r30, r18);
@@ -774,8 +774,8 @@ Label_0x41e:
  434:   a0 e4           r26 = 64;                           ; 0x40
  436:   0a 27           r16 ^= r26;
 
-; Referenced from offset 0x3da <Main> by rjmp
-; Referenced from offset 0x3f2 <Main> by rjmp
+; Referenced from offset 0x3da <CallTable_29> by rjmp
+; Referenced from offset 0x3f2 <CallTable_29> by rjmp
 Label_0x438:
  438:   e8 89           r30 = Memory[[r28:r29]+16];
  43a:   e8 32           cmp(r30, 0x28);                     ; 40
@@ -784,7 +784,7 @@ Label_0x438:
  440:   f8 8b           Memory[[r28:r29]+16] = r31;
  442:   a6 d1           run_call_table();                   ; Parameter r30 (0-39) CallTable_31
 
-; Referenced from offset 0x43c <Main> by brcc
+; Referenced from offset 0x43c <CallTable_29> by brcc
 Label_0x444:
  444:   e9 89           r30 = Memory[[r28:r29]+17];
  446:   e8 32           cmp(r30, 0x28);                     ; 40
@@ -793,17 +793,17 @@ Label_0x444:
  44c:   f9 8b           Memory[[r28:r29]+17] = r31;
  44e:   a0 d1           run_call_table();                   ; Parameter r30 (0-39) CallTable_31
 
-; Referenced from offset 0x448 <Main> by brcc
+; Referenced from offset 0x448 <CallTable_29> by brcc
 Label_0x450:
- 450:   f1 fe           skipif (r15[1])
+ 450:   f1 fe           skipif (bit(r15,1))
  452:   04 c0           goto Label_0x45c;
  454:   ad ef           r26 = 253;                          ; 0xfd
  456:   fa 22           r15 &= r26;
  458:   ac a1           r26 = Memory[[r28:r29]+36];
  45a:   9e d3           CallTable_22();
 
-; Referenced from offset 0x3d6 <Main> by rjmp
-; Referenced from offset 0x452 <Main> by rjmp
+; Referenced from offset 0x3d6 <CallTable_29> by rjmp
+; Referenced from offset 0x452 <CallTable_29> by rjmp
 Label_0x45c:
  45c:   ab 89           r26 = Memory[[r28:r29]+19];
  45e:   ae 70           r26 &= 14;                          ; 0x0e
@@ -813,7 +813,7 @@ Label_0x45c:
  466:   94 d1           run_call_table();                   ; Parameter r30 (0-39) CallTable_31
  468:   f5 cd           goto Main;
 
-; Referenced from offset 0x462 <Main> by brne
+; Referenced from offset 0x462 <CallTable_29> by brne
 Label_0x46a:
  46a:   ab 89           r26 = Memory[[r28:r29]+19];
  46c:   ae 70           r26 &= 14;                          ; 0x0e
@@ -821,7 +821,7 @@ Label_0x46a:
  470:   09 f0           if (c1 == c2) goto Label_0x474;
  472:   4b c0           goto Label_0x50a;
 
-; Referenced from offset 0x470 <Main> by breq
+; Referenced from offset 0x470 <CallTable_29> by breq
 Label_0x474:
  474:   ac 89           r26 = Memory[[r28:r29]+20];
  476:   aa 23           (r26 == 0) || (r26 < 0);            ; test r26
@@ -833,7 +833,7 @@ Label_0x474:
  482:   a2 15           cmp(r26, r2);
  484:   c9 f4           if (c1 != c2) goto Label_0x4b8;
 
-; Referenced from offset 0x47c <Main> by breq
+; Referenced from offset 0x47c <CallTable_29> by breq
 Label_0x486:
  486:   26 e7           r18 = 118;                          ; 0x76
  488:   2d a7           Memory[[r28:r29]+45] = r18;
@@ -860,11 +860,11 @@ Label_0x486:
  4b4:   09 f4           if (c1 != c2) goto Label_0x4b8;
  4b6:   a6 d0           Function_0x604();
 
-; Referenced from offset 0x478 <Main> by breq
-; Referenced from offset 0x484 <Main> by brne
-; Referenced from offset 0x4b4 <Main> by brne
+; Referenced from offset 0x478 <CallTable_29> by breq
+; Referenced from offset 0x484 <CallTable_29> by brne
+; Referenced from offset 0x4b4 <CallTable_29> by brne
 Label_0x4b8:
- 4b8:   45 fc           skipif (!r4[5])
+ 4b8:   45 fc           skipif (!bit(r4,5))
  4ba:   cc cd           goto Main;
  4bc:   a1 ef           r26 = 241;                          ; 0xf1
  4be:   a5 bb           IO[PORTC] = r26;
@@ -884,8 +884,8 @@ Label_0x4b8:
  4da:   ba 2b           r27 |= r26;
  4dc:   b8 87           Memory[[r28:r29]+8] = r27;
 
-; Referenced from offset 0x4ce <Main> by breq
-; Referenced from offset 0x4d6 <Main> by breq
+; Referenced from offset 0x4ce <CallTable_29> by breq
+; Referenced from offset 0x4d6 <CallTable_29> by breq
 Label_0x4de:
  4de:   a9 87           Memory[[r28:r29]+9] = r26;
  4e0:   d5 bb           IO[PORTC] = r29;
@@ -898,29 +898,29 @@ Label_0x4de:
  4ee:   e4 2f           r30 = r20;
  4f0:   4f d1           run_call_table();                   ; Parameter r30 (0-39) CallTable_31
 
-; Referenced from offset 0x4ec <Main> by brne
+; Referenced from offset 0x4ec <CallTable_29> by brne
 Label_0x4f2:
  4f2:   a0 32           cmp(r26, 0x20);                     ; 32
  4f4:   11 f4           if (c1 != c2) goto Label_0x4fa;
  4f6:   e6 2f           r30 = r22;
  4f8:   4b d1           run_call_table();                   ; Parameter r30 (0-39) CallTable_31
 
-; Referenced from offset 0x4f4 <Main> by brne
+; Referenced from offset 0x4f4 <CallTable_29> by brne
 Label_0x4fa:
  4fa:   a0 34           cmp(r26, 0x40);                     ; 64
  4fc:   11 f4           if (c1 != c2) goto Label_0x502;
  4fe:   e3 2f           r30 = r19;
  500:   47 d1           run_call_table();                   ; Parameter r30 (0-39) CallTable_31
 
-; Referenced from offset 0x4fc <Main> by brne
+; Referenced from offset 0x4fc <CallTable_29> by brne
 Label_0x502:
  502:   a0 38           cmp(r26, 0x80);                     ; 128
  504:   11 f4           if (c1 != c2) goto Label_0x50a;
  506:   e5 2f           r30 = r21;
  508:   43 d1           run_call_table();                   ; Parameter r30 (0-39) CallTable_31
 
-; Referenced from offset 0x472 <Main> by rjmp
-; Referenced from offset 0x504 <Main> by brne
+; Referenced from offset 0x472 <CallTable_29> by rjmp
+; Referenced from offset 0x504 <CallTable_29> by brne
 Label_0x50a:
  50a:   ab 89           r26 = Memory[[r28:r29]+19];
  50c:   ae 73           r26 &= 62;                          ; 0x3e
@@ -928,23 +928,23 @@ Label_0x50a:
  510:   09 f0           if (c1 == c2) goto Label_0x514;
  512:   a0 cd           goto Main;
 
-; Referenced from offset 0x510 <Main> by breq
+; Referenced from offset 0x510 <CallTable_29> by breq
 Label_0x514:
- 514:   02 ff           skipif (r16[2])
+ 514:   02 ff           skipif (bit(r16,2))
  516:   04 c0           goto Label_0x520;
  518:   31 e0           r19 = 1;                            ; 0x01
  51a:   41 e0           r20 = 1;                            ; 0x01
  51c:   61 e0           r22 = 1;                            ; 0x01
  51e:   51 e0           r21 = 1;                            ; 0x01
 
-; Referenced from offset 0x516 <Main> by rjmp
+; Referenced from offset 0x516 <CallTable_29> by rjmp
 Label_0x520:
  520:   ab 81           r26 = Memory[[r28:r29]+3];
  522:   a5 38           cmp(r26, 0x85);                     ; 133
  524:   08 f4           if (!Carry) goto Label_0x528;
  526:   34 c0           goto Label_0x590;
 
-; Referenced from offset 0x524 <Main> by brcc
+; Referenced from offset 0x524 <CallTable_29> by brcc
 Label_0x528:
  528:   e9 2d           r30 = r9;
  52a:   f0 91 05 02     r31 = Memory[0x0205];               ; 517
@@ -953,7 +953,7 @@ Label_0x528:
  532:   08 f4           if (!Carry) goto Label_0x536;
  534:   ff 27           r31 = 0x00;                         ; 0
 
-; Referenced from offset 0x532 <Main> by brcc
+; Referenced from offset 0x532 <CallTable_29> by brcc
 Label_0x536:
  536:   15 d7           delay_0x1362();                     ; Parameter r30
  538:   a4 e0           r26 = 4;                            ; 0x04
@@ -963,7 +963,7 @@ Label_0x536:
  540:   09 f0           if (c1 == c2) goto Label_0x544;
  542:   aa 0f           r26 *= 2;
 
-; Referenced from offset 0x540 <Main> by breq
+; Referenced from offset 0x540 <CallTable_29> by breq
 Label_0x544:
  544:   b0 e0           r27 = 0;                            ; 0x00
  546:   3a d7           Function_0x13bc();
@@ -973,7 +973,7 @@ Label_0x544:
  54e:   08 f0           if (Carry) goto Label_0x552;
  550:   0f 2e           r0 = r31;
 
-; Referenced from offset 0x54e <Main> by brcs
+; Referenced from offset 0x54e <CallTable_29> by brcs
 Label_0x552:
  552:   ee 2d           r30 = r14;
  554:   f0 91 06 02     r31 = Memory[0x0206];               ; 518
@@ -982,7 +982,7 @@ Label_0x552:
  55c:   08 f4           if (!Carry) goto Label_0x560;
  55e:   ff 27           r31 = 0x00;                         ; 0
 
-; Referenced from offset 0x55c <Main> by brcc
+; Referenced from offset 0x55c <CallTable_29> by brcc
 Label_0x560:
  560:   00 d7           delay_0x1362();                     ; Parameter r30
  562:   a4 e0           r26 = 4;                            ; 0x04
@@ -992,7 +992,7 @@ Label_0x560:
  56a:   09 f0           if (c1 == c2) goto Label_0x56e;
  56c:   aa 0f           r26 *= 2;
 
-; Referenced from offset 0x56a <Main> by breq
+; Referenced from offset 0x56a <CallTable_29> by breq
 Label_0x56e:
  56e:   b0 e0           r27 = 0;                            ; 0x00
  570:   25 d7           Function_0x13bc();
@@ -1001,23 +1001,23 @@ Label_0x56e:
  576:   08 f0           if (Carry) goto Label_0x57a;
  578:   0f 0e           r0 += r31;                          ; No carry
 
-; Referenced from offset 0x576 <Main> by brcs
+; Referenced from offset 0x576 <CallTable_29> by brcs
 Label_0x57a:
  57a:   f8 94           Disable_Interrupts();
  57c:   00 92 04 02     Memory[0x0204] = r0;                ; 516
  580:   78 94           Enable_Interrupts();
- 582:   13 fd           skipif (!r17[3])
+ 582:   13 fd           skipif (!bit(r17,3))
  584:   67 cd           goto Main;
  586:   a8 b3           r26 = IO[PORTB];
  588:   af 70           r26 &= 15;                          ; 0x0f
  58a:   09 f4           if (c1 != c2) goto Label_0x58e;
  58c:   c8 d2           enable_ADC_and_set_r17[3]();        ; CallTable_34
 
-; Referenced from offset 0x58a <Main> by brne
+; Referenced from offset 0x58a <CallTable_29> by brne
 Label_0x58e:
  58e:   62 cd           goto Main;
 
-; Referenced from offset 0x526 <Main> by rjmp
+; Referenced from offset 0x526 <CallTable_29> by rjmp
 ; Referenced from offset 0x16d8 <loop_clear_memory2> by jmp
 ; Referenced from offset 0x16f8 <loop_clear_memory2> by jmp
 Label_0x590:
@@ -1033,33 +1033,33 @@ Function_0x59c:
  59e:   bd 8d           r27 = Memory[[r28:r29]+29];
  5a0:   ee 8d           r30 = Memory[[r28:r29]+30];
  5a2:   ff 8d           r31 = Memory[[r28:r29]+31];
- 5a4:   14 fd           skipif (!r17[4])
+ 5a4:   14 fd           skipif (!bit(r17,4))
  5a6:   04 c0           goto Label_0x5b0;
  5a8:   ae 1b           r26 -= r30;                         ; No carry
  5aa:   bf 0b           r27 += r31;                         ; With carry
  5ac:   fb 2f           r31 = r27;
  5ae:   02 c0           goto Label_0x5b4;
 
-; Referenced from offset 0x5a6 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x5a6 <Function_0x59c> by rjmp
 Label_0x5b0:
  5b0:   ea 1b           r30 -= r26;                         ; No carry
  5b2:   fb 0b           r31 += r27;                         ; With carry
 
-; Referenced from offset 0x5ae <loop_clear_memory2> by rjmp
+; Referenced from offset 0x5ae <Function_0x59c> by rjmp
 Label_0x5b4:
  5b4:   f2 30           cmp(r31, 0x02);                     ; 2
  5b6:   08 f4           if (!Carry) goto Label_0x5ba;
  5b8:   08 95           return;
 
 
-; Referenced from offset 0x5b6 <loop_clear_memory2> by brcc
+; Referenced from offset 0x5b6 <Function_0x59c> by brcc
 Label_0x5ba:
  5ba:   f6 30           cmp(r31, 0x06);                     ; 6
  5bc:   08 f0           if (Carry) goto Label_0x5c0;
  5be:   08 95           return;
 
 
-; Referenced from offset 0x5bc <loop_clear_memory2> by brcs
+; Referenced from offset 0x5bc <Function_0x59c> by brcs
 Label_0x5c0:
  5c0:   a0 e1           r26 = 16;                           ; 0x10
  5c2:   1a 27           r17 ^= r26;
@@ -1072,32 +1072,32 @@ Label_0x5c0:
  5d2:   eb 2e           r14 = r27;
  5d4:   02 c0           goto Label_0x5da;
 
-; Referenced from offset 0x5ce <loop_clear_memory2> by brcs
+; Referenced from offset 0x5ce <Function_0x59c> by brcs
 Label_0x5d6:
  5d6:   9b 2e           r9 = r27;
  5d8:   ea 2e           r14 = r26;
 
-; Referenced from offset 0x5d4 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x5d4 <Function_0x59c> by rjmp
 Label_0x5da:
  5da:   90 92 b7 00     channel_a_current_width_modulation_value = r9; ; 0x00b7
  5de:   e0 92 b7 01     channel_b_current_width_modulation_value = r14; ; 0x01b7
  5e2:   08 95           return;
 
 
-; Referenced from offset 0x5e4 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x5e4 <Function_0x59c> by rjmp
 Label_0x5e4:
  5e4:   ff cf           goto Label_0x5e4;
 
-; Referenced from offset 0x60e <IVT_RESET> by rcall
-; Referenced from offset 0x904 <IVT_RESET> by rcall
-; Referenced from offset 0x11d6 <USART_RX_Complete> by rcall
-; Referenced from offset 0x11e8 <USART_RX_Complete> by rcall
-; Referenced from offset 0x141c <loop_clear_memory2> by rcall
-; Referenced from offset 0x1426 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1430 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1438 <loop_clear_memory2> by rcall
-; Referenced from offset 0x144a <loop_clear_memory2> by rcall
-; Referenced from offset 0x148e <loop_clear_memory2> by rcall
+; Referenced from offset 0x60e <CallTable_18> by rcall
+; Referenced from offset 0x904 <run_call_table> by rcall
+; Referenced from offset 0x11d6 <loop_clear_memory2> by rcall
+; Referenced from offset 0x11e8 <loop_clear_memory2> by rcall
+; Referenced from offset 0x141c <Function_0x13fa> by rcall
+; Referenced from offset 0x1426 <Function_0x13fa> by rcall
+; Referenced from offset 0x1430 <Function_0x13fa> by rcall
+; Referenced from offset 0x1438 <Function_0x13fa> by rcall
+; Referenced from offset 0x144a <Function_0x13fa> by rcall
+; Referenced from offset 0x148e <Function_0x13fa> by rcall
 sleep:     ; Parameter r26
  5e6:   bf 93           push    r27
  5e8:   b0 e8           r27 = 128;                          ; 0x80
@@ -1107,7 +1107,7 @@ sleep:     ; Parameter r26
  5f0:   b3 95           r27++;
  5f2:   b3 bd           IO[OCR2] = r27;
 
-; Referenced from offset 0x5f8 <loop_clear_memory2> by breq
+; Referenced from offset 0x5f8 <sleep> by breq
 Label_0x5f4:
  5f4:   b8 b7           r27 = IO[TIFR];
  5f6:   b0 78           r27 &= 128;                         ; 0x80
@@ -1116,16 +1116,16 @@ Label_0x5f4:
  5fc:   08 95           return;
 
 
-; Referenced from offset 0x7d4 <IVT_RESET> by rcall
-; Referenced from offset 0x874 <IVT_RESET> by rcall
-; Referenced from offset 0x88a <IVT_RESET> by rcall
-; Referenced from offset 0x994 <IVT_RESET> by rcall
+; Referenced from offset 0x7d4 <run_call_table> by rcall
+; Referenced from offset 0x874 <run_call_table> by rcall
+; Referenced from offset 0x88a <run_call_table> by rcall
+; Referenced from offset 0x994 <run_call_table> by rcall
 CallTable_18:     ; Parameter r28:r29
  5fe:   dc 8b           Memory[[r28:r29]+20] = r29;
  600:   a8 8d           r26 = Memory[[r28:r29]+24];
  602:   ab 8f           Memory[[r28:r29]+27] = r26;
 
-; Referenced from offset 0x4b6 <Main> by rcall
+; Referenced from offset 0x4b6 <CallTable_29> by rcall
 Function_0x604:
  604:   0c 7c           r16 &= 204;                         ; 0xcc
  606:   a2 d7           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29(); ; CallTable_24
@@ -1143,7 +1143,7 @@ Function_0x604:
  61e:   ab 2f           r26 = r27;
  620:   0d c0           goto Label_0x63c;
 
-; Referenced from offset 0x61c <IVT_RESET> by breq
+; Referenced from offset 0x61c <CallTable_18> by breq
 Label_0x622:
  622:   a8 8d           r26 = Memory[[r28:r29]+24];
  624:   11 60           r17 |= 1;                           ; 0x01
@@ -1154,16 +1154,16 @@ Label_0x622:
  62e:   4b 22           r4 &= r27;
  630:   05 c0           goto Label_0x63c;
 
-; Referenced from offset 0x62a <IVT_RESET> by breq
+; Referenced from offset 0x62a <CallTable_18> by breq
 Label_0x632:
  632:   b0 e1           r27 = 16;                           ; 0x10
  634:   4b 2a           r4 |= r27;
  636:   a0 91 f5 01     r26 = split_mode_number_a;          ; 0x01f5
  63a:   1d 7f           r17 &= 253;                         ; 0xfd
 
-; Referenced from offset 0x620 <IVT_RESET> by rjmp
-; Referenced from offset 0x630 <IVT_RESET> by rjmp
-; Referenced from offset 0x770 <IVT_RESET> by rjmp
+; Referenced from offset 0x620 <CallTable_18> by rjmp
+; Referenced from offset 0x630 <CallTable_18> by rjmp
+; Referenced from offset 0x770 <CallTable_18> by rjmp
 Label_0x63c:
  63c:   2b ef           r18 = 251;                          ; 0xfb
  63e:   f2 22           r15 &= r18;
@@ -1175,76 +1175,76 @@ Label_0x63c:
  64a:   39 f4           if (c1 != c2) goto Label_0x65a;
  64c:   ab e0           r26 = 11;                           ; 0x0b
  64e:   a4 d2           CallTable_22();
- 650:   11 ff           skipif (r17[1])
+ 650:   11 ff           skipif (bit(r17,1))
  652:   02 c0           goto Label_0x658;
  654:   ac e0           r26 = 12;                           ; 0x0c
  656:   a0 d2           CallTable_22();
 
-; Referenced from offset 0x652 <IVT_RESET> by rjmp
+; Referenced from offset 0x652 <CallTable_18> by rjmp
 Label_0x658:
  658:   83 c0           goto Label_0x760;
 
-; Referenced from offset 0x64a <IVT_RESET> by brne
+; Referenced from offset 0x64a <CallTable_18> by brne
 Label_0x65a:
  65a:   a7 37           cmp(r26, 0x77);                     ; 119
  65c:   39 f4           if (c1 != c2) goto Label_0x66c;
  65e:   a3 e0           r26 = 3;                            ; 0x03
  660:   9b d2           CallTable_22();
- 662:   11 ff           skipif (r17[1])
+ 662:   11 ff           skipif (bit(r17,1))
  664:   02 c0           goto Label_0x66a;
  666:   a4 e0           r26 = 4;                            ; 0x04
  668:   97 d2           CallTable_22();
 
-; Referenced from offset 0x664 <IVT_RESET> by rjmp
+; Referenced from offset 0x664 <CallTable_18> by rjmp
 Label_0x66a:
  66a:   7a c0           goto Label_0x760;
 
-; Referenced from offset 0x65c <IVT_RESET> by brne
+; Referenced from offset 0x65c <CallTable_18> by brne
 Label_0x66c:
  66c:   a8 37           cmp(r26, 0x78);                     ; 120
  66e:   39 f4           if (c1 != c2) goto Label_0x67e;
  670:   a5 e0           r26 = 5;                            ; 0x05
  672:   92 d2           CallTable_22();
- 674:   11 ff           skipif (r17[1])
+ 674:   11 ff           skipif (bit(r17,1))
  676:   02 c0           goto Label_0x67c;
  678:   a8 e0           r26 = 8;                            ; 0x08
  67a:   8e d2           CallTable_22();
 
-; Referenced from offset 0x676 <IVT_RESET> by rjmp
+; Referenced from offset 0x676 <CallTable_18> by rjmp
 Label_0x67c:
  67c:   71 c0           goto Label_0x760;
 
-; Referenced from offset 0x66e <IVT_RESET> by brne
+; Referenced from offset 0x66e <CallTable_18> by brne
 Label_0x67e:
  67e:   a9 37           cmp(r26, 0x79);                     ; 121
  680:   39 f4           if (c1 != c2) goto Label_0x690;
  682:   ad e0           r26 = 13;                           ; 0x0d
  684:   89 d2           CallTable_22();
- 686:   11 ff           skipif (r17[1])
+ 686:   11 ff           skipif (bit(r17,1))
  688:   02 c0           goto Label_0x68e;
  68a:   a1 e2           r26 = 33;                           ; 0x21
  68c:   85 d2           CallTable_22();
 
-; Referenced from offset 0x688 <IVT_RESET> by rjmp
+; Referenced from offset 0x688 <CallTable_18> by rjmp
 Label_0x68e:
  68e:   68 c0           goto Label_0x760;
 
-; Referenced from offset 0x680 <IVT_RESET> by brne
+; Referenced from offset 0x680 <CallTable_18> by brne
 Label_0x690:
  690:   aa 37           cmp(r26, 0x7a);                     ; 122
  692:   39 f4           if (c1 != c2) goto Label_0x6a2;
  694:   ae e0           r26 = 14;                           ; 0x0e
  696:   80 d2           CallTable_22();
- 698:   11 ff           skipif (r17[1])
+ 698:   11 ff           skipif (bit(r17,1))
  69a:   02 c0           goto Label_0x6a0;
  69c:   a2 e0           r26 = 2;                            ; 0x02
  69e:   7c d2           CallTable_22();
 
-; Referenced from offset 0x69a <IVT_RESET> by rjmp
+; Referenced from offset 0x69a <CallTable_18> by rjmp
 Label_0x6a0:
  6a0:   5f c0           goto Label_0x760;
 
-; Referenced from offset 0x692 <IVT_RESET> by brne
+; Referenced from offset 0x692 <CallTable_18> by brne
 Label_0x6a2:
  6a2:   24 e0           r18 = 4;                            ; 0x04
  6a4:   f2 2a           r15 |= r18;
@@ -1254,38 +1254,38 @@ Label_0x6a2:
  6ac:   75 d2           CallTable_22();
  6ae:   58 c0           goto Label_0x760;
 
-; Referenced from offset 0x6a8 <IVT_RESET> by brne
+; Referenced from offset 0x6a8 <CallTable_18> by brne
 Label_0x6b0:
  6b0:   ac 37           cmp(r26, 0x7c);                     ; 124
  6b2:   59 f4           if (c1 != c2) goto Label_0x6ca;
  6b4:   a0 e4           r26 = 64;                           ; 0x40
  6b6:   ab a3           Memory[[r28:r29]+35] = r26;
 
-; Referenced from offset 0x6ce <IVT_RESET> by rjmp
+; Referenced from offset 0x6ce <CallTable_18> by rjmp
 Label_0x6b8:
  6b8:   a7 e4           r26 = 71;                           ; 0x47
- 6ba:   10 fd           skipif (!r17[0])
+ 6ba:   10 fd           skipif (!bit(r17,0))
  6bc:   a8 ab           Memory[[r28:r29]+48] = r26;
- 6be:   11 fd           skipif (!r17[1])
+ 6be:   11 fd           skipif (!bit(r17,1))
  6c0:   a0 93 90 01     channel_a_current_gate_value = r26; ; 0x0190
  6c4:   a7 e1           r26 = 23;                           ; 0x17
  6c6:   68 d2           CallTable_22();
  6c8:   4b c0           goto Label_0x760;
 
-; Referenced from offset 0x6b2 <IVT_RESET> by brne
+; Referenced from offset 0x6b2 <CallTable_18> by brne
 Label_0x6ca:
  6ca:   ad 37           cmp(r26, 0x7d);                     ; 125
  6cc:   09 f4           if (c1 != c2) goto Label_0x6d0;
  6ce:   f4 cf           goto Label_0x6b8;
 
-; Referenced from offset 0x6cc <IVT_RESET> by brne
+; Referenced from offset 0x6cc <CallTable_18> by brne
 Label_0x6d0:
  6d0:   ae 37           cmp(r26, 0x7e);                     ; 126
  6d2:   59 f4           if (c1 != c2) goto Label_0x6ea;
  6d4:   a7 e6           r26 = 103;                          ; 0x67
- 6d6:   10 fd           skipif (!r17[0])
+ 6d6:   10 fd           skipif (!bit(r17,0))
  6d8:   a8 ab           Memory[[r28:r29]+48] = r26;
- 6da:   11 fd           skipif (!r17[1])
+ 6da:   11 fd           skipif (!bit(r17,1))
  6dc:   a0 93 90 01     channel_a_current_gate_value = r26; ; 0x0190
  6e0:   a2 e2           r26 = 34;                           ; 0x22
  6e2:   5a d2           CallTable_22();
@@ -1293,7 +1293,7 @@ Label_0x6d0:
  6e6:   ab a3           Memory[[r28:r29]+35] = r26;
  6e8:   3b c0           goto Label_0x760;
 
-; Referenced from offset 0x6d2 <IVT_RESET> by brne
+; Referenced from offset 0x6d2 <CallTable_18> by brne
 Label_0x6ea:
  6ea:   2b ef           r18 = 251;                          ; 0xfb
  6ec:   f2 22           r15 &= r18;
@@ -1303,7 +1303,7 @@ Label_0x6ea:
  6f4:   ac 8b           Memory[[r28:r29]+20] = r26;
  6f6:   49 c0           goto Label_0x78a;
 
-; Referenced from offset 0x6f0 <IVT_RESET> by brne
+; Referenced from offset 0x6f0 <CallTable_18> by brne
 Label_0x6f8:
  6f8:   a1 38           cmp(r26, 0x81);                     ; 129
  6fa:   19 f4           if (c1 != c2) goto Label_0x702;
@@ -1311,7 +1311,7 @@ Label_0x6f8:
  6fe:   4c d2           CallTable_22();
  700:   2f c0           goto Label_0x760;
 
-; Referenced from offset 0x6fa <IVT_RESET> by brne
+; Referenced from offset 0x6fa <CallTable_18> by brne
 Label_0x702:
  702:   a2 38           cmp(r26, 0x82);                     ; 130
  704:   19 f4           if (c1 != c2) goto Label_0x70c;
@@ -1319,7 +1319,7 @@ Label_0x702:
  708:   47 d2           CallTable_22();
  70a:   2a c0           goto Label_0x760;
 
-; Referenced from offset 0x704 <IVT_RESET> by brne
+; Referenced from offset 0x704 <CallTable_18> by brne
 Label_0x70c:
  70c:   a3 38           cmp(r26, 0x83);                     ; 131
  70e:   19 f4           if (c1 != c2) goto Label_0x716;
@@ -1327,7 +1327,7 @@ Label_0x70c:
  712:   42 d2           CallTable_22();
  714:   25 c0           goto Label_0x760;
 
-; Referenced from offset 0x70e <IVT_RESET> by brne
+; Referenced from offset 0x70e <CallTable_18> by brne
 Label_0x716:
  716:   a4 38           cmp(r26, 0x84);                     ; 132
  718:   19 f4           if (c1 != c2) goto Label_0x720;
@@ -1335,7 +1335,7 @@ Label_0x716:
  71c:   3d d2           CallTable_22();
  71e:   20 c0           goto Label_0x760;
 
-; Referenced from offset 0x718 <IVT_RESET> by brne
+; Referenced from offset 0x718 <CallTable_18> by brne
 Label_0x720:
  720:   24 e0           r18 = 4;                            ; 0x04
  722:   f2 2a           r15 |= r18;
@@ -1346,12 +1346,12 @@ Label_0x720:
  72c:   ab a3           Memory[[r28:r29]+35] = r26;
  72e:   a4 e1           r26 = 20;                           ; 0x14
  730:   33 d2           CallTable_22();
- 732:   11 ff           skipif (r17[1])
+ 732:   11 ff           skipif (bit(r17,1))
  734:   02 c0           goto Label_0x73a;
  736:   a5 e1           r26 = 21;                           ; 0x15
  738:   2f d2           CallTable_22();
 
-; Referenced from offset 0x734 <IVT_RESET> by rjmp
+; Referenced from offset 0x734 <CallTable_18> by rjmp
 Label_0x73a:
  73a:   a8 8d           r26 = Memory[[r28:r29]+24];
  73c:   a5 38           cmp(r26, 0x85);                     ; 133
@@ -1360,7 +1360,7 @@ Label_0x73a:
  742:   2a d2           CallTable_22();
  744:   0d c0           goto Label_0x760;
 
-; Referenced from offset 0x726 <IVT_RESET> by brcc
+; Referenced from offset 0x726 <CallTable_18> by brcc
 Label_0x746:
  746:   a7 38           cmp(r26, 0x87);                     ; 135
  748:   19 f4           if (c1 != c2) goto Label_0x750;
@@ -1368,7 +1368,7 @@ Label_0x746:
  74c:   25 d2           CallTable_22();
  74e:   08 c0           goto Label_0x760;
 
-; Referenced from offset 0x748 <IVT_RESET> by brne
+; Referenced from offset 0x748 <CallTable_18> by brne
 Label_0x750:
  750:   a0 57           r26 -= 112;                         ; 0x70, no carry
  752:   ae 31           cmp(r26, 0x1e);                     ; 30
@@ -1377,37 +1377,37 @@ Label_0x750:
  75a:   a0 2d           r26 = r0;
  75c:   1d d2           CallTable_22();
 
-; Referenced from offset 0x754 <IVT_RESET> by brcc
+; Referenced from offset 0x754 <CallTable_18> by brcc
 Label_0x75e:
  75e:   00 c0           goto Label_0x760;
 
-; Referenced from offset 0x658 <IVT_RESET> by rjmp
-; Referenced from offset 0x66a <IVT_RESET> by rjmp
-; Referenced from offset 0x67c <IVT_RESET> by rjmp
-; Referenced from offset 0x68e <IVT_RESET> by rjmp
-; Referenced from offset 0x6a0 <IVT_RESET> by rjmp
-; Referenced from offset 0x6ae <IVT_RESET> by rjmp
-; Referenced from offset 0x6c8 <IVT_RESET> by rjmp
-; Referenced from offset 0x6e8 <IVT_RESET> by rjmp
-; Referenced from offset 0x700 <IVT_RESET> by rjmp
-; Referenced from offset 0x70a <IVT_RESET> by rjmp
-; Referenced from offset 0x714 <IVT_RESET> by rjmp
-; Referenced from offset 0x71e <IVT_RESET> by rjmp
-; Referenced from offset 0x73e <IVT_RESET> by breq
-; Referenced from offset 0x744 <IVT_RESET> by rjmp
-; Referenced from offset 0x74e <IVT_RESET> by rjmp
-; Referenced from offset 0x75e <IVT_RESET> by rjmp
+; Referenced from offset 0x658 <CallTable_18> by rjmp
+; Referenced from offset 0x66a <CallTable_18> by rjmp
+; Referenced from offset 0x67c <CallTable_18> by rjmp
+; Referenced from offset 0x68e <CallTable_18> by rjmp
+; Referenced from offset 0x6a0 <CallTable_18> by rjmp
+; Referenced from offset 0x6ae <CallTable_18> by rjmp
+; Referenced from offset 0x6c8 <CallTable_18> by rjmp
+; Referenced from offset 0x6e8 <CallTable_18> by rjmp
+; Referenced from offset 0x700 <CallTable_18> by rjmp
+; Referenced from offset 0x70a <CallTable_18> by rjmp
+; Referenced from offset 0x714 <CallTable_18> by rjmp
+; Referenced from offset 0x71e <CallTable_18> by rjmp
+; Referenced from offset 0x73e <CallTable_18> by breq
+; Referenced from offset 0x744 <CallTable_18> by rjmp
+; Referenced from offset 0x74e <CallTable_18> by rjmp
+; Referenced from offset 0x75e <CallTable_18> by rjmp
 Label_0x760:
- 760:   11 fd           skipif (!r17[1])
+ 760:   11 fd           skipif (!bit(r17,1))
  762:   07 c0           goto Label_0x772;
  764:   b3 e0           r27 = 3;                            ; 0x03
  766:   1b 27           r17 ^= r27;
  768:   ab 8d           r26 = Memory[[r28:r29]+27];
- 76a:   44 fc           skipif (!r4[4])
+ 76a:   44 fc           skipif (!bit(r4,4))
  76c:   a0 91 f6 01     r26 = split_mode_number_b;          ; 0x01f6
  770:   65 cf           goto Label_0x63c;
 
-; Referenced from offset 0x762 <IVT_RESET> by rjmp
+; Referenced from offset 0x762 <CallTable_18> by rjmp
 Label_0x772:
  772:   a3 e0           r26 = 3;                            ; 0x03
  774:   ad a3           Memory[[r28:r29]+37] = r26;
@@ -1421,34 +1421,34 @@ Label_0x772:
  784:   08 f0           if (Carry) goto Label_0x788;
  786:   10 61           r17 |= 16;                          ; 0x10
 
-; Referenced from offset 0x784 <IVT_RESET> by brcs
+; Referenced from offset 0x784 <CallTable_18> by brcs
 Label_0x788:
  788:   00 c0           goto Label_0x78a;
 
-; Referenced from offset 0x6f6 <IVT_RESET> by rjmp
-; Referenced from offset 0x77e <IVT_RESET> by brne
-; Referenced from offset 0x782 <IVT_RESET> by breq
-; Referenced from offset 0x788 <IVT_RESET> by rjmp
+; Referenced from offset 0x6f6 <CallTable_18> by rjmp
+; Referenced from offset 0x77e <CallTable_18> by brne
+; Referenced from offset 0x782 <CallTable_18> by breq
+; Referenced from offset 0x788 <CallTable_18> by rjmp
 Label_0x78a:
  78a:   a2 e0           r26 = 2;                            ; 0x02
  78c:   ad 87           Memory[[r28:r29]+13] = r26;
  78e:   08 95           return;
 
 
-; Referenced from offset 0x442 <Main> by rcall
-; Referenced from offset 0x44e <Main> by rcall
-; Referenced from offset 0x466 <Main> by rcall
-; Referenced from offset 0x4f0 <Main> by rcall
-; Referenced from offset 0x4f8 <Main> by rcall
-; Referenced from offset 0x500 <Main> by rcall
-; Referenced from offset 0x508 <Main> by rcall
+; Referenced from offset 0x442 <CallTable_29> by rcall
+; Referenced from offset 0x44e <CallTable_29> by rcall
+; Referenced from offset 0x466 <CallTable_29> by rcall
+; Referenced from offset 0x4f0 <CallTable_29> by rcall
+; Referenced from offset 0x4f8 <CallTable_29> by rcall
+; Referenced from offset 0x500 <CallTable_29> by rcall
+; Referenced from offset 0x508 <CallTable_29> by rcall
 run_call_table:     ; Parameter r30 (0-39) CallTable_31
  790:   e8 32           cmp(r30, 0x28);                     ; 40
  792:   10 f0           if (Carry) goto Label_0x798;
  794:   a0 e5           r26 = 80;                           ; 0x50
  796:   6f c7           goto error_handler;
 
-; Referenced from offset 0x792 <IVT_RESET> by brcs
+; Referenced from offset 0x792 <run_call_table> by brcs
 Label_0x798:
  798:   ff 27           r31 = 0x00;                         ; 0
  79a:   ee 0f           r30 *= 2;
@@ -1506,13 +1506,13 @@ Label_0x798:
  806:   08 f0           if (Carry) goto Label_0x80a;
  808:   ee 27           r30 = 0x00;                         ; 0
 
-; Referenced from offset 0x806 <IVT_RESET> by brcs
+; Referenced from offset 0x806 <run_call_table> by brcs
 Label_0x80a:
  80a:   56 d5           Function_0x12b8();
  80c:   08 95           return;
 
 
-; Referenced from offset 0x7f4 <IVT_RESET> by breq
+; Referenced from offset 0x7f4 <run_call_table> by breq
 Label_0x80e:
  80e:   a0 91 85 01     r26 = Memory[0x0185];               ; 389
  812:   aa 23           (r26 == 0) || (r26 < 0);            ; test r26
@@ -1521,7 +1521,7 @@ Label_0x80e:
  818:   61 d5           show_Text_on_Display2();            ; Parameter r26
  81a:   d0 93 85 01     Memory[0x0185] = r29;               ; 389
 
-; Referenced from offset 0x814 <IVT_RESET> by breq
+; Referenced from offset 0x814 <run_call_table> by breq
 Label_0x81e:
  81e:   08 95           return;
 
@@ -1547,14 +1547,14 @@ Label_0x81e:
  844:   20 f4           if (!Carry) goto Label_0x84e;
  846:   a3 95           r26++;
 
-; Referenced from offset 0x850 <IVT_RESET> by rjmp
+; Referenced from offset 0x850 <run_call_table> by rjmp
 Label_0x848:
  848:   a8 8f           Memory[[r28:r29]+24] = r26;
  84a:   50 d5           show_Text_on_Display();             ; Parameter r26
  84c:   08 95           return;
 
 
-; Referenced from offset 0x844 <IVT_RESET> by brcc
+; Referenced from offset 0x844 <run_call_table> by brcc
 Label_0x84e:
  84e:   a9 8d           r26 = Memory[[r28:r29]+25];
  850:   fb cf           goto Label_0x848;
@@ -1564,14 +1564,14 @@ Label_0x84e:
  858:   21 f0           if (c1 == c2) goto Label_0x862;
  85a:   aa 95           r26--;
 
-; Referenced from offset 0x864 <IVT_RESET> by rjmp
+; Referenced from offset 0x864 <run_call_table> by rjmp
 Label_0x85c:
  85c:   a8 8f           Memory[[r28:r29]+24] = r26;
  85e:   46 d5           show_Text_on_Display();             ; Parameter r26
  860:   08 95           return;
 
 
-; Referenced from offset 0x858 <IVT_RESET> by breq
+; Referenced from offset 0x858 <run_call_table> by breq
 Label_0x862:
  862:   aa 8d           r26 = Memory[[r28:r29]+26];
  864:   fb cf           goto Label_0x85c;
@@ -1581,7 +1581,7 @@ Label_0x862:
  86c:   28 f4           if (!Carry) goto Label_0x878;
  86e:   a3 95           r26++;
 
-; Referenced from offset 0x87a <IVT_RESET> by rjmp
+; Referenced from offset 0x87a <run_call_table> by rjmp
 Label_0x870:
  870:   a8 8f           Memory[[r28:r29]+24] = r26;
  872:   3c d5           show_Text_on_Display();             ; Parameter r26
@@ -1589,7 +1589,7 @@ Label_0x870:
  876:   08 95           return;
 
 
-; Referenced from offset 0x86c <IVT_RESET> by brcc
+; Referenced from offset 0x86c <run_call_table> by brcc
 Label_0x878:
  878:   a9 8d           r26 = Memory[[r28:r29]+25];
  87a:   fa cf           goto Label_0x870;
@@ -1599,7 +1599,7 @@ Label_0x878:
  882:   29 f0           if (c1 == c2) goto Label_0x88e;
  884:   aa 95           r26--;
 
-; Referenced from offset 0x890 <IVT_RESET> by rjmp
+; Referenced from offset 0x890 <run_call_table> by rjmp
 Label_0x886:
  886:   a8 8f           Memory[[r28:r29]+24] = r26;
  888:   31 d5           show_Text_on_Display();             ; Parameter r26
@@ -1607,7 +1607,7 @@ Label_0x886:
  88c:   08 95           return;
 
 
-; Referenced from offset 0x882 <IVT_RESET> by breq
+; Referenced from offset 0x882 <run_call_table> by breq
 Label_0x88e:
  88e:   aa 8d           r26 = Memory[[r28:r29]+26];
  890:   fa cf           goto Label_0x886;
@@ -1619,7 +1619,7 @@ Label_0x88e:
  89c:   bf d0           CallTable_4();
  89e:   63 c0           goto Label_0x966;
 
-; Referenced from offset 0x896 <IVT_RESET> by brne
+; Referenced from offset 0x896 <run_call_table> by brne
 Label_0x8a0:
  8a0:   a8 30           cmp(r26, 0x08);                     ; 8
  8a2:   69 f4           if (c1 != c2) goto Label_0x8be;
@@ -1637,7 +1637,7 @@ Label_0x8a0:
  8bc:   08 95           return;
 
 
-; Referenced from offset 0x8a2 <IVT_RESET> by brne
+; Referenced from offset 0x8a2 <run_call_table> by brne
 Label_0x8be:
  8be:   a9 30           cmp(r26, 0x09);                     ; 9
  8c0:   49 f4           if (c1 != c2) goto Label_0x8d4;
@@ -1649,7 +1649,7 @@ Label_0x8be:
  8ce:   0e 94 f9 0c     write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
  8d2:   a4 c0           goto CallTable_4;
 
-; Referenced from offset 0x8c0 <IVT_RESET> by brne
+; Referenced from offset 0x8c0 <run_call_table> by brne
 Label_0x8d4:
  8d4:   aa 30           cmp(r26, 0x0a);                     ; 10
  8d6:   71 f4           if (c1 != c2) goto Label_0x8f4;
@@ -1668,7 +1668,7 @@ Label_0x8d4:
  8f2:   08 95           return;
 
 
-; Referenced from offset 0x8d6 <IVT_RESET> by brne
+; Referenced from offset 0x8d6 <run_call_table> by brne
 Label_0x8f4:
  8f4:   ab 30           cmp(r26, 0x0b);                     ; 11
  8f6:   a9 f4           if (c1 != c2) goto Label_0x922;
@@ -1677,18 +1677,18 @@ Label_0x8f4:
  8fe:   0e 94 17 0d     send_com_buffer_to_USART();
  902:   aa e0           r26 = 10;                           ; 0x0a
  904:   70 de           sleep();                            ; Parameter r26
- 906:   15 ff           skipif (r17[5])
+ 906:   15 ff           skipif (bit(r17,5))
  908:   04 c0           goto Label_0x912;
  90a:   e0 91 20 02     r30 = com_input_buffer[0];          ; 0x0220
  90e:   e5 30           cmp(r30, 0x05);                     ; 5
  910:   11 f0           if (c1 == c2) goto Label_0x916;
 
-; Referenced from offset 0x908 <IVT_RESET> by rjmp
+; Referenced from offset 0x908 <run_call_table> by rjmp
 Label_0x912:
  912:   a4 e0           r26 = 4;                            ; 0x04
  914:   b0 d6           error_handler();                    ; CallTable_23_37_38_39
 
-; Referenced from offset 0x910 <IVT_RESET> by breq
+; Referenced from offset 0x910 <run_call_table> by breq
 Label_0x916:
  916:   a6 e0           r26 = 6;                            ; 0x06
  918:   a0 93 20 02     com_input_buffer[0] = r26;          ; 0x0220
@@ -1696,14 +1696,14 @@ Label_0x916:
  91e:   a8 ef           r26 = 248;                          ; 0xf8
  920:   04 c0           goto Label_0x92a;
 
-; Referenced from offset 0x8f6 <IVT_RESET> by brne
+; Referenced from offset 0x8f6 <run_call_table> by brne
 Label_0x922:
  922:   ac 30           cmp(r26, 0x0c);                     ; 12
  924:   61 f4           if (c1 != c2) goto Label_0x93e;
  926:   3e d6           Function_0x15a4();
  928:   a7 ef           r26 = 247;                          ; 0xf7
 
-; Referenced from offset 0x920 <IVT_RESET> by rjmp
+; Referenced from offset 0x920 <run_call_table> by rjmp
 Label_0x92a:
  92a:   e0 d4           show_Text_on_Display();             ; Parameter r26
  92c:   a4 e6           r26 = 100;                          ; 0x64
@@ -1716,7 +1716,7 @@ Label_0x92a:
  93a:   50 e0           r21 = 0;                            ; 0x00
  93c:   14 c0           goto Label_0x966;
 
-; Referenced from offset 0x924 <IVT_RESET> by brne
+; Referenced from offset 0x924 <run_call_table> by brne
 Label_0x93e:
  93e:   ad 30           cmp(r26, 0x0d);                     ; 13
  940:   21 f4           if (c1 != c2) goto Label_0x94a;
@@ -1724,7 +1724,7 @@ Label_0x93e:
  944:   2f d6           Function_0x15a4();
  946:   0c 94 3b 0d     goto reset_device;
 
-; Referenced from offset 0x940 <IVT_RESET> by brne
+; Referenced from offset 0x940 <run_call_table> by brne
 Label_0x94a:
  94a:   ae 30           cmp(r26, 0x0e);                     ; 14
  94c:   61 f4           if (c1 != c2) goto Label_0x966;
@@ -1741,9 +1741,9 @@ Label_0x94a:
  962:   49 e0           r20 = 9;                            ; 0x09
  964:   54 e0           r21 = 4;                            ; 0x04
 
-; Referenced from offset 0x89e <IVT_RESET> by rjmp
-; Referenced from offset 0x93c <IVT_RESET> by rjmp
-; Referenced from offset 0x94c <IVT_RESET> by brne
+; Referenced from offset 0x89e <run_call_table> by rjmp
+; Referenced from offset 0x93c <run_call_table> by rjmp
+; Referenced from offset 0x94c <run_call_table> by brne
 Label_0x966:
  966:   08 95           return;
 
@@ -1804,14 +1804,14 @@ Label_0x966:
  9de:   08 95           return;
 
 
-; Referenced from offset 0x9d8 <IVT_RESET> by breq
+; Referenced from offset 0x9d8 <run_call_table> by breq
 Label_0x9e0:
  9e0:   3e e0           r19 = 14;                           ; 0x0e
  9e2:   4d e0           r20 = 13;                           ; 0x0d
  9e4:   08 95           return;
 
 
-; Referenced from offset 0xa8a <IVT_RESET> by rcall
+; Referenced from offset 0xa8a <CallTable_33> by rcall
 CallTable_32:
  9e6:   28 8d           r18 = Memory[[r28:r29]+24];
  9e8:   22 5d           r18 -= 210;                         ; 0xd2, no carry
@@ -1824,13 +1824,13 @@ CallTable_32:
  9f8:   09 f4           if (c1 != c2) goto Label_0x9fc;
  9fa:   01 d0           CallTable_33();
 
-; Referenced from offset 0x9f8 <IVT_RESET> by brne
+; Referenced from offset 0x9f8 <CallTable_32> by brne
 Label_0x9fc:
  9fc:   08 95           return;
 
 
-; Referenced from offset 0x898 <IVT_RESET> by rcall
-; Referenced from offset 0x9fa <IVT_RESET> by rcall
+; Referenced from offset 0x898 <run_call_table> by rcall
+; Referenced from offset 0x9fa <CallTable_32> by rcall
 CallTable_33:
  9fe:   d0 93 a4 00     mem_unknown_0xa4 = r29;             ; 0x00a4
  a02:   d0 93 a4 01     mem_unknown_0x19e[6] = r29;         ; 0x01a4
@@ -1843,10 +1843,10 @@ CallTable_33:
  a1a:   08 95           return;
 
 
-; Referenced from offset 0x89c <IVT_RESET> by rcall
-; Referenced from offset 0x8d2 <IVT_RESET> by rjmp
-; Referenced from offset 0x996 <IVT_RESET> by rcall
-; Referenced from offset 0x9a2 <IVT_RESET> by rjmp
+; Referenced from offset 0x89c <run_call_table> by rcall
+; Referenced from offset 0x8d2 <run_call_table> by rjmp
+; Referenced from offset 0x996 <run_call_table> by rcall
+; Referenced from offset 0x9a2 <run_call_table> by rjmp
 CallTable_4:
  a1c:   ab 8d           r26 = Memory[[r28:r29]+27];
  a1e:   ab 8f           Memory[[r28:r29]+27] = r26;
@@ -1867,8 +1867,8 @@ CallTable_4:
  a3e:   08 95           return;
 
 
-; Referenced from offset 0x9b8 <IVT_RESET> by rcall
-; Referenced from offset 0xa88 <IVT_RESET> by rcall
+; Referenced from offset 0x9b8 <run_call_table> by rcall
+; Referenced from offset 0xa88 <CallTable_33> by rcall
 Function_0xa40:
  a40:   e0 91 00 02     r30 = Memory[0x0200];               ; 512
  a44:   f8 8d           r31 = Memory[[r28:r29]+24];
@@ -1876,13 +1876,13 @@ Function_0xa40:
  a48:   09 f4           if (c1 != c2) goto Label_0xa4c;
  a4a:   eb 59           r30 -= 155;                         ; 0x9b, no carry
 
-; Referenced from offset 0xa48 <IVT_RESET> by brne
+; Referenced from offset 0xa48 <CallTable_33> by brne
 Label_0xa4c:
  a4c:   f4 3d           cmp(r31, 0xd4);                     ; 212
  a4e:   09 f4           if (c1 != c2) goto Label_0xa52;
  a50:   eb 59           r30 -= 155;                         ; 0x9b, no carry
 
-; Referenced from offset 0xa4e <IVT_RESET> by brne
+; Referenced from offset 0xa4e <CallTable_33> by brne
 Label_0xa52:
  a52:   f6 3d           cmp(r31, 0xd6);                     ; 214
  a54:   29 f4           if (c1 != c2) goto Label_0xa60;
@@ -1892,7 +1892,7 @@ Label_0xa52:
  a5c:   e6 ea           r30 = 166;                          ; 0xa6
  a5e:   ae d4           Function_0x13bc();
 
-; Referenced from offset 0xa54 <IVT_RESET> by brne
+; Referenced from offset 0xa54 <CallTable_33> by brne
 Label_0xa60:
  a60:   f9 e0           r31 = 9;                            ; 0x09
  a62:   2a d4           Function_0x12b8();
@@ -1904,13 +1904,13 @@ Label_0xa60:
  a6e:   08 f4           if (!Carry) goto Label_0xa72;
  a70:   f5 e0           r31 = 5;                            ; 0x05
 
-; Referenced from offset 0xa6e <IVT_RESET> by brcc
+; Referenced from offset 0xa6e <CallTable_33> by brcc
 Label_0xa72:
  a72:   ea 30           cmp(r30, 0x0a);                     ; 10
  a74:   08 f4           if (!Carry) goto Label_0xa78;
  a76:   f1 e0           r31 = 1;                            ; 0x01
 
-; Referenced from offset 0xa74 <IVT_RESET> by brcc
+; Referenced from offset 0xa74 <CallTable_33> by brcc
 Label_0xa78:
  a78:   ef 0f           r30 += r31;                         ; No carry
  a7a:   48 f0           if (Carry) goto Label_0xa8e;
@@ -1918,9 +1918,9 @@ Label_0xa78:
  a80:   eb 17           cmp(r30, r27);
  a82:   28 f4           if (!Carry) goto Label_0xa8e;
 
-; Referenced from offset 0xa92 <IVT_RESET> by rjmp
-; Referenced from offset 0xab0 <IVT_RESET> by brcc
-; Referenced from offset 0xab6 <IVT_RESET> by rjmp
+; Referenced from offset 0xa92 <CallTable_33> by rjmp
+; Referenced from offset 0xab0 <CallTable_33> by brcc
+; Referenced from offset 0xab6 <CallTable_33> by rjmp
 Label_0xa84:
  a84:   e0 93 00 02     Memory[0x0200] = r30;               ; 512
  a88:   db df           Function_0xa40();
@@ -1928,9 +1928,9 @@ Label_0xa84:
  a8c:   08 95           return;
 
 
-; Referenced from offset 0xa7a <IVT_RESET> by brcs
-; Referenced from offset 0xa82 <IVT_RESET> by brcc
-; Referenced from offset 0xaa8 <IVT_RESET> by brcs
+; Referenced from offset 0xa7a <CallTable_33> by brcs
+; Referenced from offset 0xa82 <CallTable_33> by brcc
+; Referenced from offset 0xaa8 <CallTable_33> by brcs
 Label_0xa8e:
  a8e:   e0 91 02 02     r30 = Memory[0x0202];               ; 514
  a92:   f8 cf           goto Label_0xa84;
@@ -1940,13 +1940,13 @@ Label_0xa8e:
  a9c:   08 f4           if (!Carry) goto Label_0xaa0;
  a9e:   f5 e0           r31 = 5;                            ; 0x05
 
-; Referenced from offset 0xa9c <IVT_RESET> by brcc
+; Referenced from offset 0xa9c <CallTable_33> by brcc
 Label_0xaa0:
  aa0:   ef 30           cmp(r30, 0x0f);                     ; 15
  aa2:   08 f4           if (!Carry) goto Label_0xaa6;
  aa4:   f1 e0           r31 = 1;                            ; 0x01
 
-; Referenced from offset 0xaa2 <IVT_RESET> by brcc
+; Referenced from offset 0xaa2 <CallTable_33> by brcc
 Label_0xaa6:
  aa6:   ef 1b           r30 -= r31;                         ; No carry
  aa8:   90 f3           if (Carry) goto Label_0xa8e;
@@ -1957,7 +1957,7 @@ Label_0xaa6:
  ab6:   e6 cf           goto Label_0xa84;
  ab8:   ac e8           r26 = 140;                          ; 0x8c
 
-; Referenced from offset 0xac4 <IVT_RESET> by brcs
+; Referenced from offset 0xac4 <CallTable_33> by brcs
 Label_0xaba:
  aba:   b0 e0           r27 = 0;                            ; 0x00
  abc:   2c 91           r18 = Memory[r26:r27];
@@ -1969,7 +1969,7 @@ Label_0xaba:
 
  ac8:   ac e8           r26 = 140;                          ; 0x8c
 
-; Referenced from offset 0xad4 <IVT_RESET> by brcs
+; Referenced from offset 0xad4 <CallTable_33> by brcs
 Label_0xaca:
  aca:   b1 e0           r27 = 1;                            ; 0x01
  acc:   2c 91           r18 = Memory[r26:r27];
@@ -1982,7 +1982,7 @@ Label_0xaca:
  ad8:   ac e8           r26 = 140;                          ; 0x8c
  ada:   b0 e0           r27 = 0;                            ; 0x00
 
-; Referenced from offset 0xaea <IVT_RESET> by brcs
+; Referenced from offset 0xaea <CallTable_33> by brcs
 Label_0xadc:
  adc:   2c 91           r18 = Memory[r26:r27];
  ade:   b1 e0           r27 = 1;                            ; 0x01
@@ -2017,7 +2017,7 @@ Label_0xadc:
  b1c:   08 95           return;
 
 
-; Referenced from offset 0x58c <Main> by rcall
+; Referenced from offset 0x58c <CallTable_29> by rcall
 ; Referenced from offset 0x16c0 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x16c6 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x16cc <loop_clear_memory2> by rcall
@@ -2031,16 +2031,16 @@ enable_ADC_and_set_r17[3]:     ; CallTable_34
  b28:   08 95           return;
 
 
-; Referenced from offset 0xb78 <loop_clear_memory2> by rcall
+; Referenced from offset 0xb78 <Function_0xb58> by rcall
 ; Referenced from offset 0x17a2 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x17ac <loop_clear_memory2> by rcall
-; Referenced from offset 0x18e0 <loop_clear_memory2> by rcall
-Function_0xb2a:
+; Referenced from offset 0x18e0 <Function_0x1858> by rcall
+prng_next:     ; Result in r26 and X[18]
  b2a:   2f 93           push    r18
  b2c:   cf 93           push    r28
  b2e:   c1 e6           r28 = 97;                           ; 0x61
 
-; Referenced from offset 0xb38 <loop_clear_memory2> by brcs
+; Referenced from offset 0xb38 <enable_ADC_and_set_r17[3]> by brcs
 Label_0xb30:
  b30:   29 91           r18 = Memory[[r28:r29]++];
  b32:   27 95           r18 >>= 1;                          ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
@@ -2056,7 +2056,7 @@ Label_0xb30:
  b46:   a2 0f           r26 += r18;                         ; No carry
  b48:   2c b5           r18 = IO[TCNT1L];
  b4a:   a2 0f           r26 += r18;                         ; No carry
- b4c:   a2 ff           skipif (r26[2])
+ b4c:   a2 ff           skipif (bit(r26,2))
  b4e:   a2 95           r26 = ((r26 & 0xf0) >> 4) | ((r26 & 0x0f) << 4); ; swap nibbles
  b50:   aa 8b           Memory[[r28:r29]+18] = r26;
  b52:   cf 91           pop     r28
@@ -2064,10 +2064,10 @@ Label_0xb30:
  b56:   08 95           return;
 
 
-; Referenced from offset 0x48e <Main> by rcall
-; Referenced from offset 0x49a <Main> by rcall
-; Referenced from offset 0x4aa <Main> by rcall
-; Referenced from offset 0xdba <endless_loop> by rcall
+; Referenced from offset 0x48e <CallTable_29> by rcall
+; Referenced from offset 0x49a <CallTable_29> by rcall
+; Referenced from offset 0x4aa <CallTable_29> by rcall
+; Referenced from offset 0xdba <CallTable_30> by rcall
 Function_0xb58:
  b58:   bf 93           push    r27
  b5a:   2f 93           push    r18
@@ -2083,15 +2083,15 @@ Function_0xb58:
  b6e:   af e0           r26 = 15;                           ; 0x0f
  b70:   82 d5           error_handler();                    ; CallTable_23_37_38_39
 
-; Referenced from offset 0xb6c <loop_clear_memory2> by brcc
+; Referenced from offset 0xb6c <Function_0xb58> by brcc
 Label_0xb72:
  b72:   f3 95           r31++;
  b74:   ef ef           r30 = 0xff;                         ; 255
  b76:   0a d4           Function_0x138c();
 
-; Referenced from offset 0xb86 <loop_clear_memory2> by brcc
+; Referenced from offset 0xb86 <Function_0xb58> by brcc
 Label_0xb78:
- b78:   d8 df           Function_0xb2a();
+ b78:   d8 df           prng_next();                        ; Result in r26 and X[18]
  b7a:   fe 2f           r31 = r30;
  b7c:   ea 2f           r30 = r26;
  b7e:   06 d4           Function_0x138c();
@@ -2100,7 +2100,7 @@ Label_0xb78:
  b84:   09 f0           if (c1 == c2) goto Label_0xb88;
  b86:   c0 f7           if (!Carry) goto Label_0xb78;
 
-; Referenced from offset 0xb84 <loop_clear_memory2> by breq
+; Referenced from offset 0xb84 <Function_0xb58> by breq
 Label_0xb88:
  b88:   ae 2f           r26 = r30;
  b8a:   ff 91           pop     r31
@@ -2118,30 +2118,30 @@ endless_loop:
 ; Referenced from offset 0x10c <Main> by rcall
 ; Referenced from offset 0x27c <Main> by rcall
 ; Referenced from offset 0x30c <Main> by rcall
-; Referenced from offset 0x45a <Main> by rcall
-; Referenced from offset 0x616 <IVT_RESET> by rcall
-; Referenced from offset 0x64e <IVT_RESET> by rcall
-; Referenced from offset 0x656 <IVT_RESET> by rcall
-; Referenced from offset 0x660 <IVT_RESET> by rcall
-; Referenced from offset 0x668 <IVT_RESET> by rcall
-; Referenced from offset 0x672 <IVT_RESET> by rcall
-; Referenced from offset 0x67a <IVT_RESET> by rcall
-; Referenced from offset 0x684 <IVT_RESET> by rcall
-; Referenced from offset 0x68c <IVT_RESET> by rcall
-; Referenced from offset 0x696 <IVT_RESET> by rcall
-; Referenced from offset 0x69e <IVT_RESET> by rcall
-; Referenced from offset 0x6ac <IVT_RESET> by rcall
-; Referenced from offset 0x6c6 <IVT_RESET> by rcall
-; Referenced from offset 0x6e2 <IVT_RESET> by rcall
-; Referenced from offset 0x6fe <IVT_RESET> by rcall
-; Referenced from offset 0x708 <IVT_RESET> by rcall
-; Referenced from offset 0x712 <IVT_RESET> by rcall
-; Referenced from offset 0x71c <IVT_RESET> by rcall
-; Referenced from offset 0x730 <IVT_RESET> by rcall
-; Referenced from offset 0x738 <IVT_RESET> by rcall
-; Referenced from offset 0x742 <IVT_RESET> by rcall
-; Referenced from offset 0x74c <IVT_RESET> by rcall
-; Referenced from offset 0x75c <IVT_RESET> by rcall
+; Referenced from offset 0x45a <CallTable_29> by rcall
+; Referenced from offset 0x616 <CallTable_18> by rcall
+; Referenced from offset 0x64e <CallTable_18> by rcall
+; Referenced from offset 0x656 <CallTable_18> by rcall
+; Referenced from offset 0x660 <CallTable_18> by rcall
+; Referenced from offset 0x668 <CallTable_18> by rcall
+; Referenced from offset 0x672 <CallTable_18> by rcall
+; Referenced from offset 0x67a <CallTable_18> by rcall
+; Referenced from offset 0x684 <CallTable_18> by rcall
+; Referenced from offset 0x68c <CallTable_18> by rcall
+; Referenced from offset 0x696 <CallTable_18> by rcall
+; Referenced from offset 0x69e <CallTable_18> by rcall
+; Referenced from offset 0x6ac <CallTable_18> by rcall
+; Referenced from offset 0x6c6 <CallTable_18> by rcall
+; Referenced from offset 0x6e2 <CallTable_18> by rcall
+; Referenced from offset 0x6fe <CallTable_18> by rcall
+; Referenced from offset 0x708 <CallTable_18> by rcall
+; Referenced from offset 0x712 <CallTable_18> by rcall
+; Referenced from offset 0x71c <CallTable_18> by rcall
+; Referenced from offset 0x730 <CallTable_18> by rcall
+; Referenced from offset 0x738 <CallTable_18> by rcall
+; Referenced from offset 0x742 <CallTable_18> by rcall
+; Referenced from offset 0x74c <CallTable_18> by rcall
+; Referenced from offset 0x75c <CallTable_18> by rcall
 CallTable_22:
  b98:   ef 93           push    r30
  b9a:   ff 93           push    r31
@@ -2153,7 +2153,7 @@ CallTable_22:
  ba8:   fd e0           r31 = 13;                           ; 0x0d
  baa:   86 d3           Function_0x12b8();
 
-; Referenced from offset 0xba4 <endless_loop> by breq
+; Referenced from offset 0xba4 <CallTable_22> by breq
 Label_0xbac:
  bac:   a0 38           cmp(r26, 0x80);                     ; 128
  bae:   38 f0           if (Carry) goto Label_0xbbe;
@@ -2164,11 +2164,11 @@ Label_0xbac:
  bb8:   aa e0           r26 = 10;                           ; 0x0a
  bba:   5d c5           goto error_handler;
 
-; Referenced from offset 0xbb6 <endless_loop> by brcs
+; Referenced from offset 0xbb6 <CallTable_22> by brcs
 Label_0xbbc:
  bbc:   6a c0           goto Label_0xc92;
 
-; Referenced from offset 0xbae <endless_loop> by brcs
+; Referenced from offset 0xbae <CallTable_22> by brcs
 Label_0xbbe:
  bbe:   fc e1           r31 = 28;                           ; 0x1c
  bc0:   ee e3           r30 = 62;                           ; 0x3e
@@ -2180,7 +2180,7 @@ Label_0xbbe:
  bcc:   08 f4           if (!Carry) goto Label_0xbd0;
  bce:   f2 e2           r31 = 34;                           ; 0x22
 
-; Referenced from offset 0xbcc <endless_loop> by brcc
+; Referenced from offset 0xbcc <CallTable_22> by brcc
 Label_0xbd0:
  bd0:   e0 e0           r30 = 0;                            ; 0x00
  bd2:   22 27           r18 = 0x00;                         ; 0
@@ -2190,7 +2190,7 @@ Label_0xbd0:
  bda:   e0 0d           r30 += r0;                          ; No carry
  bdc:   f2 1f           r31 += r18;                         ; With carry
 
-; Referenced from offset 0xc22 <endless_loop> by rjmp
+; Referenced from offset 0xc22 <CallTable_22> by rjmp
 Label_0xbde:
  bde:   b2 e0           r27 = 2;                            ; 0x02
  be0:   a8 e1           r26 = 24;                           ; 0x18
@@ -2202,7 +2202,7 @@ Label_0xbde:
  bec:   09 f4           if (c1 != c2) goto Label_0xbf0;
  bee:   7b c0           goto Label_0xce6;
 
-; Referenced from offset 0xbec <endless_loop> by brne
+; Referenced from offset 0xbec <CallTable_22> by brne
 Label_0xbf0:
  bf0:   c0 2d           r28 = r0;
  bf2:   c0 7f           r28 &= 240;                         ; 0xf0
@@ -2220,18 +2220,18 @@ Label_0xbf0:
  c0a:   2c 2e           r2 = r28;
  c0c:   03 c0           goto Label_0xc14;
 
-; Referenced from offset 0xbfe <endless_loop> by brne
+; Referenced from offset 0xbfe <CallTable_22> by brne
 Label_0xc0e:
  c0e:   c1 e0           r28 = 1;                            ; 0x01
  c10:   01 c0           goto Label_0xc14;
 
-; Referenced from offset 0xbf8 <endless_loop> by breq
+; Referenced from offset 0xbf8 <CallTable_22> by breq
 Label_0xc12:
  c12:   c2 e0           r28 = 2;                            ; 0x02
 
-; Referenced from offset 0xc0c <endless_loop> by rjmp
-; Referenced from offset 0xc10 <endless_loop> by rjmp
-; Referenced from offset 0xc1c <endless_loop> by brne
+; Referenced from offset 0xc0c <CallTable_22> by rjmp
+; Referenced from offset 0xc10 <CallTable_22> by rjmp
+; Referenced from offset 0xc1c <CallTable_22> by brne
 Label_0xc14:
  c14:   31 96           [r31:r30]++;
  c16:   c8 95           r0 = Flash[r30:r31];
@@ -2242,7 +2242,7 @@ Label_0xc14:
  c20:   66 d0           CallTable_30();
  c22:   dd cf           goto Label_0xbde;
 
-; Referenced from offset 0xbb2 <endless_loop> by brcs
+; Referenced from offset 0xbb2 <CallTable_22> by brcs
 Label_0xc24:
  c24:   c0 e4           r28 = 64;                           ; 0x40
  c26:   0c 2e           r0 = r28;
@@ -2255,24 +2255,24 @@ Label_0xc24:
  c34:   a0 5a           r26 -= 160;                         ; 0xa0, no carry
  c36:   02 c0           goto Label_0xc3c;
 
-; Referenced from offset 0xc2a <endless_loop> by brcs
+; Referenced from offset 0xc2a <CallTable_22> by brcs
 Label_0xc38:
  c38:   df bb           IO[EEARH] = r29;
  c3a:   a0 56           r26 -= 96;                          ; 0x60, no carry
 
-; Referenced from offset 0xc36 <endless_loop> by rjmp
+; Referenced from offset 0xc36 <CallTable_22> by rjmp
 Label_0xc3c:
  c3c:   ae bb           IO[EEAR] = r26;
- c3e:   e0 9a           IO[EECR[0]] = true;                 ; 0x01 = 1
+ c3e:   e0 9a           IO_BIT[EECR,0] = true;              ; 0x01 = 1
  c40:   ed b3           r30 = IO[EEDR];
  c42:   e0 0d           r30 += r0;                          ; No carry
 
-; Referenced from offset 0xc90 <endless_loop> by rjmp
+; Referenced from offset 0xc90 <CallTable_22> by rjmp
 Label_0xc44:
  c44:   b2 e0           r27 = 2;                            ; 0x02
  c46:   a8 e1           r26 = 24;                           ; 0x18
  c48:   ee bb           IO[EEAR] = r30;
- c4a:   e0 9a           IO[EECR[0]] = true;                 ; 0x01 = 1
+ c4a:   e0 9a           IO_BIT[EECR,0] = true;              ; 0x01 = 1
  c4c:   0d b2           r0 = IO[EEDR];
  c4e:   0d 92           Memory[[r26:r27]++] = r0;
  c50:   c0 2d           r28 = r0;
@@ -2281,7 +2281,7 @@ Label_0xc44:
  c56:   09 f4           if (c1 != c2) goto Label_0xc5a;
  c58:   46 c0           goto Label_0xce6;
 
-; Referenced from offset 0xc56 <endless_loop> by brne
+; Referenced from offset 0xc56 <CallTable_22> by brne
 Label_0xc5a:
  c5a:   c0 2d           r28 = r0;
  c5c:   c0 7f           r28 &= 240;                         ; 0xf0
@@ -2299,22 +2299,22 @@ Label_0xc5a:
  c74:   2c 2e           r2 = r28;
  c76:   03 c0           goto Label_0xc7e;
 
-; Referenced from offset 0xc68 <endless_loop> by brne
+; Referenced from offset 0xc68 <CallTable_22> by brne
 Label_0xc78:
  c78:   c1 e0           r28 = 1;                            ; 0x01
  c7a:   01 c0           goto Label_0xc7e;
 
-; Referenced from offset 0xc62 <endless_loop> by breq
+; Referenced from offset 0xc62 <CallTable_22> by breq
 Label_0xc7c:
  c7c:   c2 e0           r28 = 2;                            ; 0x02
 
-; Referenced from offset 0xc76 <endless_loop> by rjmp
-; Referenced from offset 0xc7a <endless_loop> by rjmp
-; Referenced from offset 0xc8a <endless_loop> by brne
+; Referenced from offset 0xc76 <CallTable_22> by rjmp
+; Referenced from offset 0xc7a <CallTable_22> by rjmp
+; Referenced from offset 0xc8a <CallTable_22> by brne
 Label_0xc7e:
  c7e:   e3 95           r30++;
  c80:   ee bb           IO[EEAR] = r30;
- c82:   e0 9a           IO[EECR[0]] = true;                 ; 0x01 = 1
+ c82:   e0 9a           IO_BIT[EECR,0] = true;              ; 0x01 = 1
  c84:   0d b2           r0 = IO[EEDR];
  c86:   0d 92           Memory[[r26:r27]++] = r0;
  c88:   ca 95           r28--;
@@ -2323,7 +2323,7 @@ Label_0xc7e:
  c8e:   e3 95           r30++;
  c90:   d9 cf           goto Label_0xc44;
 
-; Referenced from offset 0xbbc <endless_loop> by rjmp
+; Referenced from offset 0xbbc <CallTable_22> by rjmp
 Label_0xc92:
  c92:   a0 5c           r26 -= 192;                         ; 0xc0, no carry
  c94:   f1 e0           r31 = 1;                            ; 0x01
@@ -2335,7 +2335,7 @@ Label_0xc92:
  ca0:   ec 0f           r30 += r28;                         ; No carry
  ca2:   fd 1f           r31 += r29;                         ; With carry
 
-; Referenced from offset 0xce4 <endless_loop> by rjmp
+; Referenced from offset 0xce4 <CallTable_22> by rjmp
 Label_0xca4:
  ca4:   b2 e0           r27 = 2;                            ; 0x02
  ca6:   a8 e1           r26 = 24;                           ; 0x18
@@ -2361,21 +2361,21 @@ Label_0xca4:
  cce:   2c 2e           r2 = r28;
  cd0:   03 c0           goto Label_0xcd8;
 
-; Referenced from offset 0xcc2 <endless_loop> by brne
+; Referenced from offset 0xcc2 <CallTable_22> by brne
 Label_0xcd2:
  cd2:   c1 e0           r28 = 1;                            ; 0x01
  cd4:   01 c0           goto Label_0xcd8;
 
-; Referenced from offset 0xcbc <endless_loop> by breq
+; Referenced from offset 0xcbc <CallTable_22> by breq
 Label_0xcd6:
  cd6:   c2 e0           r28 = 2;                            ; 0x02
 
-; Referenced from offset 0xcd0 <endless_loop> by rjmp
-; Referenced from offset 0xcd4 <endless_loop> by rjmp
+; Referenced from offset 0xcd0 <CallTable_22> by rjmp
+; Referenced from offset 0xcd4 <CallTable_22> by rjmp
 Label_0xcd8:
  cd8:   31 96           [r31:r30]++;
 
-; Referenced from offset 0xce0 <endless_loop> by brne
+; Referenced from offset 0xce0 <CallTable_22> by brne
 Label_0xcda:
  cda:   01 90           r0 = Memory[[r30:r31]++];
  cdc:   0d 92           Memory[[r26:r27]++] = r0;
@@ -2384,9 +2384,9 @@ Label_0xcda:
  ce2:   05 d0           CallTable_30();
  ce4:   df cf           goto Label_0xca4;
 
-; Referenced from offset 0xbee <endless_loop> by rjmp
-; Referenced from offset 0xc58 <endless_loop> by rjmp
-; Referenced from offset 0xcb2 <endless_loop> by breq
+; Referenced from offset 0xbee <CallTable_22> by rjmp
+; Referenced from offset 0xc58 <CallTable_22> by rjmp
+; Referenced from offset 0xcb2 <CallTable_22> by breq
 Label_0xce6:
  ce6:   cf 91           pop     r28
  ce8:   ff 91           pop     r31
@@ -2394,9 +2394,9 @@ Label_0xce6:
  cec:   08 95           return;
 
 
-; Referenced from offset 0xc20 <endless_loop> by rcall
-; Referenced from offset 0xc8c <endless_loop> by rcall
-; Referenced from offset 0xce2 <endless_loop> by rcall
+; Referenced from offset 0xc20 <CallTable_22> by rcall
+; Referenced from offset 0xc8c <CallTable_22> by rcall
+; Referenced from offset 0xce2 <CallTable_22> by rcall
 CallTable_30:
  cee:   ef 93           push    r30
  cf0:   ff 93           push    r31
@@ -2408,33 +2408,33 @@ CallTable_30:
  cfe:   09 f4           if (c1 != c2) goto Label_0xd02;
  d00:   a0 c0           goto Label_0xe42;
 
-; Referenced from offset 0xcfe <endless_loop> by brne
+; Referenced from offset 0xcfe <CallTable_30> by brne
 Label_0xd02:
- d02:   e0 ff           skipif (r30[0])
+ d02:   e0 ff           skipif (bit(r30,0))
  d04:   68 94           set
 
-; Referenced from offset 0xe40 <endless_loop> by rjmp
+; Referenced from offset 0xe40 <CallTable_30> by rjmp
 Label_0xd06:
  d06:   a8 e1           r26 = 24;                           ; 0x18
  d08:   b2 e0           r27 = 2;                            ; 0x02
  d0a:   cc 91           r28 = Memory[r26:r27];
- d0c:   c7 fd           skipif (!r28[7])
+ d0c:   c7 fd           skipif (!bit(r28,7))
  d0e:   84 c0           goto Label_0xe18;
  d10:   c0 7e           r28 &= 224;                         ; 0xe0
  d12:   c0 34           cmp(r28, 0x40);                     ; 64
  d14:   09 f4           if (c1 != c2) goto Label_0xd18;
  d16:   1f c0           goto Label_0xd56;
 
-; Referenced from offset 0xd14 <endless_loop> by brne
+; Referenced from offset 0xd14 <CallTable_30> by brne
 Label_0xd18:
  d18:   c0 32           cmp(r28, 0x20);                     ; 32
  d1a:   09 f4           if (c1 != c2) goto Label_0xd1e;
  d1c:   66 c0           goto Label_0xdea;
 
-; Referenced from offset 0xd1a <endless_loop> by brne
+; Referenced from offset 0xd1a <CallTable_30> by brne
 Label_0xd1e:
  d1e:   cc 91           r28 = Memory[r26:r27];
- d20:   c4 ff           skipif (r28[4])
+ d20:   c4 ff           skipif (bit(r28,4))
  d22:   18 c0           goto Label_0xd54;
  d24:   cd 91           r28 = Memory[[r26:r27]++];
  d26:   c3 70           r28 &= 3;                           ; 0x03
@@ -2450,9 +2450,9 @@ Label_0xd1e:
  d3a:   0e f4           if (T == 0) goto Label_0xd3e;
  d3c:   b1 e0           r27 = 1;                            ; 0x01
 
-; Referenced from offset 0xd32 <endless_loop> by brcs
-; Referenced from offset 0xd38 <endless_loop> by brcc
-; Referenced from offset 0xd3a <endless_loop> by brtc
+; Referenced from offset 0xd32 <CallTable_30> by brcs
+; Referenced from offset 0xd38 <CallTable_30> by brcc
+; Referenced from offset 0xd3a <CallTable_30> by brtc
 Label_0xd3e:
  d3e:   cc 91           r28 = Memory[r26:r27];
  d40:   ac e8           r26 = 140;                          ; 0x8c
@@ -2460,7 +2460,7 @@ Label_0xd3e:
  d44:   0e f4           if (T == 0) goto Label_0xd48;
  d46:   b1 e0           r27 = 1;                            ; 0x01
 
-; Referenced from offset 0xd44 <endless_loop> by brtc
+; Referenced from offset 0xd44 <CallTable_30> by brtc
 Label_0xd48:
  d48:   ac 91           r26 = Memory[r26:r27];
  d4a:   ac 17           cmp(r26, r28);
@@ -2468,15 +2468,15 @@ Label_0xd48:
  d4e:   a2 e0           r26 = 2;                            ; 0x02
  d50:   fa 2a           r15 |= r26;
 
-; Referenced from offset 0xd4c <endless_loop> by brne
+; Referenced from offset 0xd4c <CallTable_30> by brne
 Label_0xd52:
  d52:   70 c0           goto Label_0xe34;
 
-; Referenced from offset 0xd22 <endless_loop> by rjmp
+; Referenced from offset 0xd22 <CallTable_30> by rjmp
 Label_0xd54:
  d54:   6f c0           goto Label_0xe34;
 
-; Referenced from offset 0xd16 <endless_loop> by rjmp
+; Referenced from offset 0xd16 <CallTable_30> by rjmp
 Label_0xd56:
  d56:   cc 91           r28 = Memory[r26:r27];
  d58:   cc 71           r28 &= 28;                          ; 0x1c
@@ -2495,34 +2495,34 @@ Label_0xd56:
  d72:   0e f4           if (T == 0) goto Label_0xd76;
  d74:   b1 e0           r27 = 1;                            ; 0x01
 
-; Referenced from offset 0xd6a <endless_loop> by brcs
-; Referenced from offset 0xd70 <endless_loop> by brcc
-; Referenced from offset 0xd72 <endless_loop> by brtc
+; Referenced from offset 0xd6a <CallTable_30> by brcs
+; Referenced from offset 0xd70 <CallTable_30> by brcc
+; Referenced from offset 0xd72 <CallTable_30> by brtc
 Label_0xd76:
  d76:   c2 2f           r28 = r18;
  d78:   c0 30           cmp(r28, 0);
  d7a:   09 f4           if (c1 != c2) goto Label_0xd7e;
  d7c:   23 c0           goto Label_0xdc4;
 
-; Referenced from offset 0xd7a <endless_loop> by brne
+; Referenced from offset 0xd7a <CallTable_30> by brne
 Label_0xd7e:
  d7e:   c4 30           cmp(r28, 0x04);                     ; 4
  d80:   09 f4           if (c1 != c2) goto Label_0xd84;
  d82:   27 c0           goto Label_0xdd2;
 
-; Referenced from offset 0xd80 <endless_loop> by brne
+; Referenced from offset 0xd80 <CallTable_30> by brne
 Label_0xd84:
  d84:   c8 30           cmp(r28, 0x08);                     ; 8
  d86:   09 f4           if (c1 != c2) goto Label_0xd8a;
  d88:   2b c0           goto Label_0xde0;
 
-; Referenced from offset 0xd86 <endless_loop> by brne
+; Referenced from offset 0xd86 <CallTable_30> by brne
 Label_0xd8a:
  d8a:   cc 30           cmp(r28, 0x0c);                     ; 12
  d8c:   09 f4           if (c1 != c2) goto Label_0xd90;
  d8e:   14 c0           goto Label_0xdb8;
 
-; Referenced from offset 0xd8c <endless_loop> by brne
+; Referenced from offset 0xd8c <CallTable_30> by brne
 Label_0xd90:
  d90:   2d 91           r18 = Memory[[r26:r27]++];
  d92:   20 90 1a 02     r2 = Memory[0x021a];                ; 538
@@ -2531,34 +2531,34 @@ Label_0xd90:
  d9a:   22 0d           r18 += r2;                          ; No carry
  d9c:   09 c0           goto Label_0xdb0;
 
-; Referenced from offset 0xd98 <endless_loop> by brne
+; Referenced from offset 0xd98 <CallTable_30> by brne
 Label_0xd9e:
  d9e:   c4 31           cmp(r28, 0x14);                     ; 20
  da0:   11 f4           if (c1 != c2) goto Label_0xda6;
  da2:   22 21           r18 &= r2;
  da4:   05 c0           goto Label_0xdb0;
 
-; Referenced from offset 0xda0 <endless_loop> by brne
+; Referenced from offset 0xda0 <CallTable_30> by brne
 Label_0xda6:
  da6:   c8 31           cmp(r28, 0x18);                     ; 24
  da8:   11 f4           if (c1 != c2) goto Label_0xdae;
  daa:   22 29           r18 |= r2;
  dac:   01 c0           goto Label_0xdb0;
 
-; Referenced from offset 0xda8 <endless_loop> by brne
+; Referenced from offset 0xda8 <CallTable_30> by brne
 Label_0xdae:
  dae:   22 25           r18 ^= r2;
 
-; Referenced from offset 0xd9c <endless_loop> by rjmp
-; Referenced from offset 0xda4 <endless_loop> by rjmp
-; Referenced from offset 0xdac <endless_loop> by rjmp
+; Referenced from offset 0xd9c <CallTable_30> by rjmp
+; Referenced from offset 0xda4 <CallTable_30> by rjmp
+; Referenced from offset 0xdac <CallTable_30> by rjmp
 Label_0xdb0:
  db0:   a1 50           r26 -= 1;                           ; 0x01, no carry
  db2:   bd 0b           r27 += r29;                         ; With carry
  db4:   2c 93           Memory[r26:r27] = r18;
  db6:   3e c0           goto Label_0xe34;
 
-; Referenced from offset 0xd8e <endless_loop> by rjmp
+; Referenced from offset 0xd8e <CallTable_30> by rjmp
 Label_0xdb8:
  db8:   2a 2f           r18 = r26;
  dba:   ce de           Function_0xb58();
@@ -2567,33 +2567,33 @@ Label_0xdb8:
  dc0:   2c 92           Memory[r26:r27] = r2;
  dc2:   38 c0           goto Label_0xe34;
 
-; Referenced from offset 0xd7c <endless_loop> by rjmp
+; Referenced from offset 0xd7c <CallTable_30> by rjmp
 Label_0xdc4:
  dc4:   2c 91           r18 = Memory[r26:r27];
  dc6:   bb 27           r27 = 0x00;                         ; 0
  dc8:   0e f4           if (T == 0) goto Label_0xdcc;
  dca:   b3 95           r27++;
 
-; Referenced from offset 0xdc8 <endless_loop> by brtc
+; Referenced from offset 0xdc8 <CallTable_30> by brtc
 Label_0xdcc:
  dcc:   ac e8           r26 = 140;                          ; 0x8c
  dce:   2c 93           Memory[r26:r27] = r18;
  dd0:   31 c0           goto Label_0xe34;
 
-; Referenced from offset 0xd82 <endless_loop> by rjmp
+; Referenced from offset 0xd82 <CallTable_30> by rjmp
 Label_0xdd2:
  dd2:   ff 27           r31 = 0x00;                         ; 0
  dd4:   0e f4           if (T == 0) goto Label_0xdd8;
  dd6:   f3 95           r31++;
 
-; Referenced from offset 0xdd4 <endless_loop> by brtc
+; Referenced from offset 0xdd4 <CallTable_30> by brtc
 Label_0xdd8:
  dd8:   ec e8           r30 = 140;                          ; 0x8c
  dda:   20 81           r18 = Memory[r30:r31];
  ddc:   2c 93           Memory[r26:r27] = r18;
  dde:   2a c0           goto Label_0xe34;
 
-; Referenced from offset 0xd88 <endless_loop> by rjmp
+; Referenced from offset 0xd88 <CallTable_30> by rjmp
 Label_0xde0:
  de0:   2c 91           r18 = Memory[r26:r27];
  de2:   88 94           clc
@@ -2601,7 +2601,7 @@ Label_0xde0:
  de6:   2c 93           Memory[r26:r27] = r18;
  de8:   25 c0           goto Label_0xe34;
 
-; Referenced from offset 0xd1c <endless_loop> by rjmp
+; Referenced from offset 0xd1c <CallTable_30> by rjmp
 Label_0xdea:
  dea:   cd 91           r28 = Memory[[r26:r27]++];
  dec:   2c 2f           r18 = r28;
@@ -2618,16 +2618,16 @@ Label_0xdea:
  e02:   0e f4           if (T == 0) goto Label_0xe06;
  e04:   f1 e0           r31 = 1;                            ; 0x01
 
-; Referenced from offset 0xdfa <endless_loop> by brcs
-; Referenced from offset 0xe00 <endless_loop> by brcc
-; Referenced from offset 0xe02 <endless_loop> by brtc
+; Referenced from offset 0xdfa <CallTable_30> by brcs
+; Referenced from offset 0xe00 <CallTable_30> by brcc
+; Referenced from offset 0xe02 <CallTable_30> by brtc
 Label_0xe06:
  e06:   c2 2f           r28 = r18;
  e08:   cc 71           r28 &= 28;                          ; 0x1c
  e0a:   c6 95           r28 >>= 1;                          ; _BV(7) = 0, Carry = _BV(0) (logical shift)
  e0c:   c6 95           r28 >>= 1;                          ; _BV(7) = 0, Carry = _BV(0) (logical shift)
 
-; Referenced from offset 0xe14 <endless_loop> by brne
+; Referenced from offset 0xe14 <CallTable_30> by brne
 Label_0xe0e:
  e0e:   2d 91           r18 = Memory[[r26:r27]++];
  e10:   21 93           Memory[[r30:r31]++] = r18;
@@ -2635,11 +2635,11 @@ Label_0xe0e:
  e14:   e1 f7           if (c1 != c2) goto Label_0xe0e;
  e16:   0e c0           goto Label_0xe34;
 
-; Referenced from offset 0xd0e <endless_loop> by rjmp
+; Referenced from offset 0xd0e <CallTable_30> by rjmp
 Label_0xe18:
  e18:   ff 27           r31 = 0x00;                         ; 0
  e1a:   ed 91           r30 = Memory[[r26:r27]++];
- e1c:   e6 fd           skipif (!r30[6])
+ e1c:   e6 fd           skipif (!bit(r30,6))
  e1e:   f1 e0           r31 = 1;                            ; 0x01
  e20:   ef 73           r30 &= 63;                          ; 0x3f
  e22:   e0 58           r30 -= 128;                         ; 0x80, no carry
@@ -2649,33 +2649,33 @@ Label_0xe18:
  e2a:   0e f4           if (T == 0) goto Label_0xe2e;
  e2c:   f1 e0           r31 = 1;                            ; 0x01
 
-; Referenced from offset 0xe28 <endless_loop> by brcs
-; Referenced from offset 0xe2a <endless_loop> by brtc
+; Referenced from offset 0xe28 <CallTable_30> by brcs
+; Referenced from offset 0xe2a <CallTable_30> by brtc
 Label_0xe2e:
  e2e:   cc 91           r28 = Memory[r26:r27];
  e30:   c0 83           Memory[r30:r31] = r28;
  e32:   00 c0           goto Label_0xe34;
 
-; Referenced from offset 0xd52 <endless_loop> by rjmp
-; Referenced from offset 0xd54 <endless_loop> by rjmp
-; Referenced from offset 0xdb6 <endless_loop> by rjmp
-; Referenced from offset 0xdc2 <endless_loop> by rjmp
-; Referenced from offset 0xdd0 <endless_loop> by rjmp
-; Referenced from offset 0xdde <endless_loop> by rjmp
-; Referenced from offset 0xde8 <endless_loop> by rjmp
-; Referenced from offset 0xe16 <endless_loop> by rjmp
-; Referenced from offset 0xe32 <endless_loop> by rjmp
+; Referenced from offset 0xd52 <CallTable_30> by rjmp
+; Referenced from offset 0xd54 <CallTable_30> by rjmp
+; Referenced from offset 0xdb6 <CallTable_30> by rjmp
+; Referenced from offset 0xdc2 <CallTable_30> by rjmp
+; Referenced from offset 0xdd0 <CallTable_30> by rjmp
+; Referenced from offset 0xdde <CallTable_30> by rjmp
+; Referenced from offset 0xde8 <CallTable_30> by rjmp
+; Referenced from offset 0xe16 <CallTable_30> by rjmp
+; Referenced from offset 0xe32 <CallTable_30> by rjmp
 Label_0xe34:
  e34:   36 f0           if (T == 1) goto Label_0xe42;
  e36:   c0 91 85 00     r28 = mem_unknown_0x85;             ; 0x0085
- e3a:   c1 ff           skipif (r28[1])
+ e3a:   c1 ff           skipif (bit(r28,1))
  e3c:   02 c0           goto Label_0xe42;
  e3e:   68 94           set
  e40:   62 cf           goto Label_0xd06;
 
-; Referenced from offset 0xd00 <endless_loop> by rjmp
-; Referenced from offset 0xe34 <endless_loop> by brts
-; Referenced from offset 0xe3c <endless_loop> by rjmp
+; Referenced from offset 0xd00 <CallTable_30> by rjmp
+; Referenced from offset 0xe34 <CallTable_30> by brts
+; Referenced from offset 0xe3c <CallTable_30> by rjmp
 Label_0xe42:
  e42:   2f 90           pop     r2
  e44:   2f 91           pop     r18
@@ -2703,7 +2703,7 @@ Timer0_Overflow:
 
 
 ; Referenced from offset 0x04 <IVT_IRQ0> by jmp
-; Referenced from offset 0x18a8 <loop_clear_memory2> by rcall
+; Referenced from offset 0x18a8 <Function_0x1858> by rcall
 IRQ0_Handler:
  e66:   1f b6           r1 = IO[SREG];
  e68:   7b b7           r23 = IO[GICR];
@@ -2718,7 +2718,7 @@ IRQ0_Handler:
  e7a:   d2 c0           goto Label_0x1020;
 
 ; Referenced from offset 0x08 <IVT_IRQ1> by jmp
-; Referenced from offset 0x18ba <loop_clear_memory2> by rcall
+; Referenced from offset 0x18ba <Function_0x1858> by rcall
 IRQ1_Handler:
  e7c:   1f b6           r1 = IO[SREG];
  e7e:   7b b7           r23 = IO[GICR];
@@ -2735,54 +2735,54 @@ IRQ1_Handler:
 ; Referenced from offset 0x18 <IVT_TIMER1_COMPA> by jmp
 Timer1_CMP_A:
  e92:   1f b6           r1 = IO[SREG];
- e94:   54 fc           skipif (!r5[4])
+ e94:   54 fc           skipif (!bit(r5,4))
  e96:   06 c0           goto Label_0xea4;
- e98:   c2 9b           skipif (IO[PORTB[2]])               ; 0x04 = 4
+ e98:   c2 9b           skipif (IO_BIT[PORTB,2])            ; 0x04 = 4
  e9a:   0a c0           goto Label_0xeb0;
- e9c:   c2 98           IO[PORTB[2]] = false;               ; 0x04 = 4
- e9e:   43 fc           skipif (!r4[3])
- ea0:   c1 98           IO[PORTB[1]] = false;               ; 0x02 = 2
+ e9c:   c2 98           IO_BIT[PORTB,2] = false;            ; 0x04 = 4
+ e9e:   43 fc           skipif (!bit(r4,3))
+ ea0:   c1 98           IO_BIT[PORTB,1] = false;            ; 0x02 = 2
  ea2:   03 c0           goto Label_0xeaa;
 
-; Referenced from offset 0xe96 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xe96 <IRQ0_Handler> by rjmp
 Label_0xea4:
- ea4:   c3 9b           skipif (IO[PORTB[3]])               ; 0x08 = 8
+ ea4:   c3 9b           skipif (IO_BIT[PORTB,3])            ; 0x08 = 8
  ea6:   04 c0           goto Label_0xeb0;
- ea8:   c3 98           IO[PORTB[3]] = false;               ; 0x08 = 8
+ ea8:   c3 98           IO_BIT[PORTB,3] = false;            ; 0x08 = 8
 
-; Referenced from offset 0xea2 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xea2 <IRQ0_Handler> by rjmp
 Label_0xeaa:
- eaa:   00 ff           skipif (r16[0])
+ eaa:   00 ff           skipif (bit(r16,0))
  eac:   0c c0           goto Label_0xec6;
  eae:   5a c0           goto Label_0xf64;
 
-; Referenced from offset 0xe9a <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xea6 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xe9a <IRQ0_Handler> by rjmp
+; Referenced from offset 0xea6 <IRQ0_Handler> by rjmp
 Label_0xeb0:
- eb0:   54 fc           skipif (!r5[4])
+ eb0:   54 fc           skipif (!bit(r5,4))
  eb2:   06 c0           goto Label_0xec0;
- eb4:   c3 9b           skipif (IO[PORTB[3]])               ; 0x08 = 8
+ eb4:   c3 9b           skipif (IO_BIT[PORTB,3])            ; 0x08 = 8
  eb6:   17 c0           goto Label_0xee6;
- eb8:   c3 98           IO[PORTB[3]] = false;               ; 0x08 = 8
- eba:   43 fc           skipif (!r4[3])
- ebc:   c0 98           IO[PORTB[0]] = false;               ; 0x01 = 1
+ eb8:   c3 98           IO_BIT[PORTB,3] = false;            ; 0x08 = 8
+ eba:   43 fc           skipif (!bit(r4,3))
+ ebc:   c0 98           IO_BIT[PORTB,0] = false;            ; 0x01 = 1
  ebe:   03 c0           goto Label_0xec6;
 
-; Referenced from offset 0xeb2 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xeb2 <IRQ0_Handler> by rjmp
 Label_0xec0:
- ec0:   c2 9b           skipif (IO[PORTB[2]])               ; 0x04 = 4
+ ec0:   c2 9b           skipif (IO_BIT[PORTB,2])            ; 0x04 = 4
  ec2:   11 c0           goto Label_0xee6;
- ec4:   c2 98           IO[PORTB[2]] = false;               ; 0x04 = 4
+ ec4:   c2 98           IO_BIT[PORTB,2] = false;            ; 0x04 = 4
 
-; Referenced from offset 0xeac <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xebe <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xeac <IRQ0_Handler> by rjmp
+; Referenced from offset 0xebe <IRQ0_Handler> by rjmp
 Label_0xec6:
- ec6:   53 fe           skipif (r5[3])
+ ec6:   53 fe           skipif (bit(r5,3))
  ec8:   02 c0           goto Label_0xece;
  eca:   73 e0           r23 = 3;                            ; 0x03
  ecc:   07 27           r16 ^= r23;
 
-; Referenced from offset 0xec8 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xec8 <IRQ0_Handler> by rjmp
 Label_0xece:
  ece:   7c b5           r23 = IO[TCNT1L];
  ed0:   8d b5           r24 = IO[TCNT1H];
@@ -2794,16 +2794,16 @@ Label_0xece:
  ee2:   89 0f           r24 += r25;                         ; No carry
  ee4:   48 c0           goto Label_0xf76;
 
-; Referenced from offset 0xeb6 <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xec2 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xeb6 <IRQ0_Handler> by rjmp
+; Referenced from offset 0xec2 <IRQ0_Handler> by rjmp
 Label_0xee6:
- ee6:   03 ff           skipif (r16[3])
+ ee6:   03 ff           skipif (bit(r16,3))
  ee8:   10 c0           goto Label_0xf0a;
  eea:   07 7f           r16 &= 247;                         ; 0xf7
- eec:   96 98           IO[PORTD[6]] = false;               ; 0x40 = 64
- eee:   43 fc           skipif (!r4[3])
- ef0:   95 98           IO[PORTD[5]] = false;               ; 0x20 = 32
- ef2:   13 fd           skipif (!r17[3])
+ eec:   96 98           IO_BIT[PORTD,6] = false;            ; 0x40 = 64
+ eee:   43 fc           skipif (!bit(r4,3))
+ ef0:   95 98           IO_BIT[PORTD,5] = false;            ; 0x20 = 32
+ ef2:   13 fd           skipif (!bit(r17,3))
  ef4:   05 c0           goto Label_0xf00;
  ef6:   71 e0           r23 = 1;                            ; 0x01
  ef8:   77 b9           IO[ADMUX] = r23;
@@ -2811,28 +2811,28 @@ Label_0xee6:
  efc:   76 b9           IO[ADCSR] = r23;
  efe:   18 60           r17 |= 8;                           ; 0x08
 
-; Referenced from offset 0xef4 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xef4 <IRQ0_Handler> by rjmp
 Label_0xf00:
  f00:   70 91 09 02     r23 = Memory[0x0209];               ; 521
  f04:   80 91 0a 02     r24 = Memory[0x020a];               ; 522
  f08:   36 c0           goto Label_0xf76;
 
-; Referenced from offset 0xee8 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xee8 <IRQ0_Handler> by rjmp
 Label_0xf0a:
- f0a:   96 99           skipif (!IO[PORTD[6]])              ; 0x40 = 64
+ f0a:   96 99           skipif (!IO_BIT[PORTD,6])           ; 0x40 = 64
  f0c:   08 c0           goto Label_0xf1e;
- f0e:   96 9a           IO[PORTD[6]] = true;                ; 0x40 = 64
- f10:   43 fc           skipif (!r4[3])
- f12:   95 9a           IO[PORTD[5]] = true;                ; 0x20 = 32
+ f0e:   96 9a           IO_BIT[PORTD,6] = true;             ; 0x40 = 64
+ f10:   43 fc           skipif (!bit(r4,3))
+ f12:   95 9a           IO_BIT[PORTD,5] = true;             ; 0x20 = 32
  f14:   70 91 0b 02     r23 = Memory[0x020b];               ; 523
  f18:   80 91 0c 02     r24 = Memory[0x020c];               ; 524
  f1c:   2c c0           goto Label_0xf76;
 
-; Referenced from offset 0xf0c <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xf0c <IRQ0_Handler> by rjmp
 Label_0xf1e:
- f1e:   55 fe           skipif (r5[5])
+ f1e:   55 fe           skipif (bit(r5,5))
  f20:   09 c0           goto Label_0xf34;
- f22:   57 fc           skipif (!r5[7])
+ f22:   57 fc           skipif (!bit(r5,7))
  f24:   05 c0           goto Label_0xf30;
  f26:   70 e8           r23 = 128;                          ; 0x80
  f28:   7a bf           IO[GIFR] = r23;
@@ -2840,70 +2840,70 @@ Label_0xf1e:
  f2c:   70 68           r23 |= 128;                         ; 0x80
  f2e:   7b bf           IO[GICR] = r23;
 
-; Referenced from offset 0xf24 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xf24 <IRQ0_Handler> by rjmp
 Label_0xf30:
  f30:   1f be           IO[SREG] = r1;
  f32:   18 95           ireturn;
 
 
-; Referenced from offset 0xe90 <loop_clear_memory2> by rjmp
-; Referenced from offset 0xf20 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xe90 <IRQ0_Handler> by rjmp
+; Referenced from offset 0xf20 <IRQ0_Handler> by rjmp
 Label_0xf34:
- f34:   50 fe           skipif (r5[0])
+ f34:   50 fe           skipif (bit(r5,0))
  f36:   1d c0           goto Label_0xf72;
- f38:   42 fc           skipif (!r4[2])
+ f38:   42 fc           skipif (!bit(r4,2))
  f3a:   04 c0           goto Label_0xf44;
- f3c:   07 fd           skipif (!r16[7])
+ f3c:   07 fd           skipif (!bit(r16,7))
  f3e:   19 c0           goto Label_0xf72;
- f40:   01 ff           skipif (r16[1])
+ f40:   01 ff           skipif (bit(r16,1))
  f42:   08 c0           goto Label_0xf54;
 
-; Referenced from offset 0xf3a <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xf3a <IRQ0_Handler> by rjmp
 Label_0xf44:
  f44:   08 60           r16 |= 8;                           ; 0x08
- f46:   54 fc           skipif (!r5[4])
- f48:   c3 9a           IO[PORTB[3]] = true;                ; 0x08 = 8
- f4a:   54 fe           skipif (r5[4])
- f4c:   c2 9a           IO[PORTB[2]] = true;                ; 0x04 = 4
- f4e:   43 fc           skipif (!r4[3])
- f50:   c1 9a           IO[PORTB[1]] = true;                ; 0x02 = 2
+ f46:   54 fc           skipif (!bit(r5,4))
+ f48:   c3 9a           IO_BIT[PORTB,3] = true;             ; 0x08 = 8
+ f4a:   54 fe           skipif (bit(r5,4))
+ f4c:   c2 9a           IO_BIT[PORTB,2] = true;             ; 0x04 = 4
+ f4e:   43 fc           skipif (!bit(r4,3))
+ f50:   c1 9a           IO_BIT[PORTB,1] = true;             ; 0x02 = 2
  f52:   0f c0           goto Label_0xf72;
 
-; Referenced from offset 0xf42 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xf42 <IRQ0_Handler> by rjmp
 Label_0xf54:
- f54:   50 fe           skipif (r5[0])
+ f54:   50 fe           skipif (bit(r5,0))
  f56:   0d c0           goto Label_0xf72;
- f58:   42 fc           skipif (!r4[2])
+ f58:   42 fc           skipif (!bit(r4,2))
  f5a:   04 c0           goto Label_0xf64;
- f5c:   07 fd           skipif (!r16[7])
+ f5c:   07 fd           skipif (!bit(r16,7))
  f5e:   09 c0           goto Label_0xf72;
- f60:   00 ff           skipif (r16[0])
+ f60:   00 ff           skipif (bit(r16,0))
  f62:   07 c0           goto Label_0xf72;
 
-; Referenced from offset 0xeae <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xf5a <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xeae <IRQ0_Handler> by rjmp
+; Referenced from offset 0xf5a <IRQ0_Handler> by rjmp
 Label_0xf64:
  f64:   08 60           r16 |= 8;                           ; 0x08
- f66:   54 fc           skipif (!r5[4])
- f68:   c2 9a           IO[PORTB[2]] = true;                ; 0x04 = 4
- f6a:   54 fe           skipif (r5[4])
- f6c:   c3 9a           IO[PORTB[3]] = true;                ; 0x08 = 8
- f6e:   43 fc           skipif (!r4[3])
- f70:   c0 9a           IO[PORTB[0]] = true;                ; 0x01 = 1
+ f66:   54 fc           skipif (!bit(r5,4))
+ f68:   c2 9a           IO_BIT[PORTB,2] = true;             ; 0x04 = 4
+ f6a:   54 fe           skipif (bit(r5,4))
+ f6c:   c3 9a           IO_BIT[PORTB,3] = true;             ; 0x08 = 8
+ f6e:   43 fc           skipif (!bit(r4,3))
+ f70:   c0 9a           IO_BIT[PORTB,0] = true;             ; 0x01 = 1
 
-; Referenced from offset 0xf36 <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xf3e <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xf52 <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xf56 <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xf5e <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xf62 <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xf36 <IRQ0_Handler> by rjmp
+; Referenced from offset 0xf3e <IRQ0_Handler> by rjmp
+; Referenced from offset 0xf52 <IRQ0_Handler> by rjmp
+; Referenced from offset 0xf56 <IRQ0_Handler> by rjmp
+; Referenced from offset 0xf5e <IRQ0_Handler> by rjmp
+; Referenced from offset 0xf62 <IRQ0_Handler> by rjmp
 Label_0xf72:
  f72:   79 2d           r23 = r9;
  f74:   8d 2f           r24 = r29;
 
-; Referenced from offset 0xee4 <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xf08 <Timer1_CMP_A> by rjmp
-; Referenced from offset 0xf1c <Timer1_CMP_A> by rjmp
+; Referenced from offset 0xee4 <IRQ0_Handler> by rjmp
+; Referenced from offset 0xf08 <IRQ0_Handler> by rjmp
+; Referenced from offset 0xf1c <IRQ0_Handler> by rjmp
 Label_0xf76:
  f76:   9a b5           r25 = IO[OCR1AL];
  f78:   3b b4           r3 = IO[OCR1AH];
@@ -2920,47 +2920,47 @@ Label_0xf76:
 ; Referenced from offset 0x1c <IVT_TIMER1_COMPB> by jmp
 Timer1_CMP_B:
  f8a:   1f b6           r1 = IO[SREG];
- f8c:   43 fc           skipif (!r4[3])
+ f8c:   43 fc           skipif (!bit(r4,3))
  f8e:   25 c0           goto Label_0xfda;
- f90:   a4 fc           skipif (!r10[4])
+ f90:   a4 fc           skipif (!bit(r10,4))
  f92:   04 c0           goto Label_0xf9c;
- f94:   c0 9b           skipif (IO[PORTB[0]])               ; 0x01 = 1
+ f94:   c0 9b           skipif (IO_BIT[PORTB,0])            ; 0x01 = 1
  f96:   08 c0           goto Label_0xfa8;
- f98:   c0 98           IO[PORTB[0]] = false;               ; 0x01 = 1
+ f98:   c0 98           IO_BIT[PORTB,0] = false;            ; 0x01 = 1
  f9a:   03 c0           goto Label_0xfa2;
 
 ; Referenced from offset 0xf92 <Timer1_CMP_B> by rjmp
 Label_0xf9c:
- f9c:   c1 9b           skipif (IO[PORTB[1]])               ; 0x02 = 2
+ f9c:   c1 9b           skipif (IO_BIT[PORTB,1])            ; 0x02 = 2
  f9e:   04 c0           goto Label_0xfa8;
- fa0:   c1 98           IO[PORTB[1]] = false;               ; 0x02 = 2
+ fa0:   c1 98           IO_BIT[PORTB,1] = false;            ; 0x02 = 2
 
 ; Referenced from offset 0xf9a <Timer1_CMP_B> by rjmp
 Label_0xfa2:
- fa2:   04 ff           skipif (r16[4])
+ fa2:   04 ff           skipif (bit(r16,4))
  fa4:   0a c0           goto Label_0xfba;
  fa6:   52 c0           goto Label_0x104c;
 
 ; Referenced from offset 0xf96 <Timer1_CMP_B> by rjmp
 ; Referenced from offset 0xf9e <Timer1_CMP_B> by rjmp
 Label_0xfa8:
- fa8:   a4 fc           skipif (!r10[4])
+ fa8:   a4 fc           skipif (!bit(r10,4))
  faa:   04 c0           goto Label_0xfb4;
- fac:   c1 9b           skipif (IO[PORTB[1]])               ; 0x02 = 2
+ fac:   c1 9b           skipif (IO_BIT[PORTB,1])            ; 0x02 = 2
  fae:   15 c0           goto Label_0xfda;
- fb0:   c1 98           IO[PORTB[1]] = false;               ; 0x02 = 2
+ fb0:   c1 98           IO_BIT[PORTB,1] = false;            ; 0x02 = 2
  fb2:   03 c0           goto Label_0xfba;
 
 ; Referenced from offset 0xfaa <Timer1_CMP_B> by rjmp
 Label_0xfb4:
- fb4:   c0 9b           skipif (IO[PORTB[0]])               ; 0x01 = 1
+ fb4:   c0 9b           skipif (IO_BIT[PORTB,0])            ; 0x01 = 1
  fb6:   11 c0           goto Label_0xfda;
- fb8:   c0 98           IO[PORTB[0]] = false;               ; 0x01 = 1
+ fb8:   c0 98           IO_BIT[PORTB,0] = false;            ; 0x01 = 1
 
 ; Referenced from offset 0xfa4 <Timer1_CMP_B> by rjmp
 ; Referenced from offset 0xfb2 <Timer1_CMP_B> by rjmp
 Label_0xfba:
- fba:   a3 fe           skipif (r10[3])
+ fba:   a3 fe           skipif (bit(r10,3))
  fbc:   02 c0           goto Label_0xfc2;
  fbe:   70 e3           r23 = 48;                           ; 0x30
  fc0:   07 27           r16 ^= r23;
@@ -2981,11 +2981,11 @@ Label_0xfc2:
 ; Referenced from offset 0xfae <Timer1_CMP_B> by rjmp
 ; Referenced from offset 0xfb6 <Timer1_CMP_B> by rjmp
 Label_0xfda:
- fda:   07 ff           skipif (r16[7])
+ fda:   07 ff           skipif (bit(r16,7))
  fdc:   0e c0           goto Label_0xffa;
  fde:   0f 77           r16 &= 127;                         ; 0x7f
- fe0:   95 98           IO[PORTD[5]] = false;               ; 0x20 = 32
- fe2:   13 fd           skipif (!r17[3])
+ fe0:   95 98           IO_BIT[PORTD,5] = false;            ; 0x20 = 32
+ fe2:   13 fd           skipif (!bit(r17,3))
  fe4:   05 c0           goto Label_0xff0;
  fe6:   71 e0           r23 = 1;                            ; 0x01
  fe8:   77 b9           IO[ADMUX] = r23;
@@ -3001,18 +3001,18 @@ Label_0xff0:
 
 ; Referenced from offset 0xfdc <Timer1_CMP_B> by rjmp
 Label_0xffa:
- ffa:   95 99           skipif (!IO[PORTD[5]])              ; 0x20 = 32
+ ffa:   95 99           skipif (!IO_BIT[PORTD,5])           ; 0x20 = 32
  ffc:   06 c0           goto Label_0x100a;
- ffe:   95 9a           IO[PORTD[5]] = true;                ; 0x20 = 32
+ ffe:   95 9a           IO_BIT[PORTD,5] = true;             ; 0x20 = 32
 1000:   70 91 10 02     r23 = Memory[0x0210];               ; 528
 1004:   80 91 11 02     r24 = Memory[0x0211];               ; 529
 1008:   28 c0           goto Label_0x105a;
 
 ; Referenced from offset 0xffc <Timer1_CMP_B> by rjmp
 Label_0x100a:
-100a:   a5 fe           skipif (r10[5])
+100a:   a5 fe           skipif (bit(r10,5))
 100c:   09 c0           goto Label_0x1020;
-100e:   a7 fc           skipif (!r10[7])
+100e:   a7 fc           skipif (!bit(r10,7))
 1010:   05 c0           goto Label_0x101c;
 1012:   70 e4           r23 = 64;                           ; 0x40
 1014:   7a bf           IO[GIFR] = r23;
@@ -3026,25 +3026,25 @@ Label_0x101c:
 101e:   18 95           ireturn;
 
 
-; Referenced from offset 0xe7a <IVT_RESET> by rjmp
+; Referenced from offset 0xe7a <IRQ0_Handler> by rjmp
 ; Referenced from offset 0x100c <Timer1_CMP_B> by rjmp
 Label_0x1020:
-1020:   a0 fe           skipif (r10[0])
+1020:   a0 fe           skipif (bit(r10,0))
 1022:   19 c0           goto Label_0x1056;
-1024:   42 fc           skipif (!r4[2])
+1024:   42 fc           skipif (!bit(r4,2))
 1026:   04 c0           goto Label_0x1030;
-1028:   03 fd           skipif (!r16[3])
+1028:   03 fd           skipif (!bit(r16,3))
 102a:   15 c0           goto Label_0x1056;
-102c:   05 ff           skipif (r16[5])
+102c:   05 ff           skipif (bit(r16,5))
 102e:   06 c0           goto Label_0x103c;
 
 ; Referenced from offset 0x1026 <Timer1_CMP_B> by rjmp
 Label_0x1030:
 1030:   00 68           r16 |= 128;                         ; 0x80
-1032:   a4 fc           skipif (!r10[4])
-1034:   c1 9a           IO[PORTB[1]] = true;                ; 0x02 = 2
-1036:   a4 fe           skipif (r10[4])
-1038:   c0 9a           IO[PORTB[0]] = true;                ; 0x01 = 1
+1032:   a4 fc           skipif (!bit(r10,4))
+1034:   c1 9a           IO_BIT[PORTB,1] = true;             ; 0x02 = 2
+1036:   a4 fe           skipif (bit(r10,4))
+1038:   c0 9a           IO_BIT[PORTB,0] = true;             ; 0x01 = 1
 
 ; Referenced from offset 0x1fd4 <store_z_pointer_at_0x020e_and_move_r13_to_r2_and_set_r18_to_negative_r30> by rjmp
 Label_0x103a:
@@ -3052,23 +3052,23 @@ Label_0x103a:
 
 ; Referenced from offset 0x102e <Timer1_CMP_B> by rjmp
 Label_0x103c:
-103c:   a0 fe           skipif (r10[0])
+103c:   a0 fe           skipif (bit(r10,0))
 103e:   0b c0           goto Label_0x1056;
-1040:   42 fc           skipif (!r4[2])
+1040:   42 fc           skipif (!bit(r4,2))
 1042:   04 c0           goto Label_0x104c;
-1044:   03 fd           skipif (!r16[3])
+1044:   03 fd           skipif (!bit(r16,3))
 1046:   07 c0           goto Label_0x1056;
-1048:   04 ff           skipif (r16[4])
+1048:   04 ff           skipif (bit(r16,4))
 104a:   05 c0           goto Label_0x1056;
 
 ; Referenced from offset 0xfa6 <Timer1_CMP_B> by rjmp
 ; Referenced from offset 0x1042 <Timer1_CMP_B> by rjmp
 Label_0x104c:
 104c:   00 68           r16 |= 128;                         ; 0x80
-104e:   a4 fc           skipif (!r10[4])
-1050:   c0 9a           IO[PORTB[0]] = true;                ; 0x01 = 1
-1052:   a4 fe           skipif (r10[4])
-1054:   c1 9a           IO[PORTB[1]] = true;                ; 0x02 = 2
+104e:   a4 fc           skipif (!bit(r10,4))
+1050:   c0 9a           IO_BIT[PORTB,0] = true;             ; 0x01 = 1
+1052:   a4 fe           skipif (bit(r10,4))
+1054:   c1 9a           IO_BIT[PORTB,1] = true;             ; 0x02 = 2
 
 ; Referenced from offset 0x1022 <Timer1_CMP_B> by rjmp
 ; Referenced from offset 0x102a <Timer1_CMP_B> by rjmp
@@ -3116,7 +3116,7 @@ ADC_Conversion_Complete:
 108c:   97 95           r25 >>= 1;                          ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
 108e:   c1 36           cmp(r28, 0x61);                     ; 97
 1090:   09 f4           if (c1 != c2) goto Label_0x1094;
-1092:   f3 fe           skipif (r15[3])
+1092:   f3 fe           skipif (bit(r15,3))
 
 ; Referenced from offset 0x1090 <ADC_Conversion_Complete> by brne
 Label_0x1094:
@@ -3144,14 +3144,14 @@ Label_0x10ac:
 
 ; Referenced from offset 0x10aa <ADC_Conversion_Complete> by rjmp
 Label_0x10b2:
-10b2:   f0 fe           skipif (r15[0])
+10b2:   f0 fe           skipif (bit(r15,0))
 10b4:   88 83           Memory[r28:r29] = r24;
 10b6:   09 c0           goto Label_0x10ca;
 
 ; Referenced from offset 0x109a <ADC_Conversion_Complete> by brcc
 Label_0x10b8:
 10b8:   88 83           Memory[r28:r29] = r24;
-10ba:   46 fe           skipif (r4[6])
+10ba:   46 fe           skipif (bit(r4,6))
 10bc:   06 c0           goto Label_0x10ca;
 10be:   c7 36           cmp(r28, 0x67);                     ; 103
 10c0:   21 f4           if (c1 != c2) goto Label_0x10ca;
@@ -3170,7 +3170,7 @@ Label_0x10b8:
 Label_0x10ca:
 10ca:   77 b1           r23 = IO[ADMUX];
 10cc:   73 95           r23++;
-10ce:   73 fd           skipif (!r23[3])
+10ce:   73 fd           skipif (!bit(r23,3))
 10d0:   06 c0           goto Label_0x10de;
 10d2:   77 b9           IO[ADMUX] = r23;
 10d4:   7c ec           r23 = 204;                          ; 0xcc
@@ -3182,9 +3182,9 @@ Label_0x10ca:
 
 ; Referenced from offset 0x10d0 <ADC_Conversion_Complete> by rjmp
 Label_0x10de:
-10de:   94 9b           skipif (IO[PORTD[4]])               ; 0x10 = 16
+10de:   94 9b           skipif (IO_BIT[PORTD,4])            ; 0x10 = 16
 10e0:   06 c0           goto Label_0x10ee;
-10e2:   94 98           IO[PORTD[4]] = false;               ; 0x10 = 16
+10e2:   94 98           IO_BIT[PORTD,4] = false;            ; 0x10 = 16
 10e4:   74 e0           r23 = 4;                            ; 0x04
 10e6:   70 93 08 02     Memory[0x0208] = r23;               ; 520
 10ea:   70 91 00 05     r23 = Memory[0x0500];               ; 1280
@@ -3218,9 +3218,9 @@ SPI_Transfer_Complete:
 
 ; Referenced from offset 0x1110 <SPI_Transfer_Complete> by breq
 Label_0x111c:
-111c:   94 9a           IO[PORTD[4]] = true;                ; 0x10 = 16
+111c:   94 9a           IO_BIT[PORTD,4] = true;             ; 0x10 = 16
 111e:   00 00           nop
-1120:   94 98           IO[PORTD[4]] = false;               ; 0x10 = 16
+1120:   94 98           IO_BIT[PORTD,4] = false;            ; 0x10 = 16
 1122:   70 91 05 02     r23 = Memory[0x0205];               ; 517
 1126:   87 2d           r24 = r7;
 1128:   0f 92           push    r0
@@ -3263,7 +3263,7 @@ Label_0x116a:
 ; Referenced from offset 0x1104 <SPI_Transfer_Complete> by breq
 ; Referenced from offset 0x110c <SPI_Transfer_Complete> by breq
 Label_0x1172:
-1172:   94 9a           IO[PORTD[4]] = true;                ; 0x10 = 16
+1172:   94 9a           IO_BIT[PORTD,4] = true;             ; 0x10 = 16
 
 ; Referenced from offset 0x111a <SPI_Transfer_Complete> by rjmp
 ; Referenced from offset 0x1168 <SPI_Transfer_Complete> by rjmp
@@ -3278,7 +3278,7 @@ USART_RX_Complete:
 1178:   1f b6           r1 = IO[SREG];
 117a:   ef 93           push    r30
 117c:   ff 93           push    r31
-117e:   15 fd           skipif (!r17[5])
+117e:   15 fd           skipif (!bit(r17,5))
 1180:   1f c0           goto Label_0x11c0;
 1182:   8b b1           r24 = IO[UCSRA];
 1184:   88 71           r24 &= 24;                          ; 0x18
@@ -3328,22 +3328,22 @@ Label_0x11c0:
 Function_0x11c8:
 11c8:   b4 e0           r27 = 4;                            ; 0x04
 
-; Referenced from offset 0x11da <USART_RX_Complete> by brne
+; Referenced from offset 0x11da <loop_clear_memory2> by brne
 Label_0x11ca:
 11ca:   a0 e3           r26 = 48;                           ; 0x30
 11cc:   a5 bb           IO[PORTC] = r26;
-11ce:   aa 9a           IO[PORTC[2]] = true;                ; 0x04 = 4
+11ce:   aa 9a           IO_BIT[PORTC,2] = true;             ; 0x04 = 4
 11d0:   00 00           nop
-11d2:   aa 98           IO[PORTC[2]] = false;               ; 0x04 = 4
+11d2:   aa 98           IO_BIT[PORTC,2] = false;            ; 0x04 = 4
 11d4:   a2 e2           r26 = 34;                           ; 0x22
 11d6:   07 da           sleep();                            ; Parameter r26
 11d8:   ba 95           r27--;
 11da:   b9 f7           if (c1 != c2) goto Label_0x11ca;
 11dc:   a0 e2           r26 = 32;                           ; 0x20
 11de:   a5 bb           IO[PORTC] = r26;
-11e0:   aa 9a           IO[PORTC[2]] = true;                ; 0x04 = 4
+11e0:   aa 9a           IO_BIT[PORTC,2] = true;             ; 0x04 = 4
 11e2:   00 00           nop
-11e4:   aa 98           IO[PORTC[2]] = false;               ; 0x04 = 4
+11e4:   aa 98           IO_BIT[PORTC,2] = false;            ; 0x04 = 4
 11e6:   a2 e2           r26 = 34;                           ; 0x22
 11e8:   fe d9           sleep();                            ; Parameter r26
 11ea:   f8 e2           r31 = 40;                           ; 0x28
@@ -3355,64 +3355,64 @@ Label_0x11ca:
 11f6:   08 95           return;
 
 
-; Referenced from offset 0xb12 <IVT_RESET> by rcall
-; Referenced from offset 0xb1a <IVT_RESET> by rcall
-; Referenced from offset 0x11ec <USART_RX_Complete> by rcall
-; Referenced from offset 0x11f0 <USART_RX_Complete> by rcall
-; Referenced from offset 0x11f4 <USART_RX_Complete> by rcall
-; Referenced from offset 0x127c <loop_clear_memory2> by rcall
-; Referenced from offset 0x12aa <loop_clear_memory2> by rcall
-; Referenced from offset 0x12c0 <IVT_RESET> by rcall
-; Referenced from offset 0x130a <loop_clear_memory2> by rcall
+; Referenced from offset 0xb12 <CallTable_33> by rcall
+; Referenced from offset 0xb1a <CallTable_33> by rcall
+; Referenced from offset 0x11ec <loop_clear_memory2> by rcall
+; Referenced from offset 0x11f0 <loop_clear_memory2> by rcall
+; Referenced from offset 0x11f4 <loop_clear_memory2> by rcall
+; Referenced from offset 0x127c <Function_0x1278> by rcall
+; Referenced from offset 0x12aa <Function_0x1278> by rcall
+; Referenced from offset 0x12c0 <Function_0x12b8> by rcall
+; Referenced from offset 0x130a <show_Text_on_Display2> by rcall
 Function_0x11f8:
 11f8:   23 d0           Function_0x1240();
 11fa:   bf 93           push    r27
-11fc:   ab 98           IO[PORTC[3]] = false;               ; 0x08 = 8
-11fe:   aa 9a           IO[PORTC[2]] = true;                ; 0x04 = 4
+11fc:   ab 98           IO_BIT[PORTC,3] = false;            ; 0x08 = 8
+11fe:   aa 9a           IO_BIT[PORTC,2] = true;             ; 0x04 = 4
 1200:   bf 2f           r27 = r31;
 1202:   b0 7f           r27 &= 240;                         ; 0xf0
 1204:   b4 60           r27 |= 4;                           ; 0x04
 1206:   b5 bb           IO[PORTC] = r27;
-1208:   aa 98           IO[PORTC[2]] = false;               ; 0x04 = 4
+1208:   aa 98           IO_BIT[PORTC,2] = false;            ; 0x04 = 4
 120a:   00 00           nop
-120c:   aa 9a           IO[PORTC[2]] = true;                ; 0x04 = 4
+120c:   aa 9a           IO_BIT[PORTC,2] = true;             ; 0x04 = 4
 120e:   f2 95           r31 = ((r31 & 0xf0) >> 4) | ((r31 & 0x0f) << 4); ; swap nibbles
 1210:   f0 7f           r31 &= 240;                         ; 0xf0
 1212:   f4 60           r31 |= 4;                           ; 0x04
 1214:   f5 bb           IO[PORTC] = r31;
-1216:   aa 98           IO[PORTC[2]] = false;               ; 0x04 = 4
+1216:   aa 98           IO_BIT[PORTC,2] = false;            ; 0x04 = 4
 1218:   bf 91           pop     r27
 121a:   08 95           return;
 
 
-; Referenced from offset 0x127e <loop_clear_memory2> by rcall
-; Referenced from offset 0x12ae <loop_clear_memory2> by rcall
-; Referenced from offset 0x12b4 <loop_clear_memory2> by rcall
-; Referenced from offset 0x12ce <IVT_RESET> by rcall
-; Referenced from offset 0x134c <loop_clear_memory2> by rcall
+; Referenced from offset 0x127e <Function_0x1278> by rcall
+; Referenced from offset 0x12ae <Function_0x1278> by rcall
+; Referenced from offset 0x12b4 <Function_0x1278> by rcall
+; Referenced from offset 0x12ce <Function_0x12b8> by rcall
+; Referenced from offset 0x134c <show_Text_on_Display2> by rcall
 Function_0x121c:
 121c:   11 d0           Function_0x1240();
 121e:   bf 93           push    r27
-1220:   ab 9a           IO[PORTC[3]] = true;                ; 0x08 = 8
-1222:   aa 9a           IO[PORTC[2]] = true;                ; 0x04 = 4
+1220:   ab 9a           IO_BIT[PORTC,3] = true;             ; 0x08 = 8
+1222:   aa 9a           IO_BIT[PORTC,2] = true;             ; 0x04 = 4
 1224:   be 2f           r27 = r30;
 1226:   b0 7f           r27 &= 240;                         ; 0xf0
 1228:   bc 60           r27 |= 12;                          ; 0x0c
 122a:   b5 bb           IO[PORTC] = r27;
-122c:   aa 98           IO[PORTC[2]] = false;               ; 0x04 = 4
+122c:   aa 98           IO_BIT[PORTC,2] = false;            ; 0x04 = 4
 122e:   00 00           nop
-1230:   aa 9a           IO[PORTC[2]] = true;                ; 0x04 = 4
+1230:   aa 9a           IO_BIT[PORTC,2] = true;             ; 0x04 = 4
 1232:   e2 95           r30 = ((r30 & 0xf0) >> 4) | ((r30 & 0x0f) << 4); ; swap nibbles
 1234:   e0 7f           r30 &= 240;                         ; 0xf0
 1236:   ec 60           r30 |= 12;                          ; 0x0c
 1238:   e5 bb           IO[PORTC] = r30;
-123a:   aa 98           IO[PORTC[2]] = false;               ; 0x04 = 4
+123a:   aa 98           IO_BIT[PORTC,2] = false;            ; 0x04 = 4
 123c:   bf 91           pop     r27
 123e:   08 95           return;
 
 
-; Referenced from offset 0x11f8 <USART_RX_Complete> by rcall
-; Referenced from offset 0x121c <USART_RX_Complete> by rcall
+; Referenced from offset 0x11f8 <Function_0x11f8> by rcall
+; Referenced from offset 0x121c <Function_0x11f8> by rcall
 Function_0x1240:
 1240:   af 93           push    r26
 1242:   bf 93           push    r27
@@ -3422,21 +3422,21 @@ Function_0x1240:
 124a:   a2 e0           r26 = 2;                            ; 0x02
 124c:   a5 bb           IO[PORTC] = r26;
 
-; Referenced from offset 0x126a <loop_clear_memory2> by brne
+; Referenced from offset 0x126a <Function_0x11f8> by brne
 Label_0x124e:
 124e:   00 00           nop
 1250:   00 00           nop
-1252:   aa 9a           IO[PORTC[2]] = true;                ; 0x04 = 4
+1252:   aa 9a           IO_BIT[PORTC,2] = true;             ; 0x04 = 4
 1254:   00 00           nop
 1256:   00 00           nop
 1258:   a3 b3           r26 = IO[PINC];
-125a:   aa 98           IO[PORTC[2]] = false;               ; 0x04 = 4
+125a:   aa 98           IO_BIT[PORTC,2] = false;            ; 0x04 = 4
 125c:   00 00           nop
-125e:   aa 9a           IO[PORTC[2]] = true;                ; 0x04 = 4
+125e:   aa 9a           IO_BIT[PORTC,2] = true;             ; 0x04 = 4
 1260:   00 00           nop
 1262:   00 00           nop
 1264:   00 00           nop
-1266:   aa 98           IO[PORTC[2]] = false;               ; 0x04 = 4
+1266:   aa 98           IO_BIT[PORTC,2] = false;            ; 0x04 = 4
 1268:   a0 78           r26 &= 128;                         ; 0x80
 126a:   89 f7           if (c1 != c2) goto Label_0x124e;
 126c:   b5 bb           IO[PORTC] = r27;
@@ -3447,7 +3447,7 @@ Label_0x124e:
 1276:   08 95           return;
 
 
-; Referenced from offset 0xaf6 <IVT_RESET> by rcall
+; Referenced from offset 0xaf6 <CallTable_33> by rcall
 ; Referenced from offset 0x17f4 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x1810 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x1836 <loop_clear_memory2> by rcall
@@ -3460,8 +3460,8 @@ Function_0x1278:
 1282:   08 95           return;
 
 
-; Referenced from offset 0x7e8 <IVT_RESET> by rcall
-; Referenced from offset 0x7ee <IVT_RESET> by rcall
+; Referenced from offset 0x7e8 <run_call_table> by rcall
+; Referenced from offset 0x7ee <run_call_table> by rcall
 ; Referenced from offset 0x1830 <loop_clear_memory2> by rcall
 Function_0x1284:
 1284:   af 93           push    r26
@@ -3479,8 +3479,8 @@ Function_0x1284:
 129c:   09 f4           if (c1 != c2) goto Label_0x12a0;
 129e:   e3 e6           r30 = 99;                           ; 0x63
 
-; Referenced from offset 0x129c <loop_clear_memory2> by brne
-; Referenced from offset 0x12d4 <IVT_RESET> by rjmp
+; Referenced from offset 0x129c <Function_0x1278> by brne
+; Referenced from offset 0x12d4 <Function_0x12b8> by rjmp
 Label_0x12a0:
 12a0:   fa e0           r31 = 10;                           ; 0x0a
 12a2:   74 d0           Function_0x138c();
@@ -3495,11 +3495,11 @@ Label_0x12a0:
 12b4:   b3 df           Function_0x121c();
 12b6:   0f c0           goto Label_0x12d6;
 
-; Referenced from offset 0x80a <IVT_RESET> by rcall
-; Referenced from offset 0xa62 <IVT_RESET> by rcall
-; Referenced from offset 0xb02 <IVT_RESET> by rcall
-; Referenced from offset 0xbaa <endless_loop> by rcall
-; Referenced from offset 0x1684 <loop_clear_memory2> by rcall
+; Referenced from offset 0x80a <run_call_table> by rcall
+; Referenced from offset 0xa62 <CallTable_33> by rcall
+; Referenced from offset 0xb02 <CallTable_33> by rcall
+; Referenced from offset 0xbaa <CallTable_22> by rcall
+; Referenced from offset 0x1684 <write_r26_to_com_buffer> by rcall
 ; Referenced from offset 0x175c <loop_clear_memory2> by rcall
 ; Referenced from offset 0x176a <loop_clear_memory2> by rcall
 ; Referenced from offset 0x1776 <loop_clear_memory2> by rcall
@@ -3521,30 +3521,30 @@ Function_0x12b8:
 12ca:   09 f4           if (c1 != c2) goto Label_0x12ce;
 12cc:   e0 e2           r30 = 32;                           ; 0x20
 
-; Referenced from offset 0x12ca <IVT_RESET> by brne
+; Referenced from offset 0x12ca <Function_0x12b8> by brne
 Label_0x12ce:
 12ce:   a6 df           Function_0x121c();
 12d0:   ef 2f           r30 = r31;
 12d2:   03 94           r0++;
 12d4:   e5 cf           goto Label_0x12a0;
 
-; Referenced from offset 0x12b6 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x12b6 <Function_0x1278> by rjmp
 Label_0x12d6:
 12d6:   bf 91           pop     r27
 12d8:   af 91           pop     r26
 12da:   08 95           return;
 
 
-; Referenced from offset 0x7d2 <IVT_RESET> by rcall
-; Referenced from offset 0x7fc <IVT_RESET> by rcall
-; Referenced from offset 0x818 <IVT_RESET> by rcall
-; Referenced from offset 0x82e <IVT_RESET> by rcall
-; Referenced from offset 0x932 <IVT_RESET> by rcall
-; Referenced from offset 0xa26 <IVT_RESET> by rcall
-; Referenced from offset 0x1688 <loop_clear_memory2> by rcall
+; Referenced from offset 0x7d2 <run_call_table> by rcall
+; Referenced from offset 0x7fc <run_call_table> by rcall
+; Referenced from offset 0x818 <run_call_table> by rcall
+; Referenced from offset 0x82e <run_call_table> by rcall
+; Referenced from offset 0x932 <run_call_table> by rcall
+; Referenced from offset 0xa26 <CallTable_33> by rcall
+; Referenced from offset 0x1688 <write_r26_to_com_buffer> by rcall
 ; Referenced from offset 0x1814 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x183a <loop_clear_memory2> by rcall
-; Referenced from offset 0x188c <loop_clear_memory2> by rcall
+; Referenced from offset 0x188c <Function_0x1858> by rcall
 show_Text_on_Display2:     ; Parameter r26
 12dc:   ef 93           push    r30
 12de:   ff 93           push    r31
@@ -3555,36 +3555,36 @@ show_Text_on_Display2:     ; Parameter r26
 12e8:   f0 ec           r31 = 192;                          ; 0xc0
 12ea:   0f c0           goto Label_0x130a;
 
-; Referenced from offset 0x592 <Main> by rcall
-; Referenced from offset 0x596 <Main> by rcall
-; Referenced from offset 0x7ce <IVT_RESET> by rcall
-; Referenced from offset 0x7e2 <IVT_RESET> by rcall
-; Referenced from offset 0x82a <IVT_RESET> by rcall
-; Referenced from offset 0x84a <IVT_RESET> by rcall
-; Referenced from offset 0x85e <IVT_RESET> by rcall
-; Referenced from offset 0x872 <IVT_RESET> by rcall
-; Referenced from offset 0x888 <IVT_RESET> by rcall
-; Referenced from offset 0x8a6 <IVT_RESET> by rcall
-; Referenced from offset 0x8b2 <IVT_RESET> by rcall
-; Referenced from offset 0x8da <IVT_RESET> by rcall
-; Referenced from offset 0x8e8 <IVT_RESET> by rcall
-; Referenced from offset 0x92a <IVT_RESET> by rcall
-; Referenced from offset 0x92e <IVT_RESET> by rcall
-; Referenced from offset 0x954 <IVT_RESET> by rcall
-; Referenced from offset 0x958 <IVT_RESET> by rcall
-; Referenced from offset 0x970 <IVT_RESET> by rcall
-; Referenced from offset 0x97c <IVT_RESET> by rcall
-; Referenced from offset 0x9a6 <IVT_RESET> by rcall
-; Referenced from offset 0xa22 <IVT_RESET> by rcall
-; Referenced from offset 0xb0a <IVT_RESET> by rcall
-; Referenced from offset 0x167a <loop_clear_memory2> by rcall
-; Referenced from offset 0x167e <loop_clear_memory2> by rcall
+; Referenced from offset 0x592 <CallTable_29> by rcall
+; Referenced from offset 0x596 <CallTable_29> by rcall
+; Referenced from offset 0x7ce <run_call_table> by rcall
+; Referenced from offset 0x7e2 <run_call_table> by rcall
+; Referenced from offset 0x82a <run_call_table> by rcall
+; Referenced from offset 0x84a <run_call_table> by rcall
+; Referenced from offset 0x85e <run_call_table> by rcall
+; Referenced from offset 0x872 <run_call_table> by rcall
+; Referenced from offset 0x888 <run_call_table> by rcall
+; Referenced from offset 0x8a6 <run_call_table> by rcall
+; Referenced from offset 0x8b2 <run_call_table> by rcall
+; Referenced from offset 0x8da <run_call_table> by rcall
+; Referenced from offset 0x8e8 <run_call_table> by rcall
+; Referenced from offset 0x92a <run_call_table> by rcall
+; Referenced from offset 0x92e <run_call_table> by rcall
+; Referenced from offset 0x954 <run_call_table> by rcall
+; Referenced from offset 0x958 <run_call_table> by rcall
+; Referenced from offset 0x970 <run_call_table> by rcall
+; Referenced from offset 0x97c <run_call_table> by rcall
+; Referenced from offset 0x9a6 <run_call_table> by rcall
+; Referenced from offset 0xa22 <CallTable_33> by rcall
+; Referenced from offset 0xb0a <CallTable_33> by rcall
+; Referenced from offset 0x167a <write_r26_to_com_buffer> by rcall
+; Referenced from offset 0x167e <write_r26_to_com_buffer> by rcall
 ; Referenced from offset 0x17ee <loop_clear_memory2> by rcall
 ; Referenced from offset 0x1802 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x1824 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x1828 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1890 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1894 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1890 <Function_0x1858> by rcall
+; Referenced from offset 0x1894 <Function_0x1858> by rcall
 show_Text_on_Display:     ; Parameter r26
 12ec:   ef 93           push    r30
 12ee:   ff 93           push    r31
@@ -3598,18 +3598,18 @@ show_Text_on_Display:     ; Parameter r26
 12fe:   a4 56           r26 -= 100;                         ; 0x64, no carry
 1300:   01 c0           goto Label_0x1304;
 
-; Referenced from offset 0x12fa <loop_clear_memory2> by brcs
+; Referenced from offset 0x12fa <show_Text_on_Display2> by brcs
 Label_0x1302:
 1302:   f8 e8           r31 = 136;                          ; 0x88
 
-; Referenced from offset 0x1300 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x1300 <show_Text_on_Display2> by rjmp
 Label_0x1304:
 1304:   a4 36           cmp(r26, 0x64);                     ; 100
 1306:   08 f4           if (!Carry) goto Label_0x130a;
 1308:   f0 e8           r31 = 128;                          ; 0x80
 
-; Referenced from offset 0x12ea <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1306 <loop_clear_memory2> by brcc
+; Referenced from offset 0x12ea <show_Text_on_Display2> by rjmp
+; Referenced from offset 0x1306 <show_Text_on_Display2> by brcc
 Label_0x130a:
 130a:   76 df           Function_0x11f8();
 130c:   a4 36           cmp(r26, 0x64);                     ; 100
@@ -3619,7 +3619,7 @@ Label_0x130a:
 1314:   a4 56           r26 -= 100;                         ; 0x64, no carry
 1316:   c3 e0           r28 = 3;                            ; 0x03
 
-; Referenced from offset 0x1320 <loop_clear_memory2> by brne
+; Referenced from offset 0x1320 <show_Text_on_Display2> by brne
 Label_0x1318:
 1318:   88 94           clc
 131a:   aa 1f           r26 += r26;                         ; With carry
@@ -3632,13 +3632,13 @@ Label_0x1318:
 1328:   bc 1f           r27 += r28;                         ; With carry
 132a:   0c c0           goto Label_0x1344;
 
-; Referenced from offset 0x130e <loop_clear_memory2> by brcs
+; Referenced from offset 0x130e <show_Text_on_Display2> by brcs
 Label_0x132c:
 132c:   c0 e1           r28 = 16;                           ; 0x10
 132e:   2c 2f           r18 = r28;
 1330:   c4 e0           r28 = 4;                            ; 0x04
 
-; Referenced from offset 0x133a <loop_clear_memory2> by brne
+; Referenced from offset 0x133a <show_Text_on_Display2> by brne
 Label_0x1332:
 1332:   88 94           clc
 1334:   aa 1f           r26 += r26;                         ; With carry
@@ -3650,8 +3650,8 @@ Label_0x1332:
 1340:   cc e1           r28 = 28;                           ; 0x1c
 1342:   bc 1f           r27 += r28;                         ; With carry
 
-; Referenced from offset 0x132a <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1354 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x132a <show_Text_on_Display2> by rjmp
+; Referenced from offset 0x1354 <show_Text_on_Display2> by rjmp
 Label_0x1344:
 1344:   ea 2f           r30 = r26;
 1346:   fb 2f           r31 = r27;
@@ -3663,7 +3663,7 @@ Label_0x1344:
 1352:   11 96           [r27:r26]++;
 1354:   f7 cf           goto Label_0x1344;
 
-; Referenced from offset 0x1350 <loop_clear_memory2> by breq
+; Referenced from offset 0x1350 <show_Text_on_Display2> by breq
 Label_0x1356:
 1356:   2f 91           pop     r18
 1358:   cf 91           pop     r28
@@ -3673,12 +3673,12 @@ Label_0x1356:
 1360:   08 95           return;
 
 
-; Referenced from offset 0x536 <Main> by rcall
-; Referenced from offset 0x560 <Main> by rcall
-; Referenced from offset 0x15d6 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1630 <loop_clear_memory2> by rcall
+; Referenced from offset 0x536 <CallTable_29> by rcall
+; Referenced from offset 0x560 <CallTable_29> by rcall
+; Referenced from offset 0x15d6 <Function_0x15b8> by rcall
+; Referenced from offset 0x1630 <Function_0x15fc> by rcall
 ; Referenced from offset 0x1714 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1a98 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1a98 <fun_unknown_0x1a7c> by rcall
 delay_0x1362:     ; Parameter r30
 1362:   af 93           push    r26
 1364:   bf 93           push    r27
@@ -3686,12 +3686,12 @@ delay_0x1362:     ; Parameter r30
 1368:   a8 e0           r26 = 8;                            ; 0x08
 136a:   e6 95           r30 >>= 1;                          ; _BV(7) = 0, Carry = _BV(0) (logical shift)
 
-; Referenced from offset 0x1376 <loop_clear_memory2> by brne
+; Referenced from offset 0x1376 <delay_0x1362> by brne
 Label_0x136c:
 136c:   08 f4           if (!Carry) goto Label_0x1370;
 136e:   bf 0f           r27 += r31;                         ; No carry
 
-; Referenced from offset 0x136c <loop_clear_memory2> by brcc
+; Referenced from offset 0x136c <delay_0x1362> by brcc
 Label_0x1370:
 1370:   b7 95           r27 >>= 1;                          ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
 1372:   e7 95           r30 >>= 1;                          ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
@@ -3703,8 +3703,8 @@ Label_0x1370:
 137e:   08 95           return;
 
 
-; Referenced from offset 0x1388 <loop_clear_memory2> by brne
-; Referenced from offset 0x1666 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1388 <Function_0x1650> by brne
+; Referenced from offset 0x1666 <Function_0x1650> by rcall
 Function_0x1380:
 1380:   88 94           clc
 1382:   ee 1f           r30 += r30;                         ; With carry
@@ -3714,13 +3714,13 @@ Function_0x1380:
 138a:   08 95           return;
 
 
-; Referenced from offset 0xb76 <loop_clear_memory2> by rcall
-; Referenced from offset 0xb7e <loop_clear_memory2> by rcall
-; Referenced from offset 0x128e <loop_clear_memory2> by rcall
-; Referenced from offset 0x1296 <loop_clear_memory2> by rcall
-; Referenced from offset 0x12a2 <loop_clear_memory2> by rcall
-; Referenced from offset 0x12c4 <IVT_RESET> by rcall
-; Referenced from offset 0x15d0 <loop_clear_memory2> by rcall
+; Referenced from offset 0xb76 <Function_0xb58> by rcall
+; Referenced from offset 0xb7e <Function_0xb58> by rcall
+; Referenced from offset 0x128e <Function_0x1278> by rcall
+; Referenced from offset 0x1296 <Function_0x1278> by rcall
+; Referenced from offset 0x12a2 <Function_0x1278> by rcall
+; Referenced from offset 0x12c4 <Function_0x12b8> by rcall
+; Referenced from offset 0x15d0 <Function_0x15b8> by rcall
 Function_0x138c:
 138c:   af 93           push    r26
 138e:   bf 93           push    r27
@@ -3729,20 +3729,20 @@ Function_0x138c:
 1394:   af e0           r26 = 15;                           ; 0x0f
 1396:   6f c1           goto error_handler;
 
-; Referenced from offset 0x1392 <loop_clear_memory2> by brne
+; Referenced from offset 0x1392 <Function_0x1380> by brne
 Label_0x1398:
 1398:   aa 1b           r26 -= r26;                         ; No carry
 139a:   b9 e0           r27 = 9;                            ; 0x09
 
-; Referenced from offset 0x13ae <loop_clear_memory2> by rjmp
-; Referenced from offset 0x13b2 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x13ae <Function_0x1380> by rjmp
+; Referenced from offset 0x13b2 <Function_0x1380> by rjmp
 Label_0x139c:
 139c:   ee 1f           r30 += r30;                         ; With carry
 139e:   ba 95           r27--;
 13a0:   09 f4           if (c1 != c2) goto Label_0x13a4;
 13a2:   08 c0           goto Label_0x13b4;
 
-; Referenced from offset 0x13a0 <loop_clear_memory2> by brne
+; Referenced from offset 0x13a0 <Function_0x1380> by brne
 Label_0x13a4:
 13a4:   aa 1f           r26 += r26;                         ; With carry
 13a6:   af 1b           r26 -= r31;                         ; No carry
@@ -3751,12 +3751,12 @@ Label_0x13a4:
 13ac:   88 94           clc
 13ae:   f6 cf           goto Label_0x139c;
 
-; Referenced from offset 0x13a8 <loop_clear_memory2> by brcc
+; Referenced from offset 0x13a8 <Function_0x1380> by brcc
 Label_0x13b0:
 13b0:   08 94           sec
 13b2:   f4 cf           goto Label_0x139c;
 
-; Referenced from offset 0x13a2 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x13a2 <Function_0x1380> by rjmp
 Label_0x13b4:
 13b4:   fa 2f           r31 = r26;
 13b6:   bf 91           pop     r27
@@ -3764,11 +3764,11 @@ Label_0x13b4:
 13ba:   08 95           return;
 
 
-; Referenced from offset 0x546 <Main> by rcall
-; Referenced from offset 0x570 <Main> by rcall
-; Referenced from offset 0xa5e <IVT_RESET> by rcall
-; Referenced from offset 0x165a <loop_clear_memory2> by rcall
-; Referenced from offset 0x166c <loop_clear_memory2> by rcall
+; Referenced from offset 0x546 <CallTable_29> by rcall
+; Referenced from offset 0x570 <CallTable_29> by rcall
+; Referenced from offset 0xa5e <CallTable_33> by rcall
+; Referenced from offset 0x165a <Function_0x1650> by rcall
+; Referenced from offset 0x166c <Function_0x1650> by rcall
 Function_0x13bc:
 13bc:   bd 17           cmp(r27, r29);
 13be:   ad 07           cmp(r26, r29);                      ; with carry
@@ -3776,7 +3776,7 @@ Function_0x13bc:
 13c2:   af e0           r26 = 15;                           ; 0x0f
 13c4:   58 c1           goto error_handler;
 
-; Referenced from offset 0x13c0 <loop_clear_memory2> by brne
+; Referenced from offset 0x13c0 <Function_0x1650> by brne
 Label_0x13c6:
 13c6:   2f 93           push    r18
 
@@ -3788,8 +3788,8 @@ Label_0x13c8:
 13ce:   22 18           r2 -= r2;                           ; No carry
 13d0:   c1 e1           r28 = 17;                           ; 0x11
 
-; Referenced from offset 0x13ec <loop_clear_memory2> by rjmp
-; Referenced from offset 0x13f0 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x13ec <Function_0x1650> by rjmp
+; Referenced from offset 0x13f0 <Function_0x1650> by rjmp
 Label_0x13d2:
 13d2:   ee 1f           r30 += r30;                         ; With carry
 13d4:   ff 1f           r31 += r31;                         ; With carry
@@ -3797,7 +3797,7 @@ Label_0x13d2:
 13d8:   09 f4           if (c1 != c2) goto Label_0x13dc;
 13da:   0b c0           goto Label_0x13f2;
 
-; Referenced from offset 0x13d8 <loop_clear_memory2> by brne
+; Referenced from offset 0x13d8 <Function_0x1650> by brne
 Label_0x13dc:
 13dc:   22 1f           r18 += r18;                         ; With carry
 13de:   22 1c           r2 += r2;                           ; With carry
@@ -3809,12 +3809,12 @@ Label_0x13dc:
 13ea:   88 94           clc
 13ec:   f2 cf           goto Label_0x13d2;
 
-; Referenced from offset 0x13e4 <loop_clear_memory2> by brcc
+; Referenced from offset 0x13e4 <Function_0x1650> by brcc
 Label_0x13ee:
 13ee:   08 94           sec
 13f0:   f0 cf           goto Label_0x13d2;
 
-; Referenced from offset 0x13da <loop_clear_memory2> by rjmp
+; Referenced from offset 0x13da <Function_0x1650> by rjmp
 Label_0x13f2:
 13f2:   cf 91           pop     r28
 13f4:   2f 90           pop     r2
@@ -3822,10 +3822,10 @@ Label_0x13f2:
 13f8:   08 95           return;
 
 
-; Referenced from offset 0x1402 <loop_clear_memory2> by brne
-; Referenced from offset 0x15da <loop_clear_memory2> by rcall
-; Referenced from offset 0x162c <loop_clear_memory2> by rcall
-; Referenced from offset 0x1634 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1402 <Function_0x13fa> by brne
+; Referenced from offset 0x15da <Function_0x15b8> by rcall
+; Referenced from offset 0x162c <Function_0x15fc> by rcall
+; Referenced from offset 0x1634 <Function_0x15fc> by rcall
 Function_0x13fa:
 13fa:   88 94           clc
 13fc:   f7 95           r31 >>= 1;                          ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
@@ -3846,7 +3846,7 @@ Function_0x1406:
 1412:   ac 83           Memory[[r28:r29]+4] = r26;
 1414:   ad 83           Memory[[r28:r29]+5] = r26;
 
-; Referenced from offset 0x1482 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x1482 <Function_0x13fa> by rjmp
 Label_0x1416:
 1416:   d0 d0           Function_0x15b8();
 1418:   3e d0           Function_0x1496();
@@ -3863,8 +3863,8 @@ Label_0x1416:
 142e:   a0 e8           r26 = 128;                          ; 0x80
 1430:   da d8           sleep();                            ; Parameter r26
 
-; Referenced from offset 0x1470 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1474 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x1470 <Function_0x13fa> by rjmp
+; Referenced from offset 0x1474 <Function_0x13fa> by rjmp
 Label_0x1432:
 1432:   c2 d0           Function_0x15b8();
 1434:   30 d0           Function_0x1496();
@@ -3876,12 +3876,12 @@ Label_0x1432:
 1440:   a8 bb           IO[PORTB] = r26;
 1442:   02 c0           goto Label_0x1448;
 
-; Referenced from offset 0x143c <loop_clear_memory2> by brne
+; Referenced from offset 0x143c <Function_0x13fa> by brne
 Label_0x1444:
 1444:   a3 e0           r26 = 3;                            ; 0x03
 1446:   a8 bb           IO[PORTB] = r26;
 
-; Referenced from offset 0x1442 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x1442 <Function_0x13fa> by rjmp
 Label_0x1448:
 1448:   a2 e0           r26 = 2;                            ; 0x02
 144a:   cd d8           sleep();                            ; Parameter r26
@@ -3889,15 +3889,15 @@ Label_0x1448:
 144e:   a6 b9           IO[ADCSR] = r26;
 1450:   a0 e4           r26 = 64;                           ; 0x40
 
-; Referenced from offset 0x1454 <loop_clear_memory2> by brne
+; Referenced from offset 0x1454 <Function_0x13fa> by brne
 Label_0x1452:
 1452:   aa 95           r26--;
 1454:   f1 f7           if (c1 != c2) goto Label_0x1452;
 1456:   d8 bb           IO[PORTB] = r29;
 
-; Referenced from offset 0x145a <loop_clear_memory2> by rjmp
+; Referenced from offset 0x145a <Function_0x13fa> by rjmp
 Label_0x1458:
-1458:   36 99           skipif (!IO[ADCSR[6]])              ; 0x40 = 64
+1458:   36 99           skipif (!IO_BIT[ADCSR,6])           ; 0x40 = 64
 145a:   fe cf           goto Label_0x1458;
 145c:   a4 b1           r26 = IO[ADCL];
 145e:   f5 b1           r31 = IO[ADCH];
@@ -3911,12 +3911,12 @@ Label_0x1458:
 146e:   bb 87           Memory[[r28:r29]+11] = r27;
 1470:   e0 cf           goto Label_0x1432;
 
-; Referenced from offset 0x146c <loop_clear_memory2> by brne
+; Referenced from offset 0x146c <Function_0x13fa> by brne
 Label_0x1472:
 1472:   bc 87           Memory[[r28:r29]+12] = r27;
 1474:   de cf           goto Label_0x1432;
 
-; Referenced from offset 0x1462 <loop_clear_memory2> by brcc
+; Referenced from offset 0x1462 <Function_0x13fa> by brcc
 Label_0x1476:
 1476:   b0 30           cmp(r27, 0);
 1478:   61 f0           if (c1 == c2) goto Label_0x1492;
@@ -3926,7 +3926,7 @@ Label_0x1476:
 1480:   bb 27           r27 = 0x00;                         ; 0
 1482:   c9 cf           goto Label_0x1416;
 
-; Referenced from offset 0x147c <loop_clear_memory2> by brne
+; Referenced from offset 0x147c <Function_0x13fa> by brne
 Label_0x1484:
 1484:   dc 83           Memory[[r28:r29]+4] = r29;
 1486:   dd 83           Memory[[r28:r29]+5] = r29;
@@ -3937,19 +3937,19 @@ Label_0x1484:
 1490:   08 95           return;
 
 
-; Referenced from offset 0x1468 <loop_clear_memory2> by brcc
-; Referenced from offset 0x1478 <loop_clear_memory2> by breq
+; Referenced from offset 0x1468 <Function_0x13fa> by brcc
+; Referenced from offset 0x1478 <Function_0x13fa> by breq
 Label_0x1492:
 1492:   a4 e1           r26 = 20;                           ; 0x14
 1494:   f0 c0           goto error_handler;
 
-; Referenced from offset 0x60a <IVT_RESET> by rcall
-; Referenced from offset 0x1418 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1434 <loop_clear_memory2> by rcall
-; Referenced from offset 0x148a <loop_clear_memory2> by rcall
+; Referenced from offset 0x60a <CallTable_18> by rcall
+; Referenced from offset 0x1418 <Function_0x13fa> by rcall
+; Referenced from offset 0x1434 <Function_0x13fa> by rcall
+; Referenced from offset 0x148a <Function_0x13fa> by rcall
 ; Referenced from offset 0x179a <loop_clear_memory2> by rcall
 Function_0x1496:
-1496:   94 98           IO[PORTD[4]] = false;               ; 0x10 = 16
+1496:   94 98           IO_BIT[PORTD,4] = false;            ; 0x10 = 16
 1498:   a4 e0           r26 = 4;                            ; 0x04
 149a:   a0 93 08 02     Memory[0x0208] = r26;               ; 520
 149e:   a0 91 00 05     r26 = Memory[0x0500];               ; 1280
@@ -3970,7 +3970,7 @@ Function_0x1496:
 ; Referenced from offset 0x48 <IVT_IRQ2> by jmp
 ; Referenced from offset 0x4c <IVT_TIMER0_COMP> by jmp
 ; Referenced from offset 0x50 <IVT_SPMRDY> by jmp
-; Referenced from offset 0x1a7a <reset_device> by rjmp
+; Referenced from offset 0x1a7a <lcd_putchar> by rjmp
 RESET:
 14a6:   f8 94           Disable_Interrupts();
 14a8:   ee 27           r30 = 0x00;                         ; 0
@@ -4060,7 +4060,7 @@ loop_clear_memory2:
 1546:   a1 bd           IO[WDTCR] = r26;
 1548:   0c 94 2a 00     goto Main;
 
-; Referenced from offset 0x606 <IVT_RESET> by rcall
+; Referenced from offset 0x606 <CallTable_18> by rcall
 ; Referenced from offset 0x1516 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x1538 <loop_clear_memory2> by rcall
 copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29:     ; CallTable_24
@@ -4112,19 +4112,19 @@ Label_0x1584:
 158e:   08 95           return;
 
 
-; Referenced from offset 0x942 <IVT_RESET> by rcall
+; Referenced from offset 0x942 <run_call_table> by rcall
 ; Referenced from offset 0x1518 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x157a <copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3> by rcall
 ; Referenced from offset 0x17da <loop_clear_memory2> by rcall
 ; Referenced from offset 0x17e4 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1896 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1896 <Function_0x1858> by rcall
 copy_flash_0x1fdc_to_memory_0x01f0:
 1590:   a0 ef           r26 = 240;                          ; 0xf0
 1592:   b1 e0           r27 = 1;                            ; 0x01
 1594:   ec ed           r30 = 220;                          ; 0xdc
 1596:   ff e1           r31 = 31;                           ; 0x1f
 
-; Referenced from offset 0x15a0 <loop_clear_memory2> by brne
+; Referenced from offset 0x15a0 <copy_flash_0x1fdc_to_memory_0x01f0> by brne
 Label_0x1598:
 1598:   c8 95           r0 = Flash[r30:r31];
 159a:   0d 92           Memory[[r26:r27]++] = r0;
@@ -4134,8 +4134,8 @@ Label_0x1598:
 15a2:   08 95           return;
 
 
-; Referenced from offset 0x926 <IVT_RESET> by rcall
-; Referenced from offset 0x944 <IVT_RESET> by rcall
+; Referenced from offset 0x926 <run_call_table> by rcall
+; Referenced from offset 0x944 <run_call_table> by rcall
 ; Referenced from offset 0x17dc <loop_clear_memory2> by rcall
 ; Referenced from offset 0x17e6 <loop_clear_memory2> by rcall
 Function_0x15a4:
@@ -4144,7 +4144,7 @@ Function_0x15a4:
 15a8:   a8 e0           r26 = 8;                            ; 0x08
 15aa:   b0 e0           r27 = 0;                            ; 0x00
 
-; Referenced from offset 0x15b4 <loop_clear_memory2> by brne
+; Referenced from offset 0x15b4 <Function_0x15a4> by brne
 Label_0x15ac:
 15ac:   01 90           r0 = Memory[[r30:r31]++];
 15ae:   21 d2           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
@@ -4155,10 +4155,10 @@ Label_0x15ac:
 
 
 ; Referenced from offset 0x316 <Main> by call
-; Referenced from offset 0x608 <IVT_RESET> by rcall
-; Referenced from offset 0x1416 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1432 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1488 <loop_clear_memory2> by rcall
+; Referenced from offset 0x608 <CallTable_18> by rcall
+; Referenced from offset 0x1416 <Function_0x13fa> by rcall
+; Referenced from offset 0x1432 <Function_0x13fa> by rcall
+; Referenced from offset 0x1488 <Function_0x13fa> by rcall
 ; Referenced from offset 0x1798 <loop_clear_memory2> by rcall
 Function_0x15b8:
 15b8:   af 93           push    r26
@@ -4168,7 +4168,7 @@ Function_0x15b8:
 15c0:   2b 84           r2 = Memory[[r28:r29]+11];
 15c2:   00 24           r0 = 0x00;                          ; 0
 
-; Referenced from offset 0x15ec <loop_clear_memory2> by rjmp
+; Referenced from offset 0x15ec <Function_0x15b8> by rjmp
 Label_0x15c4:
 15c4:   a0 91 f4 01     r26 = COMM_POWER_LEVEL;             ; 0x01f4
 15c8:   a4 30           cmp(r26, 0x04);                     ; 4
@@ -4190,7 +4190,7 @@ Label_0x15c4:
 15ea:   2c 84           r2 = Memory[[r28:r29]+12];
 15ec:   eb cf           goto Label_0x15c4;
 
-; Referenced from offset 0x15de <loop_clear_memory2> by brne
+; Referenced from offset 0x15de <Function_0x15b8> by brne
 Label_0x15ee:
 15ee:   e0 93 06 02     Memory[0x0206] = r30;               ; 518
 15f2:   bf 91           pop     r27
@@ -4198,7 +4198,7 @@ Label_0x15ee:
 15f6:   08 95           return;
 
 
-; Referenced from offset 0x15ca <loop_clear_memory2> by brcc
+; Referenced from offset 0x15ca <Function_0x15b8> by brcc
 Label_0x15f8:
 15f8:   a0 e1           r26 = 16;                           ; 0x10
 15fa:   3d c0           goto error_handler;
@@ -4211,7 +4211,7 @@ Function_0x15fc:
 1602:   11 f0           if (c1 == c2) goto Label_0x1608;
 1604:   e0 91 84 01     r30 = Memory[0x0184];               ; 388
 
-; Referenced from offset 0x1602 <loop_clear_memory2> by breq
+; Referenced from offset 0x1602 <Function_0x15fc> by breq
 Label_0x1608:
 1608:   a0 91 f0 01     r26 = mem_unknown_0x1f0;            ; 0x01f0
 160c:   b1 e0           r27 = 1;                            ; 0x01
@@ -4220,14 +4220,14 @@ Label_0x1608:
 1612:   08 f0           if (Carry) goto Label_0x1616;
 1614:   a0 ec           r26 = 192;                          ; 0xc0
 
-; Referenced from offset 0x1612 <loop_clear_memory2> by brcs
+; Referenced from offset 0x1612 <Function_0x15fc> by brcs
 Label_0x1616:
 1616:   a0 93 f0 01     mem_unknown_0x1f0 = r26;            ; 0x01f0
 161a:   ee 27           r30 = 0x00;                         ; 0
 161c:   ff 27           r31 = 0x00;                         ; 0
 161e:   a0 ed           r26 = 208;                          ; 0xd0
 
-; Referenced from offset 0x1628 <loop_clear_memory2> by brne
+; Referenced from offset 0x1628 <Function_0x15fc> by brne
 Label_0x1620:
 1620:   2e 91           r18 = Memory[--[r26:r27]];
 1622:   e2 0f           r30 += r18;                         ; No carry
@@ -4244,23 +4244,23 @@ Label_0x1620:
 1638:   09 f4           if (c1 != c2) goto Label_0x163c;
 163a:   01 c0           goto Label_0x163e;
 
-; Referenced from offset 0x1638 <loop_clear_memory2> by brne
+; Referenced from offset 0x1638 <Function_0x15fc> by brne
 Label_0x163c:
 163c:   ef ef           r30 = 0xff;                         ; 255
 
-; Referenced from offset 0x163a <loop_clear_memory2> by rjmp
+; Referenced from offset 0x163a <Function_0x15fc> by rjmp
 Label_0x163e:
 163e:   e0 95           com     r30
 1640:   2e 2e           r2 = r30;
 1642:   be a1           r27 = Memory[[r28:r29]+38];
 1644:   af a1           r26 = Memory[[r28:r29]+39];
 1646:   04 d0           Function_0x1650();
-1648:   f0 fe           skipif (r15[0])
+1648:   f0 fe           skipif (bit(r15,0))
 164a:   e0 93 0d 02     current_multi_adjust_value = r30;   ; 0x020d
 164e:   08 95           return;
 
 
-; Referenced from offset 0x1646 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1646 <Function_0x15fc> by rcall
 Function_0x1650:
 1650:   2b 2f           r18 = r27;
 1652:   ab 1b           r26 -= r27;                         ; No carry
@@ -4281,22 +4281,22 @@ Function_0x1650:
 1670:   08 f4           if (!Carry) goto Label_0x1674;
 1672:   ef ef           r30 = 0xff;                         ; 255
 
-; Referenced from offset 0x1670 <loop_clear_memory2> by brcc
+; Referenced from offset 0x1670 <Function_0x1650> by brcc
 Label_0x1674:
 1674:   08 95           return;
 
 
-; Referenced from offset 0x3ea <Main> by jmp
-; Referenced from offset 0x796 <IVT_RESET> by rjmp
-; Referenced from offset 0x914 <IVT_RESET> by rcall
-; Referenced from offset 0xb70 <loop_clear_memory2> by rcall
-; Referenced from offset 0xbba <endless_loop> by rjmp
-; Referenced from offset 0x1396 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x13c4 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1494 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x15fa <loop_clear_memory2> by rjmp
+; Referenced from offset 0x3ea <CallTable_29> by jmp
+; Referenced from offset 0x796 <run_call_table> by rjmp
+; Referenced from offset 0x914 <run_call_table> by rcall
+; Referenced from offset 0xb70 <Function_0xb58> by rcall
+; Referenced from offset 0xbba <CallTable_22> by rjmp
+; Referenced from offset 0x1396 <Function_0x1380> by rjmp
+; Referenced from offset 0x13c4 <Function_0x1650> by rjmp
+; Referenced from offset 0x1494 <Function_0x13fa> by rjmp
+; Referenced from offset 0x15fa <Function_0x15b8> by rjmp
 ; Referenced from offset 0x16e4 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1a1e <loop_clear_memory2> by rjmp
+; Referenced from offset 0x1a1e <write_r26_to_com_buffer> by rjmp
 error_handler:     ; CallTable_23_37_38_39
 1676:   2a 2f           r18 = r26;
 1678:   a4 e6           r26 = 100;                          ; 0x64
@@ -4307,7 +4307,7 @@ error_handler:     ; CallTable_23_37_38_39
 1682:   e2 2f           r30 = r18;
 1684:   19 de           Function_0x12b8();
 
-; Referenced from offset 0x598 <Main> by jmp
+; Referenced from offset 0x598 <CallTable_29> by jmp
 Label_0x1686:
 1686:   a0 e0           r26 = 0;                            ; 0x00
 1688:   29 de           show_Text_on_Display2();            ; Parameter r26
@@ -4324,11 +4324,11 @@ Label_0x1686:
 169e:   a0 e6           r26 = 96;                           ; 0x60
 16a0:   a5 bf           IO[MCUCR] = r26;
 
-; Referenced from offset 0x16b6 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x16b6 <write_r26_to_com_buffer> by rjmp
 Label_0x16a2:
 16a2:   24 e0           r18 = 4;                            ; 0x04
 
-; Referenced from offset 0x16aa <loop_clear_memory2> by brne
+; Referenced from offset 0x16aa <write_r26_to_com_buffer> by brne
 Label_0x16a4:
 16a4:   af ef           r26 = 0xff;                         ; 255
 16a6:   cb d0           delay_0x183e();                     ; Parameter r26
@@ -4351,19 +4351,19 @@ fun_unknown_0x16b8:     ; Parameter r28:r29
 
 ; Referenced from offset 0x16c4 <loop_clear_memory2> by rjmp
 Label_0x16c2:
-16c2:   13 fd           skipif (!r17[3])
+16c2:   13 fd           skipif (!bit(r17,3))
 16c4:   fe cf           goto Label_0x16c2;
 16c6:   2b da           enable_ADC_and_set_r17[3]();        ; CallTable_34
 
 ; Referenced from offset 0x16ca <loop_clear_memory2> by rjmp
 Label_0x16c8:
-16c8:   13 fd           skipif (!r17[3])
+16c8:   13 fd           skipif (!bit(r17,3))
 16ca:   fe cf           goto Label_0x16c8;
 16cc:   28 da           enable_ADC_and_set_r17[3]();        ; CallTable_34
 
 ; Referenced from offset 0x16d0 <loop_clear_memory2> by rjmp
 Label_0x16ce:
-16ce:   13 fd           skipif (!r17[3])
+16ce:   13 fd           skipif (!bit(r17,3))
 16d0:   fe cf           goto Label_0x16ce;
 16d2:   ab 81           r26 = Memory[[r28:r29]+3];
 16d4:   ae 38           cmp(r26, 0x8e);                     ; 142
@@ -4398,7 +4398,7 @@ Label_0x16ee:
 Label_0x16fc:
 16fc:   e0 93 15 02     Memory[0x0215] = r30;               ; 533
 1700:   b2 e9           r27 = 146;                          ; 0x92
-1702:   e1 ff           skipif (r30[1])
+1702:   e1 ff           skipif (bit(r30,1))
 1704:   b4 50           r27 -= 4;                           ; 0x04, no carry
 1706:   ea 2f           r30 = r26;
 1708:   eb 1b           r30 -= r27;                         ; No carry
@@ -4437,15 +4437,15 @@ Label_0x171a:
 ; Referenced from offset 0x1728 <loop_clear_memory2> by breq
 ; Referenced from offset 0x1734 <loop_clear_memory2> by brne
 Label_0x1738:
-1738:   91 9a           IO[PORTD[1]] = true;                ; 0x02 = 2
+1738:   91 9a           IO_BIT[PORTD,1] = true;             ; 0x02 = 2
 173a:   a2 e0           r26 = 2;                            ; 0x02
 173c:   80 d0           delay_0x183e();                     ; Parameter r26
-173e:   80 9b           skipif (IO[PIND[0]])                ; 0x01 = 1
+173e:   80 9b           skipif (IO_BIT[PIND,0])             ; 0x01 = 1
 1740:   30 c0           goto Label_0x17a2;
-1742:   91 98           IO[PORTD[1]] = false;               ; 0x02 = 2
+1742:   91 98           IO_BIT[PORTD,1] = false;            ; 0x02 = 2
 1744:   a2 e0           r26 = 2;                            ; 0x02
 1746:   7b d0           delay_0x183e();                     ; Parameter r26
-1748:   80 99           skipif (!IO[PIND[0]])               ; 0x01 = 1
+1748:   80 99           skipif (!IO_BIT[PIND,0])            ; 0x01 = 1
 174a:   2b c0           goto Label_0x17a2;
 
 ; Referenced from offset 0x17a0 <loop_clear_memory2> by rjmp
@@ -4498,16 +4498,16 @@ Label_0x174c:
 ; Referenced from offset 0x174a <loop_clear_memory2> by rjmp
 ; Referenced from offset 0x1750 <loop_clear_memory2> by breq
 Label_0x17a2:
-17a2:   c3 d9           Function_0xb2a();
+17a2:   c3 d9           prng_next();                        ; Result in r26 and X[18]
 17a4:   0a 2e           r0 = r26;
 17a6:   b0 e0           r27 = 0;                            ; 0x00
 17a8:   a2 e0           r26 = 2;                            ; 0x02
 17aa:   23 d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
-17ac:   be d9           Function_0xb2a();
+17ac:   be d9           prng_next();                        ; Result in r26 and X[18]
 17ae:   0a 2e           r0 = r26;
 17b0:   a3 e0           r26 = 3;                            ; 0x03
 17b2:   1f d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
-17b4:   91 98           IO[PORTD[1]] = false;               ; 0x02 = 2
+17b4:   91 98           IO_BIT[PORTD,1] = false;            ; 0x02 = 2
 17b6:   a4 e0           r26 = 4;                            ; 0x04
 17b8:   b0 e0           r27 = 0;                            ; 0x00
 
@@ -4560,7 +4560,7 @@ Label_0x17f2:
 1800:   a3 e0           r26 = 3;                            ; 0x03
 1802:   74 dd           show_Text_on_Display();             ; Parameter r26
 1804:   a0 91 15 02     r26 = Memory[0x0215];               ; 533
-1808:   a0 ff           skipif (r26[0])
+1808:   a0 ff           skipif (bit(r26,0))
 180a:   03 c0           goto Label_0x1812;
 180c:   ff e0           r31 = 15;                           ; 0x0f
 180e:   e2 e4           r30 = 66;                           ; 0x42
@@ -4593,8 +4593,8 @@ Label_0x1838:
 183c:   08 95           return;
 
 
-; Referenced from offset 0x16a6 <loop_clear_memory2> by rcall
-; Referenced from offset 0x16b0 <loop_clear_memory2> by rcall
+; Referenced from offset 0x16a6 <write_r26_to_com_buffer> by rcall
+; Referenced from offset 0x16b0 <write_r26_to_com_buffer> by rcall
 ; Referenced from offset 0x173c <loop_clear_memory2> by rcall
 ; Referenced from offset 0x1746 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x179e <loop_clear_memory2> by rcall
@@ -4604,15 +4604,15 @@ delay_0x183e:     ; Parameter r26
 183e:   bf 93           push    r27
 1840:   cf 93           push    r28
 
-; Referenced from offset 0x1850 <loop_clear_memory2> by brne
+; Referenced from offset 0x1850 <delay_0x183e> by brne
 Label_0x1842:
 1842:   ce e6           r28 = 110;                          ; 0x6e
 
-; Referenced from offset 0x184c <loop_clear_memory2> by brne
+; Referenced from offset 0x184c <delay_0x183e> by brne
 Label_0x1844:
 1844:   bf ef           r27 = 0xff;                         ; 255
 
-; Referenced from offset 0x1848 <loop_clear_memory2> by brne
+; Referenced from offset 0x1848 <delay_0x183e> by brne
 Label_0x1846:
 1846:   ba 95           r27--;
 1848:   f1 f7           if (c1 != c2) goto Label_0x1846;
@@ -4627,9 +4627,9 @@ Label_0x1846:
 
 ; Referenced from offset 0x66 <Main> by call
 Function_0x1858:
-1858:   c4 9a           IO[PORTB[4]] = true;                ; 0x10 = 16
+1858:   c4 9a           IO_BIT[PORTB,4] = true;             ; 0x10 = 16
 185a:   cf 93           push    r28
-185c:   16 fd           skipif (!r17[6])
+185c:   16 fd           skipif (!bit(r17,6))
 185e:   98 c0           goto Label_0x1990;
 1860:   e0 e2           r30 = 32;                           ; 0x20
 1862:   f2 e0           r31 = 2;                            ; 0x02
@@ -4643,13 +4643,13 @@ Function_0x1858:
 1874:   08 f4           if (!Carry) goto Label_0x1878;
 1876:   8c c0           goto Label_0x1990;
 
-; Referenced from offset 0x1874 <loop_clear_memory2> by brcc
+; Referenced from offset 0x1874 <Function_0x1858> by brcc
 Label_0x1878:
 1878:   c9 30           cmp(r28, 0x09);                     ; 9
 187a:   08 f4           if (!Carry) goto Label_0x187e;
 187c:   82 c0           goto Label_0x1982;
 
-; Referenced from offset 0x187a <loop_clear_memory2> by brcc
+; Referenced from offset 0x187a <Function_0x1858> by brcc
 Label_0x187e:
 187e:   ce 30           cmp(r28, 0x0e);                     ; 14
 1880:   51 f4           if (c1 != c2) goto Label_0x1896;
@@ -4664,11 +4664,11 @@ Label_0x187e:
 1892:   a8 ef           r26 = 248;                          ; 0xf8
 1894:   2b dd           show_Text_on_Display();             ; Parameter r26
 
-; Referenced from offset 0x1880 <loop_clear_memory2> by brne
+; Referenced from offset 0x1880 <Function_0x1858> by brne
 Label_0x1896:
 1896:   7c de           copy_flash_0x1fdc_to_memory_0x01f0();
 1898:   74 c0           goto Label_0x1982;
-189a:   01 fe           skipif (r0[1])
+189a:   01 fe           skipif (bit(r0,1))
 189c:   06 c0           goto Label_0x18aa;
 189e:   c0 e9           r28 = 144;                          ; 0x90
 18a0:   a8 81           r26 = Memory[r28:r29];
@@ -4677,9 +4677,9 @@ Label_0x1896:
 18a6:   5a 2e           r5 = r26;
 18a8:   de da           IRQ0_Handler();
 
-; Referenced from offset 0x189c <loop_clear_memory2> by rjmp
+; Referenced from offset 0x189c <Function_0x1858> by rjmp
 Label_0x18aa:
-18aa:   00 fe           skipif (r0[0])
+18aa:   00 fe           skipif (bit(r0,0))
 18ac:   68 c0           goto Label_0x197e;
 18ae:   a0 e9           r26 = 144;                          ; 0x90
 18b0:   b1 e0           r27 = 1;                            ; 0x01
@@ -4690,12 +4690,12 @@ Label_0x18aa:
 18ba:   e0 da           IRQ1_Handler();
 18bc:   60 c0           goto Label_0x197e;
 
-; Referenced from offset 0x1870 <loop_clear_memory2> by brne
+; Referenced from offset 0x1870 <Function_0x1858> by brne
 Label_0x18be:
 18be:   b0 5e           r27 -= 224;                         ; 0xe0, no carry
 18c0:   2b 2e           r2 = r27;
 
-; Referenced from offset 0x18c8 <loop_clear_memory2> by brcs
+; Referenced from offset 0x18c8 <Function_0x1858> by brcs
 Label_0x18c2:
 18c2:   a1 91           r26 = Memory[[r30:r31]++];
 18c4:   0a 0e           r0 += r26;                          ; No carry
@@ -4706,7 +4706,7 @@ Label_0x18c2:
 18ce:   09 f0           if (c1 == c2) goto Label_0x18d2;
 18d0:   5f c0           goto Label_0x1990;
 
-; Referenced from offset 0x18ce <loop_clear_memory2> by breq
+; Referenced from offset 0x18ce <Function_0x1858> by breq
 Label_0x18d2:
 18d2:   cf 30           cmp(r28, 0x0f);                     ; 15
 18d4:   89 f4           if (c1 != c2) goto Label_0x18f8;
@@ -4714,11 +4714,11 @@ Label_0x18d2:
 18d8:   96 d0           write_r26_to_com_buffer();          ; Parameters r26
 18da:   e1 e2           r30 = 33;                           ; 0x21
 
-; Referenced from offset 0x18ea <loop_clear_memory2> by breq
+; Referenced from offset 0x18ea <Function_0x1858> by breq
 Label_0x18dc:
 18dc:   b0 81           r27 = Memory[r30:r31];
 18de:   b2 95           r27 = ((r27 & 0xf0) >> 4) | ((r27 & 0x0f) << 4); ; swap nibbles
-18e0:   24 d9           Function_0xb2a();
+18e0:   24 d9           prng_next();                        ; Result in r26 and X[18]
 18e2:   ba 27           r27 ^= r26;
 18e4:   c5 e5           r28 = 85;                           ; 0x55
 18e6:   bc 27           r27 ^= r28;
@@ -4730,7 +4730,7 @@ Label_0x18dc:
 18f4:   88 d0           write_r26_to_com_buffer();          ; Parameters r26
 18f6:   45 c0           goto Label_0x1982;
 
-; Referenced from offset 0x18d4 <loop_clear_memory2> by brne
+; Referenced from offset 0x18d4 <Function_0x1858> by brne
 Label_0x18f8:
 18f8:   c8 30           cmp(r28, 0x08);                     ; 8
 18fa:   31 f4           if (c1 != c2) goto Label_0x1908;
@@ -4740,11 +4740,11 @@ Label_0x18f8:
 1902:   09 f4           if (c1 != c2) goto Label_0x1906;
 1904:   b8 c0           goto reset_device;
 
-; Referenced from offset 0x1902 <loop_clear_memory2> by brne
+; Referenced from offset 0x1902 <Function_0x1858> by brne
 Label_0x1906:
 1906:   44 c0           goto Label_0x1990;
 
-; Referenced from offset 0x18fa <loop_clear_memory2> by brne
+; Referenced from offset 0x18fa <Function_0x1858> by brne
 Label_0x1908:
 1908:   cc 30           cmp(r28, 0x0c);                     ; 12
 190a:   b9 f4           if (c1 != c2) goto Label_0x193a;
@@ -4761,20 +4761,20 @@ Label_0x1908:
 1920:   5d d0           read_from_eeprom();                 ; Parameter r26:r27, returns r0
 1922:   06 c0           goto Label_0x1930;
 
-; Referenced from offset 0x191a <loop_clear_memory2> by breq
+; Referenced from offset 0x191a <Function_0x1858> by breq
 Label_0x1924:
 1924:   ff e1           r31 = 31;                           ; 0x1f
 1926:   ea 2f           r30 = r26;
 1928:   c8 95           r0 = Flash[r30:r31];
 192a:   02 c0           goto Label_0x1930;
 
-; Referenced from offset 0x191e <loop_clear_memory2> by breq
+; Referenced from offset 0x191e <Function_0x1858> by breq
 Label_0x192c:
 192c:   b3 70           r27 &= 3;                           ; 0x03
 192e:   0c 90           r0 = Memory[r26:r27];
 
-; Referenced from offset 0x1922 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x192a <loop_clear_memory2> by rjmp
+; Referenced from offset 0x1922 <Function_0x1858> by rjmp
+; Referenced from offset 0x192a <Function_0x1858> by rjmp
 Label_0x1930:
 1930:   a0 2d           r26 = r0;
 1932:   69 d0           write_r26_to_com_buffer();          ; Parameters r26
@@ -4782,13 +4782,13 @@ Label_0x1930:
 1936:   67 d0           write_r26_to_com_buffer();          ; Parameters r26
 1938:   24 c0           goto Label_0x1982;
 
-; Referenced from offset 0x190a <loop_clear_memory2> by brne
+; Referenced from offset 0x190a <Function_0x1858> by brne
 Label_0x193a:
 193a:   cd 30           cmp(r28, 0x0d);                     ; 13
 193c:   09 f0           if (c1 == c2) goto Label_0x1940;
 193e:   28 c0           goto Label_0x1990;
 
-; Referenced from offset 0x193c <loop_clear_memory2> by breq
+; Referenced from offset 0x193c <Function_0x1858> by breq
 Label_0x1940:
 1940:   e1 e2           r30 = 33;                           ; 0x21
 1942:   b1 91           r27 = Memory[[r30:r31]++];
@@ -4802,9 +4802,9 @@ Label_0x1940:
 1954:   09 f4           if (c1 != c2) goto Label_0x1958;
 1956:   1c c0           goto Label_0x1990;
 
-; Referenced from offset 0x1948 <loop_clear_memory2> by breq
-; Referenced from offset 0x194c <loop_clear_memory2> by breq
-; Referenced from offset 0x1954 <loop_clear_memory2> by brne
+; Referenced from offset 0x1948 <Function_0x1858> by breq
+; Referenced from offset 0x194c <Function_0x1858> by breq
+; Referenced from offset 0x1954 <Function_0x1858> by brne
 Label_0x1958:
 1958:   cb 2f           r28 = r27;
 195a:   b3 70           r27 &= 3;                           ; 0x03
@@ -4815,8 +4815,8 @@ Label_0x1958:
 1964:   09 f0           if (c1 == c2) goto Label_0x1968;
 1966:   14 c0           goto Label_0x1990;
 
-; Referenced from offset 0x1964 <loop_clear_memory2> by breq
-; Referenced from offset 0x1970 <loop_clear_memory2> by brcs
+; Referenced from offset 0x1964 <Function_0x1858> by breq
+; Referenced from offset 0x1970 <Function_0x1858> by brcs
 Label_0x1968:
 1968:   01 90           r0 = Memory[[r30:r31]++];
 196a:   43 d0           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
@@ -4825,8 +4825,8 @@ Label_0x1968:
 1970:   d8 f3           if (Carry) goto Label_0x1968;
 1972:   05 c0           goto Label_0x197e;
 
-; Referenced from offset 0x1960 <loop_clear_memory2> by breq
-; Referenced from offset 0x197a <loop_clear_memory2> by brcs
+; Referenced from offset 0x1960 <Function_0x1858> by breq
+; Referenced from offset 0x197a <Function_0x1858> by brcs
 Label_0x1974:
 1974:   01 90           r0 = Memory[[r30:r31]++];
 1976:   0d 92           Memory[[r26:r27]++] = r0;
@@ -4834,35 +4834,35 @@ Label_0x1974:
 197a:   e0 f3           if (Carry) goto Label_0x1974;
 197c:   00 c0           goto Label_0x197e;
 
-; Referenced from offset 0x18ac <loop_clear_memory2> by rjmp
-; Referenced from offset 0x18bc <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1972 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x197c <loop_clear_memory2> by rjmp
+; Referenced from offset 0x18ac <Function_0x1858> by rjmp
+; Referenced from offset 0x18bc <Function_0x1858> by rjmp
+; Referenced from offset 0x1972 <Function_0x1858> by rjmp
+; Referenced from offset 0x197c <Function_0x1858> by rjmp
 Label_0x197e:
 197e:   a6 e0           r26 = 6;                            ; 0x06
 1980:   42 d0           write_r26_to_com_buffer();          ; Parameters r26
 
-; Referenced from offset 0x187c <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1898 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x18f6 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1938 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1994 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x187c <Function_0x1858> by rjmp
+; Referenced from offset 0x1898 <Function_0x1858> by rjmp
+; Referenced from offset 0x18f6 <Function_0x1858> by rjmp
+; Referenced from offset 0x1938 <Function_0x1858> by rjmp
+; Referenced from offset 0x1994 <Function_0x1858> by rjmp
 Label_0x1982:
 1982:   1f 79           r17 &= 159;                         ; 0x9f
 1984:   a0 e2           r26 = 32;                           ; 0x20
 1986:   a0 93 f2 01     counter_for_0x220 = r26;            ; 0x01f2
 198a:   cf 91           pop     r28
-198c:   c4 98           IO[PORTB[4]] = false;               ; 0x10 = 16
+198c:   c4 98           IO_BIT[PORTB,4] = false;            ; 0x10 = 16
 198e:   08 95           return;
 
 
-; Referenced from offset 0x185e <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1876 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x18d0 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1906 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x193e <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1956 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1966 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x185e <Function_0x1858> by rjmp
+; Referenced from offset 0x1876 <Function_0x1858> by rjmp
+; Referenced from offset 0x18d0 <Function_0x1858> by rjmp
+; Referenced from offset 0x1906 <Function_0x1858> by rjmp
+; Referenced from offset 0x193e <Function_0x1858> by rjmp
+; Referenced from offset 0x1956 <Function_0x1858> by rjmp
+; Referenced from offset 0x1966 <Function_0x1858> by rjmp
 Label_0x1990:
 1990:   a7 e0           r26 = 7;                            ; 0x07
 1992:   39 d0           write_r26_to_com_buffer();          ; Parameters r26
@@ -4878,7 +4878,7 @@ Label_0x1990:
 19a6:   09 f4           if (c1 != c2) goto Label_0x19aa;
 19a8:   a2 95           r26 = ((r26 & 0xf0) >> 4) | ((r26 & 0x0f) << 4); ; swap nibbles
 
-; Referenced from offset 0x19a6 <loop_clear_memory2> by brne
+; Referenced from offset 0x19a6 <Function_0x1858> by brne
 Label_0x19aa:
 19aa:   ac 27           r26 ^= r28;
 19ac:   cf 91           pop     r28
@@ -4895,19 +4895,19 @@ Label_0x19aa:
 19c0:   09 f4           if (c1 != c2) goto Label_0x19c4;
 19c2:   c2 95           r28 = ((r28 & 0xf0) >> 4) | ((r28 & 0x0f) << 4); ; swap nibbles
 
-; Referenced from offset 0x19c0 <loop_clear_memory2> by brne
+; Referenced from offset 0x19c0 <Function_0x1858> by brne
 Label_0x19c4:
 19c4:   af 91           pop     r26
 19c6:   08 95           return;
 
 19c8:   ff 27           r31 = 0x00;                         ; 0
 
-; Referenced from offset 0x19da <loop_clear_memory2> by rjmp
+; Referenced from offset 0x19da <Function_0x1858> by rjmp
 Label_0x19ca:
 19ca:   e7 eb           r30 = 183;                          ; 0xb7
 19cc:   a0 81           r26 = Memory[r30:r31];
 
-; Referenced from offset 0x19d4 <loop_clear_memory2> by brne
+; Referenced from offset 0x19d4 <Function_0x1858> by brne
 Label_0x19ce:
 19ce:   aa 95           r26--;
 19d0:   c8 95           r0 = Flash[r30:r31];
@@ -4918,40 +4918,40 @@ Label_0x19ce:
 19d8:   f1 e0           r31 = 1;                            ; 0x01
 19da:   f7 cf           goto Label_0x19ca;
 
-; Referenced from offset 0x756 <IVT_RESET> by call
+; Referenced from offset 0x756 <CallTable_18> by call
 ; Referenced from offset 0x1584 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x172e <loop_clear_memory2> by rcall
-; Referenced from offset 0x1920 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1920 <Function_0x1858> by rcall
 read_from_eeprom:     ; Parameter r26:r27, returns r0
 19dc:   cf 93           push    r28
 
-; Referenced from offset 0x19e2 <loop_clear_memory2> by brne
+; Referenced from offset 0x19e2 <read_from_eeprom> by brne
 Label_0x19de:
 19de:   cc b3           r28 = IO[EECR];
 19e0:   c3 70           r28 &= 3;                           ; 0x03
 19e2:   e9 f7           if (c1 != c2) goto Label_0x19de;
 19e4:   bf bb           IO[EEARH] = r27;
 19e6:   ae bb           IO[EEAR] = r26;
-19e8:   e0 9a           IO[EECR[0]] = true;                 ; 0x01 = 1
+19e8:   e0 9a           IO_BIT[EECR,0] = true;              ; 0x01 = 1
 19ea:   00 00           nop
 19ec:   0d b2           r0 = IO[EEDR];
 19ee:   cf 91           pop     r28
 19f0:   08 95           return;
 
 
-; Referenced from offset 0x8ce <IVT_RESET> by call
-; Referenced from offset 0x15ae <loop_clear_memory2> by rcall
+; Referenced from offset 0x8ce <run_call_table> by call
+; Referenced from offset 0x15ae <Function_0x15a4> by rcall
 ; Referenced from offset 0x17aa <loop_clear_memory2> by rcall
 ; Referenced from offset 0x17b2 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x17bc <loop_clear_memory2> by rcall
 ; Referenced from offset 0x17cc <loop_clear_memory2> by rcall
 ; Referenced from offset 0x17d4 <loop_clear_memory2> by rcall
 ; Referenced from offset 0x17d8 <loop_clear_memory2> by rcall
-; Referenced from offset 0x196a <loop_clear_memory2> by rcall
+; Referenced from offset 0x196a <Function_0x1858> by rcall
 write_to_eeprom:     ; Parameter r26:r27 (address), r0 (value)
 19f2:   a8 95           wdr
 
-; Referenced from offset 0x19f8 <loop_clear_memory2> by brne
+; Referenced from offset 0x19f8 <write_to_eeprom> by brne
 Label_0x19f4:
 19f4:   2c b3           r18 = IO[EECR];
 19f6:   23 70           r18 &= 3;                           ; 0x03
@@ -4959,25 +4959,25 @@ Label_0x19f4:
 19fa:   bf bb           IO[EEARH] = r27;
 19fc:   ae bb           IO[EEAR] = r26;
 19fe:   0d ba           IO[EEDR] = r0;
-1a00:   e2 9a           IO[EECR[2]] = true;                 ; 0x04 = 4
-1a02:   e1 9a           IO[EECR[1]] = true;                 ; 0x02 = 2
+1a00:   e2 9a           IO_BIT[EECR,2] = true;              ; 0x04 = 4
+1a02:   e1 9a           IO_BIT[EECR,1] = true;              ; 0x02 = 2
 1a04:   08 95           return;
 
 
-; Referenced from offset 0x400 <Main> by call
-; Referenced from offset 0x406 <Main> by call
-; Referenced from offset 0x416 <Main> by call
-; Referenced from offset 0x424 <Main> by call
-; Referenced from offset 0x430 <Main> by call
-; Referenced from offset 0x8fa <IVT_RESET> by call
-; Referenced from offset 0x18d8 <loop_clear_memory2> by rcall
-; Referenced from offset 0x18f0 <loop_clear_memory2> by rcall
-; Referenced from offset 0x18f4 <loop_clear_memory2> by rcall
-; Referenced from offset 0x190e <loop_clear_memory2> by rcall
-; Referenced from offset 0x1932 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1936 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1980 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1992 <loop_clear_memory2> by rcall
+; Referenced from offset 0x400 <CallTable_29> by call
+; Referenced from offset 0x406 <CallTable_29> by call
+; Referenced from offset 0x416 <CallTable_29> by call
+; Referenced from offset 0x424 <CallTable_29> by call
+; Referenced from offset 0x430 <CallTable_29> by call
+; Referenced from offset 0x8fa <run_call_table> by call
+; Referenced from offset 0x18d8 <Function_0x1858> by rcall
+; Referenced from offset 0x18f0 <Function_0x1858> by rcall
+; Referenced from offset 0x18f4 <Function_0x1858> by rcall
+; Referenced from offset 0x190e <Function_0x1858> by rcall
+; Referenced from offset 0x1932 <Function_0x1858> by rcall
+; Referenced from offset 0x1936 <Function_0x1858> by rcall
+; Referenced from offset 0x1980 <Function_0x1858> by rcall
+; Referenced from offset 0x1992 <Function_0x1858> by rcall
 write_r26_to_com_buffer:     ; Parameters r26
 1a06:   ef 93           push    r30
 1a08:   ff 93           push    r31
@@ -4990,7 +4990,7 @@ write_r26_to_com_buffer:     ; Parameters r26
 1a1c:   a8 e4           r26 = 72;                           ; 0x48
 1a1e:   2b ce           goto error_handler;
 
-; Referenced from offset 0x1a1a <loop_clear_memory2> by brcs
+; Referenced from offset 0x1a1a <write_r26_to_com_buffer> by brcs
 Label_0x1a20:
 1a20:   f2 e0           r31 = 2;                            ; 0x02
 1a22:   a1 93           Memory[[r30:r31]++] = r26;
@@ -5001,17 +5001,17 @@ Label_0x1a20:
 
 
 ; Referenced from offset 0x60 <Main> by call
-; Referenced from offset 0x8fe <IVT_RESET> by call
+; Referenced from offset 0x8fe <run_call_table> by call
 send_com_buffer_to_USART:
-1a2e:   5d 9b           skipif (IO[UCSRA[5]])               ; 0x20 = 32
+1a2e:   5d 9b           skipif (IO_BIT[UCSRA,5])            ; 0x20 = 32
 1a30:   08 95           return;
 
 1a32:   ec e2           r30 = 44;                           ; 0x2c
 1a34:   f2 e0           r31 = 2;                            ; 0x02
 1a36:   a0 81           r26 = Memory[r30:r31];
-1a38:   c4 9a           IO[PORTB[4]] = true;                ; 0x10 = 16
+1a38:   c4 9a           IO_BIT[PORTB,4] = true;             ; 0x10 = 16
 1a3a:   ac b9           IO[UDR] = r26;
-1a3c:   c4 98           IO[PORTB[4]] = false;               ; 0x10 = 16
+1a3c:   c4 98           IO_BIT[PORTB,4] = false;            ; 0x10 = 16
 1a3e:   a0 91 f1 01     r26 = counter_for_0x22C;            ; 0x01f1
 1a42:   aa 95           r26--;
 1a44:   a0 93 f1 01     counter_for_0x22C = r26;            ; 0x01f1
@@ -5020,14 +5020,14 @@ send_com_buffer_to_USART:
 1a4c:   08 95           return;
 
 
-; Referenced from offset 0x1a4a <loop_clear_memory2> by brcc
+; Referenced from offset 0x1a4a <send_com_buffer_to_USART> by brcc
 Label_0x1a4e:
 1a4e:   ab e0           r26 = 11;                           ; 0x0b
 1a50:   2a 2e           r2 = r26;
 1a52:   ad e2           r26 = 45;                           ; 0x2d
 1a54:   b2 e0           r27 = 2;                            ; 0x02
 
-; Referenced from offset 0x1a5c <loop_clear_memory2> by brne
+; Referenced from offset 0x1a5c <send_com_buffer_to_USART> by brne
 Label_0x1a56:
 1a56:   2d 91           r18 = Memory[[r26:r27]++];
 1a58:   21 93           Memory[[r30:r31]++] = r18;
@@ -5053,8 +5053,8 @@ lcd_putchar:     ; Parameter r29
 1a74:   08 95           return;
 
 
-; Referenced from offset 0x946 <IVT_RESET> by jmp
-; Referenced from offset 0x1904 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x946 <run_call_table> by jmp
+; Referenced from offset 0x1904 <Function_0x1858> by rjmp
 reset_device:
 1a76:   f8 94           Disable_Interrupts();
 1a78:   d8 bb           IO[PORTB] = r29;
@@ -5068,25 +5068,25 @@ fun_unknown_0x1a7c:     ; Parameters r9,r8,r7
 1a82:   e7 2d           r30 = r7;
 1a84:   f9 2d           r31 = r9;
 
-; Referenced from offset 0x1af0 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x1af0 <fun_unknown_0x1a7c> by rjmp
 Label_0x1a86:
 1a86:   ee 5c           r30 -= 206;                         ; 0xce, no carry
 1a88:   08 f4           if (!Carry) goto Label_0x1a8c;
 1a8a:   ee 27           r30 = 0x00;                         ; 0
 
-; Referenced from offset 0x1a88 <loop_clear_memory2> by brcc
+; Referenced from offset 0x1a88 <fun_unknown_0x1a7c> by brcc
 Label_0x1a8c:
 1a8c:   f2 53           r31 -= 50;                          ; 0x32, no carry
 1a8e:   08 f4           if (!Carry) goto Label_0x1a92;
 1a90:   f1 e0           r31 = 1;                            ; 0x01
 
-; Referenced from offset 0x1a8e <loop_clear_memory2> by brcc
+; Referenced from offset 0x1a8e <fun_unknown_0x1a7c> by brcc
 Label_0x1a92:
 1a92:   f4 3a           cmp(r31, 0xa4);                     ; 164
 1a94:   08 f0           if (Carry) goto Label_0x1a98;
 1a96:   f3 ea           r31 = 163;                          ; 0xa3
 
-; Referenced from offset 0x1a94 <loop_clear_memory2> by brcs
+; Referenced from offset 0x1a94 <fun_unknown_0x1a7c> by brcs
 Label_0x1a98:
 1a98:   64 dc           delay_0x1362();                     ; Parameter r30
 1a9a:   00 24           r0 = 0x00;                          ; 0
@@ -5095,13 +5095,13 @@ Label_0x1a98:
 1aa0:   f6 95           r31 >>= 1;                          ; _BV(7) = 0, Carry = _BV(0) (logical shift)
 1aa2:   e7 95           r30 >>= 1;                          ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
 
-; Referenced from offset 0x1ab4 <loop_clear_memory2> by brne
+; Referenced from offset 0x1ab4 <fun_unknown_0x1a7c> by brne
 Label_0x1aa4:
 1aa4:   10 f4           if (!Carry) goto Label_0x1aaa;
 1aa6:   2a 0e           r2 += r26;                          ; No carry
 1aa8:   0b 1e           r0 += r27;                          ; With carry
 
-; Referenced from offset 0x1aa4 <loop_clear_memory2> by brcc
+; Referenced from offset 0x1aa4 <fun_unknown_0x1a7c> by brcc
 Label_0x1aaa:
 1aaa:   07 94           r0 >>= 1;                           ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
 1aac:   27 94           r2 >>= 1;                           ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
@@ -5111,7 +5111,7 @@ Label_0x1aaa:
 1ab4:   b9 f7           if (c1 != c2) goto Label_0x1aa4;
 1ab6:   2d e0           r18 = 13;                           ; 0x0d
 
-; Referenced from offset 0x1ac4 <loop_clear_memory2> by brne
+; Referenced from offset 0x1ac4 <fun_unknown_0x1a7c> by brne
 Label_0x1ab8:
 1ab8:   88 94           clc
 1aba:   07 94           r0 >>= 1;                           ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
@@ -5139,7 +5139,7 @@ Label_0x1ab8:
 1aee:   fe 2d           r31 = r14;
 1af0:   ca cf           goto Label_0x1a86;
 
-; Referenced from offset 0x1acc <loop_clear_memory2> by brts
+; Referenced from offset 0x1acc <fun_unknown_0x1a7c> by brts
 store_z_pointer_at_0x020e_and_move_r13_to_r2_and_set_r18_to_negative_r30:
 1af2:   e0 93 0e 02     Memory[0x020e] = r30;               ; 526
 1af6:   f0 93 0f 02     Memory[0x020f] = r31;               ; 527
