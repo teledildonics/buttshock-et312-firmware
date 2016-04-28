@@ -1,25 +1,25 @@
 0x0000	L		HeaderTable
-0x0000	L	IVT_RESET
-0x0004	L	IVT_IRQ0
-0x0008	L	IVT_IRQ1
-0x000c	L	IVT_TIMER2_COMP
-0x0010	L	IVT_TIMER2_OVF
-0x0014	L	IVT_TIMER1_CAPT
-0x0018	L	IVT_TIMER1_COMPA
-0x001c	L	IVT_TIMER1_COMPB
-0x0020	L	IVT_TIMER1_OVF
-0x0024	L	IVT_TIMER0_OVF
-0x0028	L	IVT_SPISTC
-0x002c	L	IVT_USART_RXC
-0x0030	L	IVT_USART_UDR
-0x0034	L	IVT_USART_TXC
-0x0038	L	IVT_ADC
-0x003c	L	IVT_EERDY
-0x0040	L	IVT_ANA_COMP
-0x0044	L	IVT_TWI
-0x0048	L	IVT_IRQ2
-0x004c	L	IVT_TIMER0_COMP
-0x0050	L	IVT_SPMRDY
+0x0000	L		IVT_RESET
+0x0004	L		IVT_IRQ0
+0x0008	L		IVT_IRQ1
+0x000c	L		IVT_TIMER2_COMP
+0x0010	L		IVT_TIMER2_OVF
+0x0014	L		IVT_TIMER1_CAPT
+0x0018	L		IVT_TIMER1_COMPA
+0x001c	L		IVT_TIMER1_COMPB
+0x0020	L		IVT_TIMER1_OVF
+0x0024	L		IVT_TIMER0_OVF
+0x0028	L		IVT_SPISTC
+0x002c	L		IVT_USART_RXC
+0x0030	L		IVT_USART_UDR
+0x0034	L		IVT_USART_TXC
+0x0038	L		IVT_ADC
+0x003c	L		IVT_EERDY
+0x0040	L		IVT_ANA_COMP
+0x0044	L		IVT_TWI
+0x0048	L		IVT_IRQ2
+0x004c	L		IVT_TIMER0_COMP
+0x0050	L		IVT_SPMRDY
 0x14a6	L		RESET
 0x0e66	L		IRQ0_Handler
 0x0e7c	L		IRQ1_Handler
@@ -32,8 +32,11 @@
 
 0x031c	L		set_routine_timer					Parameter r26:r27, returns r0, sets T flag
 0x0352	L		CallTable_29						Parameter r28:r29
-0x0390	L		read_flash_0x01[(r30/4)-47]_to_r18_r0
+0x0389	L		Function_0x390
+0x03a8	L		Function_0x3a8
+0x059c	L		Function_0x59c
 0x05fe	L		CallTable_18						Parameter r28:r29
+0x0604	L		Function_0x604
 0x0790	L		run_call_table						Parameter r30 (0-39) CallTable_31
 0x07bc	L		CallTable_1						noop
 0x07be	L		CallTable_0_5
@@ -52,6 +55,7 @@
 0x09e6	L		CallTable_32
 0x09fe	L		CallTable_33
 0x0a1c	L		CallTable_4
+0x0a40	L		Function_0xa40
 0x0a66	L		CallTable_13
 0x0a94	L		CallTable_14
 0x0ab8	L		CallTable_26						Parameter r26
@@ -63,16 +67,35 @@
 0x0b0e	L		CallTable_35
 0x0b16	L		CallTable_36
 0x0b1e	L		enable_ADC_and_set_r17[3]				CallTable_34
+0x0b2a	L		prng_next								Result in r26 and X[18]
+0x0b58	L		Function_0xb58
 0x0b94	L		endless_loop
 0x0b96	L		rjmp_main
 0x0b98	L		CallTable_22
 0x0cee	L		CallTable_30
-0x154c	L		copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29	CallTable_24
-0x157a	L		copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3		CallTable_28
-0x1676	L		error_handler						CallTable_23_37_38_39
-
+0x11c8	L		Function_0x11c8
+0x11f8	L		Function_0x11f8
+0x121c	L		Function_0x121c
+0x1240	L		Function_0x1240
+0x1278	L		Function_0x1278
+0x1284	L		Function_0x1284
+0x12b8	L		Function_0x12b8
+0x1380	L		Function_0x1380
+0x138c	L		Function_0x138c
+0x13bc	L		Function_0x13bc
+0x13fa	L		Function_0x13fa
+0x1406	L		Function_0x1406
+0x1496	L		Function_0x1496
 0x14b0	L		loop_clear_memory
 0x14bc	L		loop_clear_memory2
+0x15a4	L		Function_0x15a4
+0x154c	L		copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29	CallTable_24
+0x15b8	L		Function_0x15b8
+0x157a	L		copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3		CallTable_28
+0x15fc	L		Function_0x15fc
+0x1650	L		Function_0x1650
+0x1676	L		error_handler						CallTable_23_37_38_39
+0x1858	L		Function_0x1858
 
 0x0054	L		Main
 0x05e6	L		sleep							Parameter r26
