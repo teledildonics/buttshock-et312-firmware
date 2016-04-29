@@ -40,8 +40,8 @@ main:
 ; Referenced from offset 0x584 <CallTable_29> by rjmp
 ; Referenced from offset 0x58e <CallTable_29> by rjmp
 ; Referenced from offset 0xb96 <rjmp_main> by rjmp
-; Referenced from offset 0x1548 <loop_clear_memory2> by jmp
-; Referenced from offset 0x1998 <Function_0x1858> by jmp
+; Referenced from offset 0x1548 <send_data_to_spdr> by jmp
+; Referenced from offset 0x1998 <serial_protocol_write_handshake_to_com_buffer> by jmp
 Main:
   54:   c0 e6           r28 = 96;                           ; 0x60
   56:   a8 95           wdr
@@ -578,7 +578,7 @@ Label_0x2f6:
 Label_0x30e:
  30e:   0e 94 3e 0d     fun_unknown_0x1a7c();               ; Parameters r9,r8,r7
  312:   0e 94 fe 0a     Function_0x15fc();
- 316:   0e 94 dc 0a     Function_0x15b8();
+ 316:   0e 94 dc 0a     Function_0x15b8();                  ; Parameter r28:r29, r6
  31a:   9c ce           goto Main;
 
 ; Referenced from offset 0xea <Main> by rcall
@@ -626,7 +626,7 @@ Label_0x34e:
 
 ; Referenced from offset 0x2a0 <Main> by rcall
 ; Referenced from offset 0x778 <CallTable_18> by rcall
-; Referenced from offset 0x1574 <loop_clear_memory2> by call
+; Referenced from offset 0x1574 <copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29> by call
 CallTable_29:     ; Parameter r28:r29
  352:   4b a0           r4 = Memory[[r28:r29]+35];
  354:   ff 27           r31 = 0x00;                         ; 0
@@ -966,7 +966,7 @@ Label_0x536:
 ; Referenced from offset 0x540 <CallTable_29> by breq
 Label_0x544:
  544:   b0 e0           r27 = 0;                            ; 0x00
- 546:   3a d7           Function_0x13bc();
+ 546:   3a d7           divide_word();                      ; Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:r31 % r26:r27
  548:   00 24           r0 = 0x00;                          ; 0
  54a:   b8 2d           r27 = r8;
  54c:   fb 1b           r31 -= r27;                         ; No carry
@@ -995,7 +995,7 @@ Label_0x560:
 ; Referenced from offset 0x56a <CallTable_29> by breq
 Label_0x56e:
  56e:   b0 e0           r27 = 0;                            ; 0x00
- 570:   25 d7           Function_0x13bc();
+ 570:   25 d7           divide_word();                      ; Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:r31 % r26:r27
  572:   b8 2d           r27 = r8;
  574:   fb 1b           r31 -= r27;                         ; No carry
  576:   08 f0           if (Carry) goto Label_0x57a;
@@ -1018,8 +1018,8 @@ Label_0x58e:
  58e:   62 cd           goto Main;
 
 ; Referenced from offset 0x526 <CallTable_29> by rjmp
-; Referenced from offset 0x16d8 <loop_clear_memory2> by jmp
-; Referenced from offset 0x16f8 <loop_clear_memory2> by jmp
+; Referenced from offset 0x16d8 <fun_unknown_0x16b8> by jmp
+; Referenced from offset 0x16f8 <fun_unknown_0x16b8> by jmp
 Label_0x590:
  590:   aa ec           r26 = 202;                          ; 0xca
  592:   ac d6           show_Text_on_Display();             ; Parameter r26
@@ -1090,14 +1090,14 @@ Label_0x5e4:
 
 ; Referenced from offset 0x60e <CallTable_18> by rcall
 ; Referenced from offset 0x904 <run_call_table> by rcall
-; Referenced from offset 0x11d6 <loop_clear_memory2> by rcall
-; Referenced from offset 0x11e8 <loop_clear_memory2> by rcall
-; Referenced from offset 0x141c <Function_0x13fa> by rcall
-; Referenced from offset 0x1426 <Function_0x13fa> by rcall
-; Referenced from offset 0x1430 <Function_0x13fa> by rcall
-; Referenced from offset 0x1438 <Function_0x13fa> by rcall
-; Referenced from offset 0x144a <Function_0x13fa> by rcall
-; Referenced from offset 0x148e <Function_0x13fa> by rcall
+; Referenced from offset 0x11d6 <initialize_lcd> by rcall
+; Referenced from offset 0x11e8 <initialize_lcd> by rcall
+; Referenced from offset 0x141c <rotate_right> by rcall
+; Referenced from offset 0x1426 <rotate_right> by rcall
+; Referenced from offset 0x1430 <rotate_right> by rcall
+; Referenced from offset 0x1438 <rotate_right> by rcall
+; Referenced from offset 0x144a <rotate_right> by rcall
+; Referenced from offset 0x148e <rotate_right> by rcall
 sleep:     ; Parameter r26
  5e6:   bf 93           push    r27
  5e8:   b0 e8           r27 = 128;                          ; 0x80
@@ -1129,8 +1129,8 @@ CallTable_18:     ; Parameter r28:r29
 Function_0x604:
  604:   0c 7c           r16 &= 204;                         ; 0xcc
  606:   a2 d7           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29(); ; CallTable_24
- 608:   d7 d7           Function_0x15b8();
- 60a:   45 d7           Function_0x1496();
+ 608:   d7 d7           Function_0x15b8();                  ; Parameter r28:r29, r6
+ 60a:   45 d7           send_data_to_spdr();
  60c:   a2 e0           r26 = 2;                            ; 0x02
  60e:   eb df           sleep();                            ; Parameter r26
  610:   a3 e0           r26 = 3;                            ; 0x03
@@ -1489,10 +1489,10 @@ Label_0x798:
  7e2:   84 d5           show_Text_on_Display();             ; Parameter r26
  7e4:   f1 e0           r31 = 1;                            ; 0x01
  7e6:   ec 81           r30 = Memory[[r28:r29]+4];
- 7e8:   4d d5           Function_0x1284();
+ 7e8:   4d d5           display_number_on_display_scaled(); ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-99)
  7ea:   f5 e0           r31 = 5;                            ; 0x05
  7ec:   ed 81           r30 = Memory[[r28:r29]+5];
- 7ee:   4a d5           Function_0x1284();
+ 7ee:   4a d5           display_number_on_display_scaled(); ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-99)
  7f0:   ac ad           r26 = Memory[[r28:r29]+60];
  7f2:   af 3f           cmp(r26, 0xff);                     ; 255
  7f4:   61 f0           if (c1 == c2) goto Label_0x80e;
@@ -1508,7 +1508,7 @@ Label_0x798:
 
 ; Referenced from offset 0x806 <run_call_table> by brcs
 Label_0x80a:
- 80a:   56 d5           Function_0x12b8();
+ 80a:   56 d5           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
  80c:   08 95           return;
 
 
@@ -1700,7 +1700,7 @@ Label_0x916:
 Label_0x922:
  922:   ac 30           cmp(r26, 0x0c);                     ; 12
  924:   61 f4           if (c1 != c2) goto Label_0x93e;
- 926:   3e d6           Function_0x15a4();
+ 926:   3e d6           copy_flash_0x01f3_to_eeprom_0x8_length_12();
  928:   a7 ef           r26 = 247;                          ; 0xf7
 
 ; Referenced from offset 0x920 <run_call_table> by rjmp
@@ -1721,7 +1721,7 @@ Label_0x93e:
  93e:   ad 30           cmp(r26, 0x0d);                     ; 13
  940:   21 f4           if (c1 != c2) goto Label_0x94a;
  942:   26 d6           copy_flash_0x1fdc_to_memory_0x01f0();
- 944:   2f d6           Function_0x15a4();
+ 944:   2f d6           copy_flash_0x01f3_to_eeprom_0x8_length_12();
  946:   0c 94 3b 0d     goto reset_device;
 
 ; Referenced from offset 0x940 <run_call_table> by brne
@@ -1890,12 +1890,12 @@ Label_0xa52:
  a58:   bb 27           r27 = 0x00;                         ; 0
  a5a:   fe e0           r31 = 14;                           ; 0x0e
  a5c:   e6 ea           r30 = 166;                          ; 0xa6
- a5e:   ae d4           Function_0x13bc();
+ a5e:   ae d4           divide_word();                      ; Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:r31 % r26:r27
 
 ; Referenced from offset 0xa54 <CallTable_33> by brne
 Label_0xa60:
  a60:   f9 e0           r31 = 9;                            ; 0x09
- a62:   2a d4           Function_0x12b8();
+ a62:   2a d4           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
  a64:   08 95           return;
 
  a66:   e0 91 00 02     r30 = Memory[0x0200];               ; 512
@@ -1996,12 +1996,12 @@ Label_0xadc:
 
  aee:   e0 91 80 01     r30 = write_lcd_parameter;          ; 0x0180
  af2:   f0 91 81 01     r31 = write_lcd_position;           ; 0x0181
- af6:   c0 d3           Function_0x1278();
+ af6:   c0 d3           display_char_r30_at_position_r31_on_display(); ; Parameter r30, r31
  af8:   08 95           return;
 
  afa:   e0 91 80 01     r30 = write_lcd_parameter;          ; 0x0180
  afe:   f0 91 81 01     r31 = write_lcd_position;           ; 0x0181
- b02:   da d3           Function_0x12b8();
+ b02:   da d3           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
  b04:   08 95           return;
 
  b06:   a0 91 80 01     r26 = write_lcd_parameter;          ; 0x0180
@@ -2009,19 +2009,19 @@ Label_0xadc:
  b0c:   08 95           return;
 
  b0e:   f0 91 80 01     r31 = write_lcd_parameter;          ; 0x0180
- b12:   72 d3           Function_0x11f8();
+ b12:   72 d3           set_lcd_position();                 ; Parameter r31
  b14:   08 95           return;
 
  b16:   e0 91 80 01     r30 = write_lcd_parameter;          ; 0x0180
- b1a:   6e d3           Function_0x11f8();
+ b1a:   6e d3           set_lcd_position();                 ; Parameter r31
  b1c:   08 95           return;
 
 
 ; Referenced from offset 0x58c <CallTable_29> by rcall
-; Referenced from offset 0x16c0 <loop_clear_memory2> by rcall
-; Referenced from offset 0x16c6 <loop_clear_memory2> by rcall
-; Referenced from offset 0x16cc <loop_clear_memory2> by rcall
-; Referenced from offset 0x1788 <loop_clear_memory2> by rcall
+; Referenced from offset 0x16c0 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x16c6 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x16cc <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1788 <fun_unknown_0x16b8> by rcall
 enable_ADC_and_set_r17[3]:     ; CallTable_34
  b1e:   a1 e0           r26 = 1;                            ; 0x01
  b20:   a7 b9           IO[ADMUX] = r26;
@@ -2032,8 +2032,8 @@ enable_ADC_and_set_r17[3]:     ; CallTable_34
 
 
 ; Referenced from offset 0xb78 <Function_0xb58> by rcall
-; Referenced from offset 0x17a2 <loop_clear_memory2> by rcall
-; Referenced from offset 0x17ac <loop_clear_memory2> by rcall
+; Referenced from offset 0x17a2 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17ac <fun_unknown_0x16b8> by rcall
 ; Referenced from offset 0x18e0 <Function_0x1858> by rcall
 prng_next:     ; Result in r26 and X[18]
  b2a:   2f 93           push    r18
@@ -2087,14 +2087,14 @@ Function_0xb58:
 Label_0xb72:
  b72:   f3 95           r31++;
  b74:   ef ef           r30 = 0xff;                         ; 255
- b76:   0a d4           Function_0x138c();
+ b76:   0a d4           divide();                           ; Parameter r31 r30: r30 /= r31, r31 = r30 % r31
 
 ; Referenced from offset 0xb86 <Function_0xb58> by brcc
 Label_0xb78:
  b78:   d8 df           prng_next();                        ; Result in r26 and X[18]
  b7a:   fe 2f           r31 = r30;
  b7c:   ea 2f           r30 = r26;
- b7e:   06 d4           Function_0x138c();
+ b7e:   06 d4           divide();                           ; Parameter r31 r30: r30 /= r31, r31 = r30 % r31
  b80:   e2 0f           r30 += r18;                         ; No carry
  b82:   eb 17           cmp(r30, r27);
  b84:   09 f0           if (c1 == c2) goto Label_0xb88;
@@ -2151,7 +2151,7 @@ CallTable_22:
  ba4:   19 f0           if (c1 == c2) goto Label_0xbac;
  ba6:   ea 2f           r30 = r26;
  ba8:   fd e0           r31 = 13;                           ; 0x0d
- baa:   86 d3           Function_0x12b8();
+ baa:   86 d3           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 
 ; Referenced from offset 0xba4 <CallTable_22> by breq
 Label_0xbac:
@@ -3187,7 +3187,7 @@ Label_0x10de:
 10e2:   94 98           IO_BIT[PORTD,4] = false;            ; 0x10 = 16
 10e4:   74 e0           r23 = 4;                            ; 0x04
 10e6:   70 93 08 02     Memory[0x0208] = r23;               ; 520
-10ea:   70 91 00 05     r23 = Memory[0x0500];               ; 1280
+10ea:   70 91 00 05     r23 = unkown_spdr_value_0;          ; 0x0500
 
 ; Referenced from offset 0x10e0 <ADC_Conversion_Complete> by rjmp
 Label_0x10ee:
@@ -3212,7 +3212,7 @@ SPI_Transfer_Complete:
 110e:   72 30           cmp(r23, 0x02);                     ; 2
 1110:   29 f0           if (c1 == c2) goto Label_0x111c;
 1112:   5c f1           if (c1 (signed)< c2) goto Label_0x116a;
-1114:   70 91 01 05     r23 = Memory[0x0501];               ; 1281
+1114:   70 91 01 05     r23 = unkown_spdr_value_1;          ; 0x0501
 1118:   7f b9           IO[SPDR] = r23;
 111a:   2c c0           goto Label_0x1174;
 
@@ -3230,12 +3230,12 @@ Label_0x111c:
 1130:   91 2d           r25 = r1;
 1132:   9f 70           r25 &= 15;                          ; 0x0f
 1134:   92 95           r25 = ((r25 & 0xf0) >> 4) | ((r25 & 0x0f) << 4); ; swap nibbles
-1136:   90 93 01 05     Memory[0x0501] = r25;               ; 1281
+1136:   90 93 01 05     unkown_spdr_value_1 = r25;          ; 0x0501
 113a:   91 2d           r25 = r1;
 113c:   90 7f           r25 &= 240;                         ; 0xf0
 113e:   92 95           r25 = ((r25 & 0xf0) >> 4) | ((r25 & 0x0f) << 4); ; swap nibbles
 1140:   90 6a           r25 |= 160;                         ; 0xa0
-1142:   90 93 00 05     Memory[0x0500] = r25;               ; 1280
+1142:   90 93 00 05     unkown_spdr_value_0 = r25;          ; 0x0500
 1146:   70 91 06 02     r23 = Memory[0x0206];               ; 518
 114a:   8c 2d           r24 = r12;
 114c:   78 9f           r1:r0 = r23 * r24;                  ; Unsigned
@@ -3243,7 +3243,7 @@ Label_0x111c:
 1150:   91 2d           r25 = r1;
 1152:   9f 70           r25 &= 15;                          ; 0x0f
 1154:   92 95           r25 = ((r25 & 0xf0) >> 4) | ((r25 & 0x0f) << 4); ; swap nibbles
-1156:   90 93 03 05     Memory[0x0503] = r25;               ; 1283
+1156:   90 93 03 05     unkown_spdr_value_3 = r25;          ; 0x0503
 115a:   91 2d           r25 = r1;
 115c:   90 7f           r25 &= 240;                         ; 0xf0
 115e:   92 95           r25 = ((r25 & 0xf0) >> 4) | ((r25 & 0x0f) << 4); ; swap nibbles
@@ -3255,7 +3255,7 @@ Label_0x111c:
 
 ; Referenced from offset 0x1112 <SPI_Transfer_Complete> by brlt
 Label_0x116a:
-116a:   70 91 03 05     r23 = Memory[0x0503];               ; 1283
+116a:   70 91 03 05     r23 = unkown_spdr_value_3;          ; 0x0503
 116e:   7f b9           IO[SPDR] = r23;
 1170:   01 c0           goto Label_0x1174;
 
@@ -3284,7 +3284,7 @@ USART_RX_Complete:
 1184:   88 71           r24 &= 24;                          ; 0x18
 1186:   e1 f4           if (c1 != c2) goto Label_0x11c0;
 1188:   7c b1           r23 = IO[UDR];
-118a:   80 91 13 02     r24 = cipher_key_box;               ; 0x0213
+118a:   80 91 13 02     r24 = cipher_key;                   ; 0x0213
 118e:   78 27           r23 ^= r24;
 1190:   f2 e0           r31 = 2;                            ; 0x02
 1192:   e0 91 f2 01     r30 = counter_for_0x220;            ; 0x01f2
@@ -3296,11 +3296,11 @@ USART_RX_Complete:
 11a2:   21 f4           if (c1 != c2) goto Label_0x11ac;
 11a4:   72 95           r23 = ((r23 & 0xf0) >> 4) | ((r23 & 0x0f) << 4); ; swap nibbles
 11a6:   7f 70           r23 &= 15;                          ; 0x0f
-11a8:   70 93 12 02     cipher_key_host = r23;              ; 0x0212
+11a8:   70 93 12 02     mem_unknown_0x212 = r23;            ; 0x0212
 
 ; Referenced from offset 0x11a2 <USART_RX_Complete> by brne
 Label_0x11ac:
-11ac:   70 91 12 02     r23 = cipher_key_host;              ; 0x0212
+11ac:   70 91 12 02     r23 = mem_unknown_0x212;            ; 0x0212
 11b0:   7f 5d           r23 -= 223;                         ; 0xdf, no carry
 11b2:   e7 17           cmp(r30, r23);
 11b4:   08 f0           if (Carry) goto Label_0x11b8;
@@ -3324,11 +3324,11 @@ Label_0x11c0:
 11c4:   aa b9           IO[UCSRB] = r26;
 11c6:   f8 cf           goto Label_0x11b8;
 
-; Referenced from offset 0x1514 <loop_clear_memory2> by rcall
-Function_0x11c8:
+; Referenced from offset 0x1514 <send_data_to_spdr> by rcall
+initialize_lcd:
 11c8:   b4 e0           r27 = 4;                            ; 0x04
 
-; Referenced from offset 0x11da <loop_clear_memory2> by brne
+; Referenced from offset 0x11da <initialize_lcd> by brne
 Label_0x11ca:
 11ca:   a0 e3           r26 = 48;                           ; 0x30
 11cc:   a5 bb           IO[PORTC] = r26;
@@ -3347,25 +3347,25 @@ Label_0x11ca:
 11e6:   a2 e2           r26 = 34;                           ; 0x22
 11e8:   fe d9           sleep();                            ; Parameter r26
 11ea:   f8 e2           r31 = 40;                           ; 0x28
-11ec:   05 d0           Function_0x11f8();
+11ec:   05 d0           set_lcd_position();                 ; Parameter r31
 11ee:   fc e0           r31 = 12;                           ; 0x0c
-11f0:   03 d0           Function_0x11f8();
+11f0:   03 d0           set_lcd_position();                 ; Parameter r31
 11f2:   f1 e0           r31 = 1;                            ; 0x01
-11f4:   01 d0           Function_0x11f8();
+11f4:   01 d0           set_lcd_position();                 ; Parameter r31
 11f6:   08 95           return;
 
 
 ; Referenced from offset 0xb12 <CallTable_33> by rcall
 ; Referenced from offset 0xb1a <CallTable_33> by rcall
-; Referenced from offset 0x11ec <loop_clear_memory2> by rcall
-; Referenced from offset 0x11f0 <loop_clear_memory2> by rcall
-; Referenced from offset 0x11f4 <loop_clear_memory2> by rcall
-; Referenced from offset 0x127c <Function_0x1278> by rcall
-; Referenced from offset 0x12aa <Function_0x1278> by rcall
-; Referenced from offset 0x12c0 <Function_0x12b8> by rcall
+; Referenced from offset 0x11ec <initialize_lcd> by rcall
+; Referenced from offset 0x11f0 <initialize_lcd> by rcall
+; Referenced from offset 0x11f4 <initialize_lcd> by rcall
+; Referenced from offset 0x127c <display_char_r30_at_position_r31_on_display> by rcall
+; Referenced from offset 0x12aa <display_char_r30_at_position_r31_on_display> by rcall
+; Referenced from offset 0x12c0 <display_number_on_display> by rcall
 ; Referenced from offset 0x130a <show_Text_on_Display2> by rcall
-Function_0x11f8:
-11f8:   23 d0           Function_0x1240();
+set_lcd_position:     ; Parameter r31
+11f8:   23 d0           wait_for_lcd();
 11fa:   bf 93           push    r27
 11fc:   ab 98           IO_BIT[PORTC,3] = false;            ; 0x08 = 8
 11fe:   aa 9a           IO_BIT[PORTC,2] = true;             ; 0x04 = 4
@@ -3385,13 +3385,13 @@ Function_0x11f8:
 121a:   08 95           return;
 
 
-; Referenced from offset 0x127e <Function_0x1278> by rcall
-; Referenced from offset 0x12ae <Function_0x1278> by rcall
-; Referenced from offset 0x12b4 <Function_0x1278> by rcall
-; Referenced from offset 0x12ce <Function_0x12b8> by rcall
+; Referenced from offset 0x127e <display_char_r30_at_position_r31_on_display> by rcall
+; Referenced from offset 0x12ae <display_char_r30_at_position_r31_on_display> by rcall
+; Referenced from offset 0x12b4 <display_char_r30_at_position_r31_on_display> by rcall
+; Referenced from offset 0x12ce <display_number_on_display> by rcall
 ; Referenced from offset 0x134c <show_Text_on_Display2> by rcall
-Function_0x121c:
-121c:   11 d0           Function_0x1240();
+output_char_to_lcd:     ; Parameter r30
+121c:   11 d0           wait_for_lcd();
 121e:   bf 93           push    r27
 1220:   ab 9a           IO_BIT[PORTC,3] = true;             ; 0x08 = 8
 1222:   aa 9a           IO_BIT[PORTC,2] = true;             ; 0x04 = 4
@@ -3411,9 +3411,9 @@ Function_0x121c:
 123e:   08 95           return;
 
 
-; Referenced from offset 0x11f8 <Function_0x11f8> by rcall
-; Referenced from offset 0x121c <Function_0x11f8> by rcall
-Function_0x1240:
+; Referenced from offset 0x11f8 <set_lcd_position> by rcall
+; Referenced from offset 0x121c <set_lcd_position> by rcall
+wait_for_lcd:
 1240:   af 93           push    r26
 1242:   bf 93           push    r27
 1244:   b5 b3           r27 = IO[PORTC];
@@ -3422,7 +3422,7 @@ Function_0x1240:
 124a:   a2 e0           r26 = 2;                            ; 0x02
 124c:   a5 bb           IO[PORTC] = r26;
 
-; Referenced from offset 0x126a <Function_0x11f8> by brne
+; Referenced from offset 0x126a <set_lcd_position> by brne
 Label_0x124e:
 124e:   00 00           nop
 1250:   00 00           nop
@@ -3448,51 +3448,51 @@ Label_0x124e:
 
 
 ; Referenced from offset 0xaf6 <CallTable_33> by rcall
-; Referenced from offset 0x17f4 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1810 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1836 <loop_clear_memory2> by rcall
-Function_0x1278:
+; Referenced from offset 0x17f4 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1810 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1836 <fun_unknown_0x16b8> by rcall
+display_char_r30_at_position_r31_on_display:     ; Parameter r30, r31
 1278:   ff 93           push    r31
 127a:   f0 68           r31 |= 128;                         ; 0x80
-127c:   bd df           Function_0x11f8();
-127e:   ce df           Function_0x121c();
+127c:   bd df           set_lcd_position();                 ; Parameter r31
+127e:   ce df           output_char_to_lcd();               ; Parameter r30
 1280:   ff 91           pop     r31
 1282:   08 95           return;
 
 
 ; Referenced from offset 0x7e8 <run_call_table> by rcall
 ; Referenced from offset 0x7ee <run_call_table> by rcall
-; Referenced from offset 0x1830 <loop_clear_memory2> by rcall
-Function_0x1284:
+; Referenced from offset 0x1830 <fun_unknown_0x16b8> by rcall
+display_number_on_display_scaled:     ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-99)
 1284:   af 93           push    r26
 1286:   bf 93           push    r27
 1288:   0f 2e           r0 = r31;
 128a:   be 2f           r27 = r30;
 128c:   f3 e0           r31 = 3;                            ; 0x03
-128e:   7e d0           Function_0x138c();
+128e:   7e d0           divide();                           ; Parameter r31 r30: r30 /= r31, r31 = r30 % r31
 1290:   ae 2f           r26 = r30;
 1292:   eb 2f           r30 = r27;
 1294:   f2 e1           r31 = 18;                           ; 0x12
-1296:   7a d0           Function_0x138c();
+1296:   7a d0           divide();                           ; Parameter r31 r30: r30 /= r31, r31 = r30 % r31
 1298:   ea 0f           r30 += r26;                         ; No carry
 129a:   e2 36           cmp(r30, 0x62);                     ; 98
 129c:   09 f4           if (c1 != c2) goto Label_0x12a0;
 129e:   e3 e6           r30 = 99;                           ; 0x63
 
-; Referenced from offset 0x129c <Function_0x1278> by brne
-; Referenced from offset 0x12d4 <Function_0x12b8> by rjmp
+; Referenced from offset 0x129c <display_char_r30_at_position_r31_on_display> by brne
+; Referenced from offset 0x12d4 <display_number_on_display> by rjmp
 Label_0x12a0:
 12a0:   fa e0           r31 = 10;                           ; 0x0a
-12a2:   74 d0           Function_0x138c();
+12a2:   74 d0           divide();                           ; Parameter r31 r30: r30 /= r31, r31 = r30 % r31
 12a4:   af 2f           r26 = r31;
 12a6:   f0 2d           r31 = r0;
 12a8:   f0 68           r31 |= 128;                         ; 0x80
-12aa:   a6 df           Function_0x11f8();
+12aa:   a6 df           set_lcd_position();                 ; Parameter r31
 12ac:   e0 63           r30 |= 48;                          ; 0x30
-12ae:   b6 df           Function_0x121c();
+12ae:   b6 df           output_char_to_lcd();               ; Parameter r30
 12b0:   ea 2f           r30 = r26;
 12b2:   e0 63           r30 |= 48;                          ; 0x30
-12b4:   b3 df           Function_0x121c();
+12b4:   b3 df           output_char_to_lcd();               ; Parameter r30
 12b6:   0f c0           goto Label_0x12d6;
 
 ; Referenced from offset 0x80a <run_call_table> by rcall
@@ -3500,35 +3500,35 @@ Label_0x12a0:
 ; Referenced from offset 0xb02 <CallTable_33> by rcall
 ; Referenced from offset 0xbaa <CallTable_22> by rcall
 ; Referenced from offset 0x1684 <write_r26_to_com_buffer> by rcall
-; Referenced from offset 0x175c <loop_clear_memory2> by rcall
-; Referenced from offset 0x176a <loop_clear_memory2> by rcall
-; Referenced from offset 0x1776 <loop_clear_memory2> by rcall
-; Referenced from offset 0x177c <loop_clear_memory2> by rcall
-; Referenced from offset 0x1782 <loop_clear_memory2> by rcall
-; Referenced from offset 0x178a <loop_clear_memory2> by rcall
-; Referenced from offset 0x1790 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1796 <loop_clear_memory2> by rcall
-Function_0x12b8:
+; Referenced from offset 0x175c <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x176a <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1776 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x177c <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1782 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x178a <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1790 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1796 <fun_unknown_0x16b8> by rcall
+display_number_on_display:     ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 12b8:   af 93           push    r26
 12ba:   bf 93           push    r27
 12bc:   0f 2e           r0 = r31;
 12be:   f0 68           r31 |= 128;                         ; 0x80
-12c0:   9b df           Function_0x11f8();
+12c0:   9b df           set_lcd_position();                 ; Parameter r31
 12c2:   f4 e6           r31 = 100;                          ; 0x64
-12c4:   63 d0           Function_0x138c();
+12c4:   63 d0           divide();                           ; Parameter r31 r30: r30 /= r31, r31 = r30 % r31
 12c6:   e0 63           r30 |= 48;                          ; 0x30
 12c8:   e0 33           cmp(r30, 0x30);                     ; 48
 12ca:   09 f4           if (c1 != c2) goto Label_0x12ce;
 12cc:   e0 e2           r30 = 32;                           ; 0x20
 
-; Referenced from offset 0x12ca <Function_0x12b8> by brne
+; Referenced from offset 0x12ca <display_number_on_display> by brne
 Label_0x12ce:
-12ce:   a6 df           Function_0x121c();
+12ce:   a6 df           output_char_to_lcd();               ; Parameter r30
 12d0:   ef 2f           r30 = r31;
 12d2:   03 94           r0++;
 12d4:   e5 cf           goto Label_0x12a0;
 
-; Referenced from offset 0x12b6 <Function_0x1278> by rjmp
+; Referenced from offset 0x12b6 <display_char_r30_at_position_r31_on_display> by rjmp
 Label_0x12d6:
 12d6:   bf 91           pop     r27
 12d8:   af 91           pop     r26
@@ -3542,8 +3542,8 @@ Label_0x12d6:
 ; Referenced from offset 0x932 <run_call_table> by rcall
 ; Referenced from offset 0xa26 <CallTable_33> by rcall
 ; Referenced from offset 0x1688 <write_r26_to_com_buffer> by rcall
-; Referenced from offset 0x1814 <loop_clear_memory2> by rcall
-; Referenced from offset 0x183a <loop_clear_memory2> by rcall
+; Referenced from offset 0x1814 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x183a <fun_unknown_0x16b8> by rcall
 ; Referenced from offset 0x188c <Function_0x1858> by rcall
 show_Text_on_Display2:     ; Parameter r26
 12dc:   ef 93           push    r30
@@ -3579,10 +3579,10 @@ show_Text_on_Display2:     ; Parameter r26
 ; Referenced from offset 0xb0a <CallTable_33> by rcall
 ; Referenced from offset 0x167a <write_r26_to_com_buffer> by rcall
 ; Referenced from offset 0x167e <write_r26_to_com_buffer> by rcall
-; Referenced from offset 0x17ee <loop_clear_memory2> by rcall
-; Referenced from offset 0x1802 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1824 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1828 <loop_clear_memory2> by rcall
+; Referenced from offset 0x17ee <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1802 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1824 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1828 <fun_unknown_0x16b8> by rcall
 ; Referenced from offset 0x1890 <Function_0x1858> by rcall
 ; Referenced from offset 0x1894 <Function_0x1858> by rcall
 show_Text_on_Display:     ; Parameter r26
@@ -3611,7 +3611,7 @@ Label_0x1304:
 ; Referenced from offset 0x12ea <show_Text_on_Display2> by rjmp
 ; Referenced from offset 0x1306 <show_Text_on_Display2> by brcc
 Label_0x130a:
-130a:   76 df           Function_0x11f8();
+130a:   76 df           set_lcd_position();                 ; Parameter r31
 130c:   a4 36           cmp(r26, 0x64);                     ; 100
 130e:   70 f0           if (Carry) goto Label_0x132c;
 1310:   c8 e0           r28 = 8;                            ; 0x08
@@ -3657,7 +3657,7 @@ Label_0x1344:
 1346:   fb 2f           r31 = r27;
 1348:   c8 95           r0 = Flash[r30:r31];
 134a:   e0 2d           r30 = r0;
-134c:   67 df           Function_0x121c();
+134c:   67 df           output_char_to_lcd();               ; Parameter r30
 134e:   2a 95           r18--;
 1350:   11 f0           if (c1 == c2) goto Label_0x1356;
 1352:   11 96           [r27:r26]++;
@@ -3677,7 +3677,7 @@ Label_0x1356:
 ; Referenced from offset 0x560 <CallTable_29> by rcall
 ; Referenced from offset 0x15d6 <Function_0x15b8> by rcall
 ; Referenced from offset 0x1630 <Function_0x15fc> by rcall
-; Referenced from offset 0x1714 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1714 <fun_unknown_0x16b8> by rcall
 ; Referenced from offset 0x1a98 <fun_unknown_0x1a7c> by rcall
 delay_0x1362:     ; Parameter r30
 1362:   af 93           push    r26
@@ -3705,23 +3705,23 @@ Label_0x1370:
 
 ; Referenced from offset 0x1388 <Function_0x1650> by brne
 ; Referenced from offset 0x1666 <Function_0x1650> by rcall
-Function_0x1380:
+multiply:     ; Parameter r30:r31, r26: r30:r31 *= r26
 1380:   88 94           clc
 1382:   ee 1f           r30 += r30;                         ; With carry
 1384:   ff 1f           r31 += r31;                         ; With carry
 1386:   aa 95           r26--;
-1388:   d9 f7           if (c1 != c2) goto Function_0x1380;
+1388:   d9 f7           if (c1 != c2) goto multiply;
 138a:   08 95           return;
 
 
 ; Referenced from offset 0xb76 <Function_0xb58> by rcall
 ; Referenced from offset 0xb7e <Function_0xb58> by rcall
-; Referenced from offset 0x128e <Function_0x1278> by rcall
-; Referenced from offset 0x1296 <Function_0x1278> by rcall
-; Referenced from offset 0x12a2 <Function_0x1278> by rcall
-; Referenced from offset 0x12c4 <Function_0x12b8> by rcall
+; Referenced from offset 0x128e <display_char_r30_at_position_r31_on_display> by rcall
+; Referenced from offset 0x1296 <display_char_r30_at_position_r31_on_display> by rcall
+; Referenced from offset 0x12a2 <display_char_r30_at_position_r31_on_display> by rcall
+; Referenced from offset 0x12c4 <display_number_on_display> by rcall
 ; Referenced from offset 0x15d0 <Function_0x15b8> by rcall
-Function_0x138c:
+divide:     ; Parameter r31 r30: r30 /= r31, r31 = r30 % r31
 138c:   af 93           push    r26
 138e:   bf 93           push    r27
 1390:   ff 23           (r31 == 0) || (r31 < 0);            ; test r31
@@ -3729,20 +3729,20 @@ Function_0x138c:
 1394:   af e0           r26 = 15;                           ; 0x0f
 1396:   6f c1           goto error_handler;
 
-; Referenced from offset 0x1392 <Function_0x1380> by brne
+; Referenced from offset 0x1392 <multiply> by brne
 Label_0x1398:
 1398:   aa 1b           r26 -= r26;                         ; No carry
 139a:   b9 e0           r27 = 9;                            ; 0x09
 
-; Referenced from offset 0x13ae <Function_0x1380> by rjmp
-; Referenced from offset 0x13b2 <Function_0x1380> by rjmp
+; Referenced from offset 0x13ae <multiply> by rjmp
+; Referenced from offset 0x13b2 <multiply> by rjmp
 Label_0x139c:
 139c:   ee 1f           r30 += r30;                         ; With carry
 139e:   ba 95           r27--;
 13a0:   09 f4           if (c1 != c2) goto Label_0x13a4;
 13a2:   08 c0           goto Label_0x13b4;
 
-; Referenced from offset 0x13a0 <Function_0x1380> by brne
+; Referenced from offset 0x13a0 <multiply> by brne
 Label_0x13a4:
 13a4:   aa 1f           r26 += r26;                         ; With carry
 13a6:   af 1b           r26 -= r31;                         ; No carry
@@ -3751,12 +3751,12 @@ Label_0x13a4:
 13ac:   88 94           clc
 13ae:   f6 cf           goto Label_0x139c;
 
-; Referenced from offset 0x13a8 <Function_0x1380> by brcc
+; Referenced from offset 0x13a8 <multiply> by brcc
 Label_0x13b0:
 13b0:   08 94           sec
 13b2:   f4 cf           goto Label_0x139c;
 
-; Referenced from offset 0x13a2 <Function_0x1380> by rjmp
+; Referenced from offset 0x13a2 <multiply> by rjmp
 Label_0x13b4:
 13b4:   fa 2f           r31 = r26;
 13b6:   bf 91           pop     r27
@@ -3769,7 +3769,7 @@ Label_0x13b4:
 ; Referenced from offset 0xa5e <CallTable_33> by rcall
 ; Referenced from offset 0x165a <Function_0x1650> by rcall
 ; Referenced from offset 0x166c <Function_0x1650> by rcall
-Function_0x13bc:
+divide_word:     ; Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:r31 % r26:r27
 13bc:   bd 17           cmp(r27, r29);
 13be:   ad 07           cmp(r26, r29);                      ; with carry
 13c0:   11 f4           if (c1 != c2) goto Label_0x13c6;
@@ -3822,20 +3822,20 @@ Label_0x13f2:
 13f8:   08 95           return;
 
 
-; Referenced from offset 0x1402 <Function_0x13fa> by brne
+; Referenced from offset 0x1402 <rotate_right> by brne
 ; Referenced from offset 0x15da <Function_0x15b8> by rcall
 ; Referenced from offset 0x162c <Function_0x15fc> by rcall
 ; Referenced from offset 0x1634 <Function_0x15fc> by rcall
-Function_0x13fa:
+rotate_right:     ; Parameter r30:r31 r26
 13fa:   88 94           clc
 13fc:   f7 95           r31 >>= 1;                          ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
 13fe:   e7 95           r30 >>= 1;                          ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
 1400:   aa 95           r26--;
-1402:   d9 f7           if (c1 != c2) goto Function_0x13fa;
+1402:   d9 f7           if (c1 != c2) goto rotate_right;
 1404:   08 95           return;
 
 
-; Referenced from offset 0x1722 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1722 <fun_unknown_0x16b8> by rcall
 Function_0x1406:
 1406:   af ef           r26 = 0xff;                         ; 255
 1408:   6a 2e           r6 = r26;
@@ -3846,10 +3846,10 @@ Function_0x1406:
 1412:   ac 83           Memory[[r28:r29]+4] = r26;
 1414:   ad 83           Memory[[r28:r29]+5] = r26;
 
-; Referenced from offset 0x1482 <Function_0x13fa> by rjmp
+; Referenced from offset 0x1482 <rotate_right> by rjmp
 Label_0x1416:
-1416:   d0 d0           Function_0x15b8();
-1418:   3e d0           Function_0x1496();
+1416:   d0 d0           Function_0x15b8();                  ; Parameter r28:r29, r6
+1418:   3e d0           send_data_to_spdr();
 141a:   a4 e0           r26 = 4;                            ; 0x04
 141c:   e4 d8           sleep();                            ; Parameter r26
 141e:   d7 b9           IO[ADMUX] = r29;
@@ -3863,11 +3863,11 @@ Label_0x1416:
 142e:   a0 e8           r26 = 128;                          ; 0x80
 1430:   da d8           sleep();                            ; Parameter r26
 
-; Referenced from offset 0x1470 <Function_0x13fa> by rjmp
-; Referenced from offset 0x1474 <Function_0x13fa> by rjmp
+; Referenced from offset 0x1470 <rotate_right> by rjmp
+; Referenced from offset 0x1474 <rotate_right> by rjmp
 Label_0x1432:
-1432:   c2 d0           Function_0x15b8();
-1434:   30 d0           Function_0x1496();
+1432:   c2 d0           Function_0x15b8();                  ; Parameter r28:r29, r6
+1434:   30 d0           send_data_to_spdr();
 1436:   a3 e0           r26 = 3;                            ; 0x03
 1438:   d6 d8           sleep();                            ; Parameter r26
 143a:   00 30           cmp(r16, 0);
@@ -3876,12 +3876,12 @@ Label_0x1432:
 1440:   a8 bb           IO[PORTB] = r26;
 1442:   02 c0           goto Label_0x1448;
 
-; Referenced from offset 0x143c <Function_0x13fa> by brne
+; Referenced from offset 0x143c <rotate_right> by brne
 Label_0x1444:
 1444:   a3 e0           r26 = 3;                            ; 0x03
 1446:   a8 bb           IO[PORTB] = r26;
 
-; Referenced from offset 0x1442 <Function_0x13fa> by rjmp
+; Referenced from offset 0x1442 <rotate_right> by rjmp
 Label_0x1448:
 1448:   a2 e0           r26 = 2;                            ; 0x02
 144a:   cd d8           sleep();                            ; Parameter r26
@@ -3889,13 +3889,13 @@ Label_0x1448:
 144e:   a6 b9           IO[ADCSR] = r26;
 1450:   a0 e4           r26 = 64;                           ; 0x40
 
-; Referenced from offset 0x1454 <Function_0x13fa> by brne
+; Referenced from offset 0x1454 <rotate_right> by brne
 Label_0x1452:
 1452:   aa 95           r26--;
 1454:   f1 f7           if (c1 != c2) goto Label_0x1452;
 1456:   d8 bb           IO[PORTB] = r29;
 
-; Referenced from offset 0x145a <Function_0x13fa> by rjmp
+; Referenced from offset 0x145a <rotate_right> by rjmp
 Label_0x1458:
 1458:   36 99           skipif (!IO_BIT[ADCSR,6])           ; 0x40 = 64
 145a:   fe cf           goto Label_0x1458;
@@ -3911,12 +3911,12 @@ Label_0x1458:
 146e:   bb 87           Memory[[r28:r29]+11] = r27;
 1470:   e0 cf           goto Label_0x1432;
 
-; Referenced from offset 0x146c <Function_0x13fa> by brne
+; Referenced from offset 0x146c <rotate_right> by brne
 Label_0x1472:
 1472:   bc 87           Memory[[r28:r29]+12] = r27;
 1474:   de cf           goto Label_0x1432;
 
-; Referenced from offset 0x1462 <Function_0x13fa> by brcc
+; Referenced from offset 0x1462 <rotate_right> by brcc
 Label_0x1476:
 1476:   b0 30           cmp(r27, 0);
 1478:   61 f0           if (c1 == c2) goto Label_0x1492;
@@ -3926,33 +3926,33 @@ Label_0x1476:
 1480:   bb 27           r27 = 0x00;                         ; 0
 1482:   c9 cf           goto Label_0x1416;
 
-; Referenced from offset 0x147c <Function_0x13fa> by brne
+; Referenced from offset 0x147c <rotate_right> by brne
 Label_0x1484:
 1484:   dc 83           Memory[[r28:r29]+4] = r29;
 1486:   dd 83           Memory[[r28:r29]+5] = r29;
-1488:   97 d0           Function_0x15b8();
-148a:   05 d0           Function_0x1496();
+1488:   97 d0           Function_0x15b8();                  ; Parameter r28:r29, r6
+148a:   05 d0           send_data_to_spdr();
 148c:   af ef           r26 = 0xff;                         ; 255
 148e:   ab d8           sleep();                            ; Parameter r26
 1490:   08 95           return;
 
 
-; Referenced from offset 0x1468 <Function_0x13fa> by brcc
-; Referenced from offset 0x1478 <Function_0x13fa> by breq
+; Referenced from offset 0x1468 <rotate_right> by brcc
+; Referenced from offset 0x1478 <rotate_right> by breq
 Label_0x1492:
 1492:   a4 e1           r26 = 20;                           ; 0x14
 1494:   f0 c0           goto error_handler;
 
 ; Referenced from offset 0x60a <CallTable_18> by rcall
-; Referenced from offset 0x1418 <Function_0x13fa> by rcall
-; Referenced from offset 0x1434 <Function_0x13fa> by rcall
-; Referenced from offset 0x148a <Function_0x13fa> by rcall
-; Referenced from offset 0x179a <loop_clear_memory2> by rcall
-Function_0x1496:
+; Referenced from offset 0x1418 <rotate_right> by rcall
+; Referenced from offset 0x1434 <rotate_right> by rcall
+; Referenced from offset 0x148a <rotate_right> by rcall
+; Referenced from offset 0x179a <fun_unknown_0x16b8> by rcall
+send_data_to_spdr:
 1496:   94 98           IO_BIT[PORTD,4] = false;            ; 0x10 = 16
 1498:   a4 e0           r26 = 4;                            ; 0x04
 149a:   a0 93 08 02     Memory[0x0208] = r26;               ; 520
-149e:   a0 91 00 05     r26 = Memory[0x0500];               ; 1280
+149e:   a0 91 00 05     r26 = unkown_spdr_value_0;          ; 0x0500
 14a2:   af b9           IO[SPDR] = r26;
 14a4:   08 95           return;
 
@@ -3978,21 +3978,21 @@ RESET:
 14ac:   ff 27           r31 = 0x00;                         ; 0
 14ae:   00 24           r0 = 0x00;                          ; 0
 
-; Referenced from offset 0x14b4 <loop_clear_memory> by brne
-loop_clear_memory:
+; Referenced from offset 0x14b4 <send_data_to_spdr> by brne
+Label_0x14b0:
 14b0:   01 92           Memory[[r30:r31]++] = r0;
 14b2:   ee 31           cmp(r30, 0x1e);                     ; 30
-14b4:   e9 f7           if (c1 != c2) goto loop_clear_memory;
+14b4:   e9 f7           if (c1 != c2) goto Label_0x14b0;
 14b6:   d2 e0           r29 = 2;                            ; 0x02
 14b8:   c0 e6           r28 = 96;                           ; 0x60
 14ba:   e0 e2           r30 = 32;                           ; 0x20
 
-; Referenced from offset 0x14c2 <loop_clear_memory2> by brne
-loop_clear_memory2:
+; Referenced from offset 0x14c2 <send_data_to_spdr> by brne
+Label_0x14bc:
 14bc:   01 92           Memory[[r30:r31]++] = r0;
 14be:   ec 17           cmp(r30, r28);
 14c0:   fd 07           cmp(r31, r29);                      ; with carry
-14c2:   e1 f7           if (c1 != c2) goto loop_clear_memory2;
+14c2:   e1 f7           if (c1 != c2) goto Label_0x14bc;
 14c4:   ef ef           r30 = 0xff;                         ; 255
 14c6:   ff e3           r31 = 63;                           ; 0x3f
 14c8:   c8 95           r0 = Flash[r30:r31];
@@ -4030,9 +4030,9 @@ loop_clear_memory2:
 1508:   a7 e0           r26 = 7;                            ; 0x07
 150a:   a5 bd           IO[TCCR2] = r26;
 150c:   af ef           r26 = 0xff;                         ; 255
-150e:   a0 93 00 05     Memory[0x0500] = r26;               ; 1280
+150e:   a0 93 00 05     unkown_spdr_value_0 = r26;          ; 0x0500
 1512:   78 94           Enable_Interrupts();
-1514:   59 de           Function_0x11c8();
+1514:   59 de           initialize_lcd();
 1516:   1a d0           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29(); ; CallTable_24
 1518:   3b d0           copy_flash_0x1fdc_to_memory_0x01f0();
 151a:   ce d0           fun_unknown_0x16b8();               ; Parameter r28:r29
@@ -4061,15 +4061,15 @@ loop_clear_memory2:
 1548:   0c 94 2a 00     goto Main;
 
 ; Referenced from offset 0x606 <CallTable_18> by rcall
-; Referenced from offset 0x1516 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1538 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1516 <send_data_to_spdr> by rcall
+; Referenced from offset 0x1538 <send_data_to_spdr> by rcall
 copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29:     ; CallTable_24
 154c:   ec e9           r30 = 156;                          ; 0x9c
 154e:   ff e1           r31 = 31;                           ; 0x1f
 1550:   bb 27           r27 = 0x00;                         ; 0
 1552:   a0 e8           r26 = 128;                          ; 0x80
 
-; Referenced from offset 0x155c <loop_clear_memory2> by brcs
+; Referenced from offset 0x155c <copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29> by brcs
 Label_0x1554:
 1554:   c8 95           r0 = Flash[r30:r31];
 1556:   0d 92           Memory[[r26:r27]++] = r0;
@@ -4081,7 +4081,7 @@ Label_0x1554:
 1562:   a8 e8           r26 = 136;                          ; 0x88
 1564:   b1 e0           r27 = 1;                            ; 0x01
 
-; Referenced from offset 0x156e <loop_clear_memory2> by brcs
+; Referenced from offset 0x156e <copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29> by brcs
 Label_0x1566:
 1566:   c8 95           r0 = Flash[r30:r31];
 1568:   0d 92           Memory[[r26:r27]++] = r0;
@@ -4094,7 +4094,7 @@ Label_0x1566:
 1578:   08 95           return;
 
 
-; Referenced from offset 0x153a <loop_clear_memory2> by rcall
+; Referenced from offset 0x153a <send_data_to_spdr> by rcall
 copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3:     ; CallTable_28
 157a:   0a d0           copy_flash_0x1fdc_to_memory_0x01f0();
 157c:   e3 ef           r30 = 243;                          ; 0xf3
@@ -4102,7 +4102,7 @@ copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3:     ; CallTable
 1580:   a8 e0           r26 = 8;                            ; 0x08
 1582:   b0 e0           r27 = 0;                            ; 0x00
 
-; Referenced from offset 0x158c <loop_clear_memory2> by brne
+; Referenced from offset 0x158c <copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3> by brne
 Label_0x1584:
 1584:   2b d2           read_from_eeprom();                 ; Parameter r26:r27, returns r0
 1586:   01 92           Memory[[r30:r31]++] = r0;
@@ -4113,10 +4113,10 @@ Label_0x1584:
 
 
 ; Referenced from offset 0x942 <run_call_table> by rcall
-; Referenced from offset 0x1518 <loop_clear_memory2> by rcall
+; Referenced from offset 0x1518 <send_data_to_spdr> by rcall
 ; Referenced from offset 0x157a <copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3> by rcall
-; Referenced from offset 0x17da <loop_clear_memory2> by rcall
-; Referenced from offset 0x17e4 <loop_clear_memory2> by rcall
+; Referenced from offset 0x17da <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17e4 <fun_unknown_0x16b8> by rcall
 ; Referenced from offset 0x1896 <Function_0x1858> by rcall
 copy_flash_0x1fdc_to_memory_0x01f0:
 1590:   a0 ef           r26 = 240;                          ; 0xf0
@@ -4136,15 +4136,15 @@ Label_0x1598:
 
 ; Referenced from offset 0x926 <run_call_table> by rcall
 ; Referenced from offset 0x944 <run_call_table> by rcall
-; Referenced from offset 0x17dc <loop_clear_memory2> by rcall
-; Referenced from offset 0x17e6 <loop_clear_memory2> by rcall
-Function_0x15a4:
+; Referenced from offset 0x17dc <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17e6 <fun_unknown_0x16b8> by rcall
+copy_flash_0x01f3_to_eeprom_0x8_length_12:
 15a4:   e3 ef           r30 = 243;                          ; 0xf3
 15a6:   f1 e0           r31 = 1;                            ; 0x01
 15a8:   a8 e0           r26 = 8;                            ; 0x08
 15aa:   b0 e0           r27 = 0;                            ; 0x00
 
-; Referenced from offset 0x15b4 <Function_0x15a4> by brne
+; Referenced from offset 0x15b4 <copy_flash_0x01f3_to_eeprom_0x8_length_12> by brne
 Label_0x15ac:
 15ac:   01 90           r0 = Memory[[r30:r31]++];
 15ae:   21 d2           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
@@ -4156,11 +4156,11 @@ Label_0x15ac:
 
 ; Referenced from offset 0x316 <Main> by call
 ; Referenced from offset 0x608 <CallTable_18> by rcall
-; Referenced from offset 0x1416 <Function_0x13fa> by rcall
-; Referenced from offset 0x1432 <Function_0x13fa> by rcall
-; Referenced from offset 0x1488 <Function_0x13fa> by rcall
-; Referenced from offset 0x1798 <loop_clear_memory2> by rcall
-Function_0x15b8:
+; Referenced from offset 0x1416 <rotate_right> by rcall
+; Referenced from offset 0x1432 <rotate_right> by rcall
+; Referenced from offset 0x1488 <rotate_right> by rcall
+; Referenced from offset 0x1798 <fun_unknown_0x16b8> by rcall
+Function_0x15b8:     ; Parameter r28:r29, r6
 15b8:   af 93           push    r26
 15ba:   bf 93           push    r27
 15bc:   ec 81           r30 = Memory[[r28:r29]+4];
@@ -4175,12 +4175,12 @@ Label_0x15c4:
 15ca:   b0 f4           if (!Carry) goto Label_0x15f8;
 15cc:   f5 e0           r31 = 5;                            ; 0x05
 15ce:   fa 1b           r31 -= r26;                         ; No carry
-15d0:   dd de           Function_0x138c();
+15d0:   dd de           divide();                           ; Parameter r31 r30: r30 /= r31, r31 = r30 % r31
 15d2:   e2 0d           r30 += r2;                          ; No carry
 15d4:   f2 2f           r31 = r18;
 15d6:   c5 de           delay_0x1362();                     ; Parameter r30
 15d8:   a8 e0           r26 = 8;                            ; 0x08
-15da:   0f df           Function_0x13fa();
+15da:   0f df           rotate_right();                     ; Parameter r30:r31 r26
 15dc:   00 20           (r0 == 0) || (r0 < 0);              ; test r0
 15de:   39 f4           if (c1 != c2) goto Label_0x15ee;
 15e0:   e0 93 05 02     Memory[0x0205] = r30;               ; 517
@@ -4235,11 +4235,11 @@ Label_0x1620:
 1626:   a0 3c           cmp(r26, 0xc0);                     ; 192
 1628:   d9 f7           if (c1 != c2) goto Label_0x1620;
 162a:   a4 e0           r26 = 4;                            ; 0x04
-162c:   e6 de           Function_0x13fa();
+162c:   e6 de           rotate_right();                     ; Parameter r30:r31 r26
 162e:   f0 e3           r31 = 48;                           ; 0x30
 1630:   98 de           delay_0x1362();                     ; Parameter r30
 1632:   a4 e0           r26 = 4;                            ; 0x04
-1634:   e2 de           Function_0x13fa();
+1634:   e2 de           rotate_right();                     ; Parameter r30:r31 r26
 1636:   ff 23           (r31 == 0) || (r31 < 0);            ; test r31
 1638:   09 f4           if (c1 != c2) goto Label_0x163c;
 163a:   01 c0           goto Label_0x163e;
@@ -4267,16 +4267,16 @@ Function_0x1650:
 1654:   ff e7           r31 = 127;                          ; 0x7f
 1656:   e0 e8           r30 = 128;                          ; 0x80
 1658:   bb 27           r27 = 0x00;                         ; 0
-165a:   b0 de           Function_0x13bc();
+165a:   b0 de           divide_word();                      ; Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:r31 % r26:r27
 165c:   ef 93           push    r30
 165e:   ff 93           push    r31
 1660:   e2 2d           r30 = r2;
 1662:   ff 27           r31 = 0x00;                         ; 0
 1664:   a7 e0           r26 = 7;                            ; 0x07
-1666:   8c de           Function_0x1380();
+1666:   8c de           multiply();                         ; Parameter r30:r31, r26: r30:r31 *= r26
 1668:   bf 91           pop     r27
 166a:   af 91           pop     r26
-166c:   a7 de           Function_0x13bc();
+166c:   a7 de           divide_word();                      ; Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:r31 % r26:r27
 166e:   e2 0f           r30 += r18;                         ; No carry
 1670:   08 f4           if (!Carry) goto Label_0x1674;
 1672:   ef ef           r30 = 0xff;                         ; 255
@@ -4291,12 +4291,12 @@ Label_0x1674:
 ; Referenced from offset 0x914 <run_call_table> by rcall
 ; Referenced from offset 0xb70 <Function_0xb58> by rcall
 ; Referenced from offset 0xbba <CallTable_22> by rjmp
-; Referenced from offset 0x1396 <Function_0x1380> by rjmp
+; Referenced from offset 0x1396 <multiply> by rjmp
 ; Referenced from offset 0x13c4 <Function_0x1650> by rjmp
-; Referenced from offset 0x1494 <Function_0x13fa> by rjmp
+; Referenced from offset 0x1494 <rotate_right> by rjmp
 ; Referenced from offset 0x15fa <Function_0x15b8> by rjmp
-; Referenced from offset 0x16e4 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1a1e <write_r26_to_com_buffer> by rjmp
+; Referenced from offset 0x16e4 <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x1a1e <serial_protocol_write_handshake_to_com_buffer> by rjmp
 error_handler:     ; CallTable_23_37_38_39
 1676:   2a 2f           r18 = r26;
 1678:   a4 e6           r26 = 100;                          ; 0x64
@@ -4305,7 +4305,7 @@ error_handler:     ; CallTable_23_37_38_39
 167e:   36 de           show_Text_on_Display();             ; Parameter r26
 1680:   f8 e0           r31 = 8;                            ; 0x08
 1682:   e2 2f           r30 = r18;
-1684:   19 de           Function_0x12b8();
+1684:   19 de           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 
 ; Referenced from offset 0x598 <CallTable_29> by jmp
 Label_0x1686:
@@ -4341,7 +4341,7 @@ Label_0x16a4:
 16b4:   a2 bb           IO[PORTD] = r26;
 16b6:   f5 cf           goto Label_0x16a2;
 
-; Referenced from offset 0x151a <loop_clear_memory2> by rcall
+; Referenced from offset 0x151a <send_data_to_spdr> by rcall
 fun_unknown_0x16b8:     ; Parameter r28:r29
 16b8:   a6 e5           r26 = 86;                           ; 0x56
 16ba:   aa 83           Memory[[r28:r29]+2] = r26;
@@ -4349,19 +4349,19 @@ fun_unknown_0x16b8:     ; Parameter r28:r29
 16be:   ab 83           Memory[[r28:r29]+3] = r26;
 16c0:   2e da           enable_ADC_and_set_r17[3]();        ; CallTable_34
 
-; Referenced from offset 0x16c4 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x16c4 <fun_unknown_0x16b8> by rjmp
 Label_0x16c2:
 16c2:   13 fd           skipif (!bit(r17,3))
 16c4:   fe cf           goto Label_0x16c2;
 16c6:   2b da           enable_ADC_and_set_r17[3]();        ; CallTable_34
 
-; Referenced from offset 0x16ca <loop_clear_memory2> by rjmp
+; Referenced from offset 0x16ca <fun_unknown_0x16b8> by rjmp
 Label_0x16c8:
 16c8:   13 fd           skipif (!bit(r17,3))
 16ca:   fe cf           goto Label_0x16c8;
 16cc:   28 da           enable_ADC_and_set_r17[3]();        ; CallTable_34
 
-; Referenced from offset 0x16d0 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x16d0 <fun_unknown_0x16b8> by rjmp
 Label_0x16ce:
 16ce:   13 fd           skipif (!bit(r17,3))
 16d0:   fe cf           goto Label_0x16ce;
@@ -4370,7 +4370,7 @@ Label_0x16ce:
 16d6:   10 f4           if (!Carry) goto Label_0x16dc;
 16d8:   0c 94 c8 02     goto Label_0x590;
 
-; Referenced from offset 0x16d6 <loop_clear_memory2> by brcc
+; Referenced from offset 0x16d6 <fun_unknown_0x16b8> by brcc
 Label_0x16dc:
 16dc:   ba 81           r27 = Memory[[r28:r29]+2];
 16de:   b2 39           cmp(r27, 0x92);                     ; 146
@@ -4378,14 +4378,14 @@ Label_0x16dc:
 16e2:   a5 e1           r26 = 21;                           ; 0x15
 16e4:   c8 cf           goto error_handler;
 
-; Referenced from offset 0x16e0 <loop_clear_memory2> by brcs
+; Referenced from offset 0x16e0 <fun_unknown_0x16b8> by brcs
 Label_0x16e6:
 16e6:   ee 27           r30 = 0x00;                         ; 0
 16e8:   a2 3b           cmp(r26, 0xb2);                     ; 178
 16ea:   08 f4           if (!Carry) goto Label_0x16ee;
 16ec:   e1 60           r30 |= 1;                           ; 0x01
 
-; Referenced from offset 0x16ea <loop_clear_memory2> by brcc
+; Referenced from offset 0x16ea <fun_unknown_0x16b8> by brcc
 Label_0x16ee:
 16ee:   b0 34           cmp(r27, 0x40);                     ; 64
 16f0:   20 f0           if (Carry) goto Label_0x16fa;
@@ -4394,7 +4394,7 @@ Label_0x16ee:
 16f6:   10 f4           if (!Carry) goto Label_0x16fc;
 16f8:   0c 94 c8 02     goto Label_0x590;
 
-; Referenced from offset 0x16f6 <loop_clear_memory2> by brcc
+; Referenced from offset 0x16f6 <fun_unknown_0x16b8> by brcc
 Label_0x16fc:
 16fc:   e0 93 15 02     Memory[0x0215] = r30;               ; 533
 1700:   b2 e9           r27 = 146;                          ; 0x92
@@ -4405,7 +4405,7 @@ Label_0x16fc:
 170a:   08 f4           if (!Carry) goto Label_0x170e;
 170c:   ee 27           r30 = 0x00;                         ; 0
 
-; Referenced from offset 0x170a <loop_clear_memory2> by brcc
+; Referenced from offset 0x170a <fun_unknown_0x16b8> by brcc
 Label_0x170e:
 170e:   e3 31           cmp(r30, 0x13);                     ; 19
 1710:   18 f4           if (!Carry) goto Label_0x1718;
@@ -4413,11 +4413,11 @@ Label_0x170e:
 1714:   26 de           delay_0x1362();                     ; Parameter r30
 1716:   01 c0           goto Label_0x171a;
 
-; Referenced from offset 0x1710 <loop_clear_memory2> by brcc
+; Referenced from offset 0x1710 <fun_unknown_0x16b8> by brcc
 Label_0x1718:
 1718:   ef ef           r30 = 0xff;                         ; 255
 
-; Referenced from offset 0x1716 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x1716 <fun_unknown_0x16b8> by rjmp
 Label_0x171a:
 171a:   e0 93 03 02     Memory[0x0203] = r30;               ; 515
 171e:   a0 e1           r26 = 16;                           ; 0x10
@@ -4434,8 +4434,8 @@ Label_0x171a:
 1734:   09 f4           if (c1 != c2) goto Label_0x1738;
 1736:   53 c0           goto Label_0x17de;
 
-; Referenced from offset 0x1728 <loop_clear_memory2> by breq
-; Referenced from offset 0x1734 <loop_clear_memory2> by brne
+; Referenced from offset 0x1728 <fun_unknown_0x16b8> by breq
+; Referenced from offset 0x1734 <fun_unknown_0x16b8> by brne
 Label_0x1738:
 1738:   91 9a           IO_BIT[PORTD,1] = true;             ; 0x02 = 2
 173a:   a2 e0           r26 = 2;                            ; 0x02
@@ -4448,7 +4448,7 @@ Label_0x1738:
 1748:   80 99           skipif (!IO_BIT[PIND,0])            ; 0x01 = 1
 174a:   2b c0           goto Label_0x17a2;
 
-; Referenced from offset 0x17a0 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x17a0 <fun_unknown_0x16b8> by rjmp
 Label_0x174c:
 174c:   89 d1           lcd_putchar();                      ; Parameter r29
 174e:   b1 3a           cmp(r27, 0xa1);                     ; 161
@@ -4458,45 +4458,45 @@ Label_0x174c:
 1756:   e8 bb           IO[PORTB] = r30;
 1758:   eb 2f           r30 = r27;
 175a:   f0 e0           r31 = 0;                            ; 0x00
-175c:   ad dd           Function_0x12b8();
+175c:   ad dd           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 175e:   e8 b3           r30 = IO[PORTB];
 1760:   ea 7f           r30 &= 250;                         ; 0xfa
 1762:   ea 60           r30 |= 10;                          ; 0x0a
 1764:   e8 bb           IO[PORTB] = r30;
 1766:   eb 81           r30 = Memory[[r28:r29]+3];
 1768:   f4 e0           r31 = 4;                            ; 0x04
-176a:   a6 dd           Function_0x12b8();
+176a:   a6 dd           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 176c:   e8 b3           r30 = IO[PORTB];
 176e:   e0 7f           r30 &= 240;                         ; 0xf0
 1770:   e8 bb           IO[PORTB] = r30;
 1772:   ef 81           r30 = Memory[[r28:r29]+7];
 1774:   f8 e0           r31 = 8;                            ; 0x08
-1776:   a0 dd           Function_0x12b8();
+1776:   a0 dd           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 1778:   ee 81           r30 = Memory[[r28:r29]+6];
 177a:   fc e0           r31 = 12;                           ; 0x0c
-177c:   9d dd           Function_0x12b8();
+177c:   9d dd           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 177e:   eb 85           r30 = Memory[[r28:r29]+11];
 1780:   f0 e4           r31 = 64;                           ; 0x40
-1782:   9a dd           Function_0x12b8();
+1782:   9a dd           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 1784:   ec 85           r30 = Memory[[r28:r29]+12];
 1786:   f4 e4           r31 = 68;                           ; 0x44
 1788:   ca d9           enable_ADC_and_set_r17[3]();        ; CallTable_34
-178a:   96 dd           Function_0x12b8();
+178a:   96 dd           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 178c:   e9 81           r30 = Memory[[r28:r29]+1];
 178e:   f8 e4           r31 = 72;                           ; 0x48
-1790:   93 dd           Function_0x12b8();
+1790:   93 dd           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 1792:   e1 b7           r30 = IO[OCDR];
 1794:   fc e4           r31 = 76;                           ; 0x4c
-1796:   90 dd           Function_0x12b8();
-1798:   0f df           Function_0x15b8();
-179a:   7d de           Function_0x1496();
+1796:   90 dd           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
+1798:   0f df           Function_0x15b8();                  ; Parameter r28:r29, r6
+179a:   7d de           send_data_to_spdr();
 179c:   aa e0           r26 = 10;                           ; 0x0a
 179e:   4f d0           delay_0x183e();                     ; Parameter r26
 17a0:   d5 cf           goto Label_0x174c;
 
-; Referenced from offset 0x1740 <loop_clear_memory2> by rjmp
-; Referenced from offset 0x174a <loop_clear_memory2> by rjmp
-; Referenced from offset 0x1750 <loop_clear_memory2> by breq
+; Referenced from offset 0x1740 <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x174a <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x1750 <fun_unknown_0x16b8> by breq
 Label_0x17a2:
 17a2:   c3 d9           prng_next();                        ; Result in r26 and X[18]
 17a4:   0a 2e           r0 = r26;
@@ -4511,7 +4511,7 @@ Label_0x17a2:
 17b6:   a4 e0           r26 = 4;                            ; 0x04
 17b8:   b0 e0           r27 = 0;                            ; 0x00
 
-; Referenced from offset 0x17c2 <loop_clear_memory2> by brcs
+; Referenced from offset 0x17c2 <fun_unknown_0x16b8> by brcs
 Label_0x17ba:
 17ba:   0d 2e           r0 = r29;
 17bc:   1a d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
@@ -4530,17 +4530,17 @@ Label_0x17ba:
 17d6:   a7 e0           r26 = 7;                            ; 0x07
 17d8:   0c d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
 17da:   da de           copy_flash_0x1fdc_to_memory_0x01f0();
-17dc:   e3 de           Function_0x15a4();
+17dc:   e3 de           copy_flash_0x01f3_to_eeprom_0x8_length_12();
 
-; Referenced from offset 0x1736 <loop_clear_memory2> by rjmp
+; Referenced from offset 0x1736 <fun_unknown_0x16b8> by rjmp
 Label_0x17de:
 17de:   40 d1           lcd_putchar();                      ; Parameter r29
 17e0:   b1 3a           cmp(r27, 0xa1);                     ; 161
 17e2:   11 f4           if (c1 != c2) goto Label_0x17e8;
 17e4:   d5 de           copy_flash_0x1fdc_to_memory_0x01f0();
-17e6:   de de           Function_0x15a4();
+17e6:   de de           copy_flash_0x01f3_to_eeprom_0x8_length_12();
 
-; Referenced from offset 0x17e2 <loop_clear_memory2> by brne
+; Referenced from offset 0x17e2 <fun_unknown_0x16b8> by brne
 Label_0x17e8:
 17e8:   a0 e7           r26 = 112;                          ; 0x70
 17ea:   a2 bb           IO[PORTD] = r26;
@@ -4548,10 +4548,10 @@ Label_0x17e8:
 17ee:   7e dd           show_Text_on_Display();             ; Parameter r26
 17f0:   f0 e4           r31 = 64;                           ; 0x40
 
-; Referenced from offset 0x17fe <loop_clear_memory2> by brcs
+; Referenced from offset 0x17fe <fun_unknown_0x16b8> by brcs
 Label_0x17f2:
 17f2:   ef ef           r30 = 0xff;                         ; 255
-17f4:   41 dd           Function_0x1278();
+17f4:   41 dd           display_char_r30_at_position_r31_on_display(); ; Parameter r30, r31
 17f6:   a6 e0           r26 = 6;                            ; 0x06
 17f8:   22 d0           delay_0x183e();                     ; Parameter r26
 17fa:   f3 95           r31++;
@@ -4564,9 +4564,9 @@ Label_0x17f2:
 180a:   03 c0           goto Label_0x1812;
 180c:   ff e0           r31 = 15;                           ; 0x0f
 180e:   e2 e4           r30 = 66;                           ; 0x42
-1810:   33 dd           Function_0x1278();
+1810:   33 dd           display_char_r30_at_position_r31_on_display(); ; Parameter r30, r31
 
-; Referenced from offset 0x180a <loop_clear_memory2> by rjmp
+; Referenced from offset 0x180a <fun_unknown_0x16b8> by rjmp
 Label_0x1812:
 1812:   a1 e0           r26 = 1;                            ; 0x01
 1814:   63 dd           show_Text_on_Display2();            ; Parameter r26
@@ -4581,12 +4581,12 @@ Label_0x1812:
 1828:   61 dd           show_Text_on_Display();             ; Parameter r26
 182a:   f9 e0           r31 = 9;                            ; 0x09
 182c:   e0 91 03 02     r30 = Memory[0x0203];               ; 515
-1830:   29 dd           Function_0x1284();
+1830:   29 dd           display_number_on_display_scaled(); ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-99)
 1832:   fb e0           r31 = 11;                           ; 0x0b
 1834:   e5 e2           r30 = 37;                           ; 0x25
-1836:   20 dd           Function_0x1278();
+1836:   20 dd           display_char_r30_at_position_r31_on_display(); ; Parameter r30, r31
 
-; Referenced from offset 0x1820 <loop_clear_memory2> by breq
+; Referenced from offset 0x1820 <fun_unknown_0x16b8> by breq
 Label_0x1838:
 1838:   a4 e0           r26 = 4;                            ; 0x04
 183a:   50 dd           show_Text_on_Display2();            ; Parameter r26
@@ -4595,11 +4595,11 @@ Label_0x1838:
 
 ; Referenced from offset 0x16a6 <write_r26_to_com_buffer> by rcall
 ; Referenced from offset 0x16b0 <write_r26_to_com_buffer> by rcall
-; Referenced from offset 0x173c <loop_clear_memory2> by rcall
-; Referenced from offset 0x1746 <loop_clear_memory2> by rcall
-; Referenced from offset 0x179e <loop_clear_memory2> by rcall
-; Referenced from offset 0x17f8 <loop_clear_memory2> by rcall
-; Referenced from offset 0x1818 <loop_clear_memory2> by rcall
+; Referenced from offset 0x173c <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1746 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x179e <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17f8 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1818 <fun_unknown_0x16b8> by rcall
 delay_0x183e:     ; Parameter r26
 183e:   bf 93           push    r27
 1840:   cf 93           push    r28
@@ -4630,18 +4630,18 @@ Function_0x1858:
 1858:   c4 9a           IO_BIT[PORTB,4] = true;             ; 0x10 = 16
 185a:   cf 93           push    r28
 185c:   16 fd           skipif (!bit(r17,6))
-185e:   98 c0           goto Label_0x1990;
+185e:   98 c0           goto serial_protocol_write_handshake_to_com_buffer;
 1860:   e0 e2           r30 = 32;                           ; 0x20
 1862:   f2 e0           r31 = 2;                            ; 0x02
 1864:   c1 91           r28 = Memory[[r30:r31]++];
 1866:   0c 2e           r0 = r28;
 1868:   cf 70           r28 &= 15;                          ; 0x0f
-186a:   b0 91 12 02     r27 = cipher_key_host;              ; 0x0212
+186a:   b0 91 12 02     r27 = mem_unknown_0x212;            ; 0x0212
 186e:   bb 23           (r27 == 0) || (r27 < 0);            ; test r27
 1870:   31 f5           if (c1 != c2) goto Label_0x18be;
 1872:   c6 30           cmp(r28, 0x06);                     ; 6
 1874:   08 f4           if (!Carry) goto Label_0x1878;
-1876:   8c c0           goto Label_0x1990;
+1876:   8c c0           goto serial_protocol_write_handshake_to_com_buffer;
 
 ; Referenced from offset 0x1874 <Function_0x1858> by brcc
 Label_0x1878:
@@ -4680,7 +4680,7 @@ Label_0x1896:
 ; Referenced from offset 0x189c <Function_0x1858> by rjmp
 Label_0x18aa:
 18aa:   00 fe           skipif (bit(r0,0))
-18ac:   68 c0           goto Label_0x197e;
+18ac:   68 c0           goto serial_protocol_write_success_to_com_buffer;
 18ae:   a0 e9           r26 = 144;                          ; 0x90
 18b0:   b1 e0           r27 = 1;                            ; 0x01
 18b2:   cc 91           r28 = Memory[r26:r27];
@@ -4688,7 +4688,7 @@ Label_0x18aa:
 18b6:   cc 93           Memory[r26:r27] = r28;
 18b8:   ac 2e           r10 = r28;
 18ba:   e0 da           IRQ1_Handler();
-18bc:   60 c0           goto Label_0x197e;
+18bc:   60 c0           goto serial_protocol_write_success_to_com_buffer;
 
 ; Referenced from offset 0x1870 <Function_0x1858> by brne
 Label_0x18be:
@@ -4704,7 +4704,7 @@ Label_0x18c2:
 18ca:   a0 81           r26 = Memory[r30:r31];
 18cc:   a0 15           cmp(r26, r0);
 18ce:   09 f0           if (c1 == c2) goto Label_0x18d2;
-18d0:   5f c0           goto Label_0x1990;
+18d0:   5f c0           goto serial_protocol_write_handshake_to_com_buffer;
 
 ; Referenced from offset 0x18ce <Function_0x1858> by breq
 Label_0x18d2:
@@ -4724,7 +4724,7 @@ Label_0x18dc:
 18e6:   bc 27           r27 ^= r28;
 18e8:   bb 23           (r27 == 0) || (r27 < 0);            ; test r27
 18ea:   c1 f3           if (c1 == c2) goto Label_0x18dc;
-18ec:   b0 93 13 02     cipher_key_box = r27;               ; 0x0213
+18ec:   b0 93 13 02     cipher_key = r27;                   ; 0x0213
 18f0:   8a d0           write_r26_to_com_buffer();          ; Parameters r26
 18f2:   af 5d           r26 -= 223;                         ; 0xdf, no carry
 18f4:   88 d0           write_r26_to_com_buffer();          ; Parameters r26
@@ -4742,7 +4742,7 @@ Label_0x18f8:
 
 ; Referenced from offset 0x1902 <Function_0x1858> by brne
 Label_0x1906:
-1906:   44 c0           goto Label_0x1990;
+1906:   44 c0           goto serial_protocol_write_handshake_to_com_buffer;
 
 ; Referenced from offset 0x18fa <Function_0x1858> by brne
 Label_0x1908:
@@ -4755,14 +4755,14 @@ Label_0x1908:
 1914:   a0 81           r26 = Memory[r30:r31];
 1916:   cb 2f           r28 = r27;
 1918:   c0 7c           r28 &= 192;                         ; 0xc0
-191a:   21 f0           if (c1 == c2) goto Label_0x1924;
+191a:   21 f0           if (c1 == c2) goto serial_protocol_write_flash_to_com_buffer;
 191c:   c0 34           cmp(r28, 0x40);                     ; 64
 191e:   31 f0           if (c1 == c2) goto Label_0x192c;
 1920:   5d d0           read_from_eeprom();                 ; Parameter r26:r27, returns r0
 1922:   06 c0           goto Label_0x1930;
 
 ; Referenced from offset 0x191a <Function_0x1858> by breq
-Label_0x1924:
+serial_protocol_write_flash_to_com_buffer:     ; Writes flash address at 0x1f00-0x1fff (chosen via r26) to com buffer
 1924:   ff e1           r31 = 31;                           ; 0x1f
 1926:   ea 2f           r30 = r26;
 1928:   c8 95           r0 = Flash[r30:r31];
@@ -4774,7 +4774,7 @@ Label_0x192c:
 192e:   0c 90           r0 = Memory[r26:r27];
 
 ; Referenced from offset 0x1922 <Function_0x1858> by rjmp
-; Referenced from offset 0x192a <Function_0x1858> by rjmp
+; Referenced from offset 0x192a <serial_protocol_write_flash_to_com_buffer> by rjmp
 Label_0x1930:
 1930:   a0 2d           r26 = r0;
 1932:   69 d0           write_r26_to_com_buffer();          ; Parameters r26
@@ -4786,9 +4786,9 @@ Label_0x1930:
 Label_0x193a:
 193a:   cd 30           cmp(r28, 0x0d);                     ; 13
 193c:   09 f0           if (c1 == c2) goto Label_0x1940;
-193e:   28 c0           goto Label_0x1990;
+193e:   28 c0           goto serial_protocol_write_handshake_to_com_buffer;
 
-; Referenced from offset 0x193c <Function_0x1858> by breq
+; Referenced from offset 0x193c <serial_protocol_write_flash_to_com_buffer> by breq
 Label_0x1940:
 1940:   e1 e2           r30 = 33;                           ; 0x21
 1942:   b1 91           r27 = Memory[[r30:r31]++];
@@ -4797,56 +4797,56 @@ Label_0x1940:
 1948:   39 f0           if (c1 == c2) goto Label_0x1958;
 194a:   aa 30           cmp(r26, 0x0a);                     ; 10
 194c:   29 f0           if (c1 == c2) goto Label_0x1958;
-194e:   c0 91 13 02     r28 = cipher_key_box;               ; 0x0213
+194e:   c0 91 13 02     r28 = cipher_key;                   ; 0x0213
 1952:   cc 23           (r28 == 0) || (r28 < 0);            ; test r28
 1954:   09 f4           if (c1 != c2) goto Label_0x1958;
-1956:   1c c0           goto Label_0x1990;
+1956:   1c c0           goto serial_protocol_write_handshake_to_com_buffer;
 
-; Referenced from offset 0x1948 <Function_0x1858> by breq
-; Referenced from offset 0x194c <Function_0x1858> by breq
-; Referenced from offset 0x1954 <Function_0x1858> by brne
+; Referenced from offset 0x1948 <serial_protocol_write_flash_to_com_buffer> by breq
+; Referenced from offset 0x194c <serial_protocol_write_flash_to_com_buffer> by breq
+; Referenced from offset 0x1954 <serial_protocol_write_flash_to_com_buffer> by brne
 Label_0x1958:
 1958:   cb 2f           r28 = r27;
 195a:   b3 70           r27 &= 3;                           ; 0x03
 195c:   c0 7c           r28 &= 192;                         ; 0xc0
 195e:   c0 34           cmp(r28, 0x40);                     ; 64
-1960:   49 f0           if (c1 == c2) goto Label_0x1974;
+1960:   49 f0           if (c1 == c2) goto serial_protocol_write_com_buffer_to_sram;
 1962:   c0 38           cmp(r28, 0x80);                     ; 128
-1964:   09 f0           if (c1 == c2) goto Label_0x1968;
-1966:   14 c0           goto Label_0x1990;
+1964:   09 f0           if (c1 == c2) goto serial_protocol_write_com_buffer_to_eeprom;
+1966:   14 c0           goto serial_protocol_write_handshake_to_com_buffer;
 
-; Referenced from offset 0x1964 <Function_0x1858> by breq
-; Referenced from offset 0x1970 <Function_0x1858> by brcs
-Label_0x1968:
+; Referenced from offset 0x1964 <serial_protocol_write_flash_to_com_buffer> by breq
+; Referenced from offset 0x1970 <serial_protocol_write_com_buffer_to_eeprom> by brcs
+serial_protocol_write_com_buffer_to_eeprom:     ; Writes flash address at 0x1f00-0x1fff (chosen via r26) to com buffer
 1968:   01 90           r0 = Memory[[r30:r31]++];
 196a:   43 d0           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
 196c:   11 96           [r27:r26]++;
 196e:   e2 15           cmp(r30, r2);
-1970:   d8 f3           if (Carry) goto Label_0x1968;
-1972:   05 c0           goto Label_0x197e;
+1970:   d8 f3           if (Carry) goto serial_protocol_write_com_buffer_to_eeprom;
+1972:   05 c0           goto serial_protocol_write_success_to_com_buffer;
 
-; Referenced from offset 0x1960 <Function_0x1858> by breq
-; Referenced from offset 0x197a <Function_0x1858> by brcs
-Label_0x1974:
+; Referenced from offset 0x1960 <serial_protocol_write_flash_to_com_buffer> by breq
+; Referenced from offset 0x197a <serial_protocol_write_com_buffer_to_sram> by brcs
+serial_protocol_write_com_buffer_to_sram:     ; Writes data (up to 8 bytes) from com buffer into sram
 1974:   01 90           r0 = Memory[[r30:r31]++];
 1976:   0d 92           Memory[[r26:r27]++] = r0;
 1978:   e2 15           cmp(r30, r2);
-197a:   e0 f3           if (Carry) goto Label_0x1974;
-197c:   00 c0           goto Label_0x197e;
+197a:   e0 f3           if (Carry) goto serial_protocol_write_com_buffer_to_sram;
+197c:   00 c0           goto serial_protocol_write_success_to_com_buffer;
 
 ; Referenced from offset 0x18ac <Function_0x1858> by rjmp
 ; Referenced from offset 0x18bc <Function_0x1858> by rjmp
-; Referenced from offset 0x1972 <Function_0x1858> by rjmp
-; Referenced from offset 0x197c <Function_0x1858> by rjmp
-Label_0x197e:
+; Referenced from offset 0x1972 <serial_protocol_write_com_buffer_to_eeprom> by rjmp
+; Referenced from offset 0x197c <serial_protocol_write_com_buffer_to_sram> by rjmp
+serial_protocol_write_success_to_com_buffer:     ; Writes a 0x6 (success code) to the com buffer
 197e:   a6 e0           r26 = 6;                            ; 0x06
 1980:   42 d0           write_r26_to_com_buffer();          ; Parameters r26
 
 ; Referenced from offset 0x187c <Function_0x1858> by rjmp
 ; Referenced from offset 0x1898 <Function_0x1858> by rjmp
 ; Referenced from offset 0x18f6 <Function_0x1858> by rjmp
-; Referenced from offset 0x1938 <Function_0x1858> by rjmp
-; Referenced from offset 0x1994 <Function_0x1858> by rjmp
+; Referenced from offset 0x1938 <serial_protocol_write_flash_to_com_buffer> by rjmp
+; Referenced from offset 0x1994 <serial_protocol_write_handshake_to_com_buffer> by rjmp
 Label_0x1982:
 1982:   1f 79           r17 &= 159;                         ; 0x9f
 1984:   a0 e2           r26 = 32;                           ; 0x20
@@ -4860,10 +4860,10 @@ Label_0x1982:
 ; Referenced from offset 0x1876 <Function_0x1858> by rjmp
 ; Referenced from offset 0x18d0 <Function_0x1858> by rjmp
 ; Referenced from offset 0x1906 <Function_0x1858> by rjmp
-; Referenced from offset 0x193e <Function_0x1858> by rjmp
-; Referenced from offset 0x1956 <Function_0x1858> by rjmp
-; Referenced from offset 0x1966 <Function_0x1858> by rjmp
-Label_0x1990:
+; Referenced from offset 0x193e <serial_protocol_write_flash_to_com_buffer> by rjmp
+; Referenced from offset 0x1956 <serial_protocol_write_flash_to_com_buffer> by rjmp
+; Referenced from offset 0x1966 <serial_protocol_write_flash_to_com_buffer> by rjmp
+serial_protocol_write_handshake_to_com_buffer:     ; Puts 0x7 into com buffer until a 0x0 is received back
 1990:   a7 e0           r26 = 7;                            ; 0x07
 1992:   39 d0           write_r26_to_com_buffer();          ; Parameters r26
 1994:   f6 cf           goto Label_0x1982;
@@ -4878,7 +4878,7 @@ Label_0x1990:
 19a6:   09 f4           if (c1 != c2) goto Label_0x19aa;
 19a8:   a2 95           r26 = ((r26 & 0xf0) >> 4) | ((r26 & 0x0f) << 4); ; swap nibbles
 
-; Referenced from offset 0x19a6 <Function_0x1858> by brne
+; Referenced from offset 0x19a6 <serial_protocol_write_handshake_to_com_buffer> by brne
 Label_0x19aa:
 19aa:   ac 27           r26 ^= r28;
 19ac:   cf 91           pop     r28
@@ -4887,7 +4887,7 @@ Label_0x19aa:
 19b0:   08 95           return;
 
 19b2:   af 93           push    r26
-19b4:   a0 91 13 02     r26 = cipher_key_box;               ; 0x0213
+19b4:   a0 91 13 02     r26 = cipher_key;                   ; 0x0213
 19b8:   ca 27           r28 ^= r26;
 19ba:   ac 2f           r26 = r28;
 19bc:   a1 71           r26 &= 17;                          ; 0x11
@@ -4895,19 +4895,19 @@ Label_0x19aa:
 19c0:   09 f4           if (c1 != c2) goto Label_0x19c4;
 19c2:   c2 95           r28 = ((r28 & 0xf0) >> 4) | ((r28 & 0x0f) << 4); ; swap nibbles
 
-; Referenced from offset 0x19c0 <Function_0x1858> by brne
+; Referenced from offset 0x19c0 <serial_protocol_write_handshake_to_com_buffer> by brne
 Label_0x19c4:
 19c4:   af 91           pop     r26
 19c6:   08 95           return;
 
 19c8:   ff 27           r31 = 0x00;                         ; 0
 
-; Referenced from offset 0x19da <Function_0x1858> by rjmp
+; Referenced from offset 0x19da <serial_protocol_write_handshake_to_com_buffer> by rjmp
 Label_0x19ca:
 19ca:   e7 eb           r30 = 183;                          ; 0xb7
 19cc:   a0 81           r26 = Memory[r30:r31];
 
-; Referenced from offset 0x19d4 <Function_0x1858> by brne
+; Referenced from offset 0x19d4 <serial_protocol_write_handshake_to_com_buffer> by brne
 Label_0x19ce:
 19ce:   aa 95           r26--;
 19d0:   c8 95           r0 = Flash[r30:r31];
@@ -4919,8 +4919,8 @@ Label_0x19ce:
 19da:   f7 cf           goto Label_0x19ca;
 
 ; Referenced from offset 0x756 <CallTable_18> by call
-; Referenced from offset 0x1584 <loop_clear_memory2> by rcall
-; Referenced from offset 0x172e <loop_clear_memory2> by rcall
+; Referenced from offset 0x1584 <copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3> by rcall
+; Referenced from offset 0x172e <fun_unknown_0x16b8> by rcall
 ; Referenced from offset 0x1920 <Function_0x1858> by rcall
 read_from_eeprom:     ; Parameter r26:r27, returns r0
 19dc:   cf 93           push    r28
@@ -4940,18 +4940,18 @@ Label_0x19de:
 
 
 ; Referenced from offset 0x8ce <run_call_table> by call
-; Referenced from offset 0x15ae <Function_0x15a4> by rcall
-; Referenced from offset 0x17aa <loop_clear_memory2> by rcall
-; Referenced from offset 0x17b2 <loop_clear_memory2> by rcall
-; Referenced from offset 0x17bc <loop_clear_memory2> by rcall
-; Referenced from offset 0x17cc <loop_clear_memory2> by rcall
-; Referenced from offset 0x17d4 <loop_clear_memory2> by rcall
-; Referenced from offset 0x17d8 <loop_clear_memory2> by rcall
-; Referenced from offset 0x196a <Function_0x1858> by rcall
+; Referenced from offset 0x15ae <copy_flash_0x01f3_to_eeprom_0x8_length_12> by rcall
+; Referenced from offset 0x17aa <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17b2 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17bc <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17cc <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17d4 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17d8 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x196a <serial_protocol_write_com_buffer_to_eeprom> by rcall
 write_to_eeprom:     ; Parameter r26:r27 (address), r0 (value)
 19f2:   a8 95           wdr
 
-; Referenced from offset 0x19f8 <write_to_eeprom> by brne
+; Referenced from offset 0x19f8 <serial_protocol_write_com_buffer_to_eeprom> by brne
 Label_0x19f4:
 19f4:   2c b3           r18 = IO[EECR];
 19f6:   23 70           r18 &= 3;                           ; 0x03
@@ -4974,10 +4974,10 @@ Label_0x19f4:
 ; Referenced from offset 0x18f0 <Function_0x1858> by rcall
 ; Referenced from offset 0x18f4 <Function_0x1858> by rcall
 ; Referenced from offset 0x190e <Function_0x1858> by rcall
-; Referenced from offset 0x1932 <Function_0x1858> by rcall
-; Referenced from offset 0x1936 <Function_0x1858> by rcall
-; Referenced from offset 0x1980 <Function_0x1858> by rcall
-; Referenced from offset 0x1992 <Function_0x1858> by rcall
+; Referenced from offset 0x1932 <serial_protocol_write_flash_to_com_buffer> by rcall
+; Referenced from offset 0x1936 <serial_protocol_write_flash_to_com_buffer> by rcall
+; Referenced from offset 0x1980 <serial_protocol_write_success_to_com_buffer> by rcall
+; Referenced from offset 0x1992 <serial_protocol_write_handshake_to_com_buffer> by rcall
 write_r26_to_com_buffer:     ; Parameters r26
 1a06:   ef 93           push    r30
 1a08:   ff 93           push    r31
@@ -4990,7 +4990,7 @@ write_r26_to_com_buffer:     ; Parameters r26
 1a1c:   a8 e4           r26 = 72;                           ; 0x48
 1a1e:   2b ce           goto error_handler;
 
-; Referenced from offset 0x1a1a <write_r26_to_com_buffer> by brcs
+; Referenced from offset 0x1a1a <serial_protocol_write_handshake_to_com_buffer> by brcs
 Label_0x1a20:
 1a20:   f2 e0           r31 = 2;                            ; 0x02
 1a22:   a1 93           Memory[[r30:r31]++] = r26;
@@ -5036,9 +5036,9 @@ Label_0x1a56:
 1a5e:   08 95           return;
 
 
-; Referenced from offset 0x1724 <loop_clear_memory2> by rcall
-; Referenced from offset 0x174c <loop_clear_memory2> by rcall
-; Referenced from offset 0x17de <loop_clear_memory2> by rcall
+; Referenced from offset 0x1724 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x174c <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17de <fun_unknown_0x16b8> by rcall
 lcd_putchar:     ; Parameter r29
 1a60:   a1 ef           r26 = 241;                          ; 0xf1
 1a62:   a5 bb           IO[PORTC] = r26;
@@ -5606,3854 +5606,6 @@ String_0x1f90_Space8_3_0:    ; Address 0x1f90 (8080)
 .word 0xffa5
 .word 0x6401
 .word 0xfa0f
-
-; Inline PGM data: 3846 words starting at 0x1ff6 (Garbage)
-.word 0x6401
-.word 0xfa46
-.word 0x6401
-.word 0x010c
-.word 0x0006
-.word 0x000a
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
-.word 0x0000
 
 }
 
