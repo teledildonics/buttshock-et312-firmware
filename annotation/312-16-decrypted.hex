@@ -9815,9 +9815,13 @@ Label_0x3fe6:
 3ff4:   0f 91           pop     r16
 3ff6:   08 95           return;
 
-3ff8:   63 28           r6 |= r3;
-3ffa:   45 29           r20 |= r5;
-3ffc:   50 54           r21 -= 64;                          ; 0x40, no carry
-3ffe:   01 ab           Memory[[r30:r31]+49] = r16;
+; Inline PGM data: 1 string starting at 0x3ff8 (authors_initials)
+String_0x3ff8_authors_initials_0:    ; Address 0x3ff8 (16376)
+.ascii "c(E)PT"
+.byte 0x01
+.byte 0xab
+.byte 0x00
+
+
 }
 

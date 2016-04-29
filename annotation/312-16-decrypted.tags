@@ -310,3 +310,4 @@
 0x1fdc	P	W	8	fla_unknown_0x1fdc
 0x1fec	P	W	5	fla_unknown_0x1fec	ref from 0x3be
 0x1ff6	P	W	3845	Garbage
+0x3ff8	P	S	1	authors_initials
