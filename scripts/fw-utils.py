@@ -19,7 +19,7 @@ class ET312FirmwareUtils(object):
     def generate_crc(self):
         xor = 0
         add = 0
-        for c in range(len(self.input_file) - 16):
+        for c in range(15872 - 16):
             xor ^= self.input_file[c]
             add += self.input_file[c]
         return [xor, (add & 0xff), ((add >> 8) & 0xff)]
@@ -55,6 +55,8 @@ class ET312FirmwareUtils(object):
             self.iv[choice] = n
 
     def fill_space(self):
+        if len(self.input_file) >= 15872:
+            return
         self.input_file += bytearray([0] * (15872 - len(self.input_file)))
 
     def upload(self, port):
@@ -116,7 +118,7 @@ def main():
     elif args.upload:
         etfw.upload(args.upload)
     elif args.crc:
-        print(etfw.generate_crc())
+        print(["0x%.02x" % x for x in etfw.generate_crc()])
     return 0
 
 if __name__ == "__main__":
