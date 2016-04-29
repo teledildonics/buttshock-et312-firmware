@@ -113,6 +113,13 @@
 0x1b00	L		subtract_r31_from_r2_save_r18_at_memory_0x0210_and_r2_at_memory_0x0211
 0x1a06	L		write_r26_to_com_buffer					Parameters r26
 
+0x1990	L		serial_protocol_write_handshake_to_com_buffer					Puts 0x7 into com buffer until a 0x0 is received back
+0x1924	L		serial_protocol_write_flash_to_com_buffer					Writes flash address at 0x1f00-0x1fff (chosen via r26) to com buffer
+0x1968	L		serial_protocol_write_com_buffer_to_eeprom					Writes flash address at 0x1f00-0x1fff (chosen via r26) to com buffer
+0x1974	L		serial_protocol_write_com_buffer_to_sram					Writes data (up to 8 bytes) from com buffer into sram
+0x197e	L		serial_protocol_write_success_to_com_buffer					Writes a 0x6 (success code) to the com buffer
+
+
 0x0060	M	B	1	COMM_MAIN_CBLOCK_BASE
 0x0061	M	B	1	CBLOCK_MULTI_A_OFFSET				Multi Adjust Offset
 0x0062	M	B	1	power_supply_voltage
