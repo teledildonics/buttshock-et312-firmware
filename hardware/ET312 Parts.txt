@@ -80,8 +80,8 @@ VR2 - Multi Adjust, 6 Pin
 VR3 - Level A (EVU XV09)
 VR4 - Level B (EVU XV09)
 
-LED1 - Led Channel A
-LED2 - Led Channel B
+LED1 - Red Led Channel A
+LED2 - Red Led Channel B
 
 S1 - "OK"
 S2 - "Menu"
