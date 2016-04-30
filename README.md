@@ -1,4 +1,4 @@
-# Erosoutsider - ET-312 Firmware
+# Buttshock - ET-312 Firmware
 
 ## Project Goals
 
