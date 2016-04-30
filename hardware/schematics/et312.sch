@@ -3218,7 +3218,7 @@ EAGLE CAD Libraries on element14&lt;/a&gt;</description>
 <sheets>
 <sheet>
 <plain>
-<text x="12.7" y="152.4" size="1.778" layer="91">Erosoutsider - ET-312 Schematics
+<text x="12.7" y="152.4" size="1.778" layer="91">Buttshock - ET-312 Schematics
 
 This project exists to reverse engineer the Erostek ET-312 Electrostimulation Device Firmware.
 
