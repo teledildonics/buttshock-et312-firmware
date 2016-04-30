@@ -43,12 +43,74 @@ RAM/EEPROM/etc, everything exists in memory on the chip.
 
 All fuses are set on the chip, locking out JTAG access or the ability
 to read out the flash or bootloader.
-*** Firmware Upgrade Files
+*** Firmware Versions
+**** Known Versions
+
+***** v1.0 (2001)
+
+- Initial Release
+
+***** v1.1:
+***** v1.2:
+***** v1.3:
+- Improved battery charge display on power up. 
+- Improved audio processing for phaser/rxtc/stereostim files 
+- A few modes were tweaked slightly 
+
+***** V1.4: 
+
+- Hardware/firmware modified to allow field firmware upgrades 
+- Bug fixed in random number generation routine 
+- MultiAdjust calculation improved 
+
+***** V1.5 (2002 / 2003): 
+- Bug fixed that causes a shutdown condition on a very small number of units 
+
+***** V1.6 (2004): 
+- Support new hardware revision. 
+- Cures "Failure 77" error on new hardware revision
+
+***** Compatibility
+
+There are at least three incompatible hardware revisions. Old boxes run firmware v1.3 or earlier, and do not allow field updates via serial. Some boxes will run firmware v1.4 and v1.5 and allow field updates. The newest hardware revision only run v1.6. 
+
+***** Inconsistencies
+
+There seem to be two variations of v1.5 Firmware out in the wild. They show the same version Number but different copyright dates. The v1.5 image from the ErosTek download site says:
+
+#+BEGIN_EXAMPLE
+(c) '02 ErosTek
+################
+ErosTek ET-312B
+SelfTest OK V1.5
+#+END_EXAMPLE
+
+Some boxes apparently have a newer date, but the same revision:
+
+#+BEGIN_EXAMPLE
+(c) '03 ErosTek
+################
+ErosTek ET-312B
+SelfTest OK V1.5
+#+END_EXAMPLE
+
+ErosTek urges the users of these boxes to upgrade to V1.6:
+
+#+BEGIN_EXAMPLE
+(c) '04 ErosTek
+################
+ErosTek ET-312B
+SelfTest OK V1.6
+#+END_EXAMPLE
+
 **** Files
 Two versions of the firmware, for v1.5 and v1.6, are available via the
 firmware upgrade website:
 
 [[http://blog.erostek.com/2012/08/27/et-312-firmware-upgrade-1/][http://blog.erostek.com/2012/08/27/et-312-firmware-upgrade-1/]]
+
+- v1.5 image: [[http://media.erostek.com.s3.amazonaws.com/support/312-15.upg][http://media.erostek.com.s3.amazonaws.com/support/312-15.upg]]
+- v1.6 image: [[http://media.erostek.com.s3.amazonaws.com/support/312-16.upg][http://media.erostek.com.s3.amazonaws.com/support/312-16.upg]]
 
 These files (312-15.upg and 312-16.upg), are also available in the
 [[http://github.com/metafetish/erosoutsider/][Erosoutsider Repo]].
@@ -138,6 +200,112 @@ correctly and play with the string offset, we could use a logic
 analyzer to dump the firmware via the LCD, and reassemble it on the
 host machine.
 
+*Update:* The LCD panel is a standard HD44780 compatible board, and is interfaced via a parallel port.
+
+*** Partial ROM dumps
+
+By reading virtual adresse $0000-$00ff we can get 256 bytes of ROM content. ErosLink uses this page to extract the ROM version number.
+
+Dump from v1.5
+
+#+BEGIN_EXAMPLE
+00000000  20 55 73 65 72 20 32 20  20 55 73 65 72 20 33 20  | User 2  User 3 |
+00000010  20 55 73 65 72 20 34 20  20 55 73 65 72 20 35 20  | User 4  User 5 |
+00000020  20 55 73 65 72 20 36 20  20 55 73 65 72 20 37 20  | User 6  User 7 |
+00000030  53 70 6c 69 74 20 41 3a  53 70 6c 69 74 20 42 3a  |Split A:Split B:|
+00000040  53 65 6c 20 46 61 76 3a  52 61 6d 70 69 6e 67 20  |Sel Fav:Ramping |
+00000050  53 61 76 65 64 21 20 20  4c 69 6e 6b 65 64 21 20  |Saved!  Linked! |
+00000060  4d 61 73 74 65 72 20 20  53 6c 61 76 65 20 20 20  |Master  Slave   |
+00000070  20 20 20 20 25 20 20 20  41 20 20 20 42 20 20 20  |    %   A   B   |
+00000080  52 61 6d 70 3a 20 20 20  20 20 20 20 20 20 20 20  |Ramp:           |
+00000090  20 20 20 20 20 20 20 20  00 00 00 00 00 00 02 00  |        ........|
+000000a0  00 03 0f ff 00 00 00 00  00 00 08 00 06 00 00 00  |................|
+000000b0  00 ff 00 00 3e 3e 00 00  9c 9c ff 07 01 fc fc 01  |....>>..........|
+000000c0  00 ff cd ff 01 01 ff ff  00 00 16 09 64 01 01 ff  |............d...|
+000000d0  ff 08 00 82 32 c8 01 01  ff ff 04 00 c0 2c 20 87  |....2........, .|
+000000e0  02 77 76 76 e1 14 d7 01  19 05 82 05 cd ff 01 78  |.wvv...........x|
+000000f0  a5 ff 01 64 0f fa 01 64  46 fa 01 64 0c 01 05 00  |...d...dF..d....|
+#+END_EXAMPLE
+
+Dump from v1.6
+
+#+BEGIN_EXAMPLE
+00000000  20 55 73 65 72 20 32 20  20 55 73 65 72 20 33 20  | User 2  User 3 |
+00000010  20 55 73 65 72 20 34 20  20 55 73 65 72 20 35 20  | User 4  User 5 |
+00000020  20 55 73 65 72 20 36 20  20 55 73 65 72 20 37 20  | User 6  User 7 |
+00000030  53 70 6c 69 74 20 41 3a  53 70 6c 69 74 20 42 3a  |Split A:Split B:|
+00000040  53 65 6c 20 46 61 76 3a  52 61 6d 70 69 6e 67 20  |Sel Fav:Ramping |
+00000050  53 61 76 65 64 21 20 20  4c 69 6e 6b 65 64 21 20  |Saved!  Linked! |
+00000060  4d 61 73 74 65 72 20 20  53 6c 61 76 65 20 20 20  |Master  Slave   |
+00000070  20 20 20 20 25 20 20 20  41 20 20 20 42 20 20 20  |    %   A   B   |
+00000080  52 61 6d 70 3a 20 20 20  20 20 20 20 20 20 20 20  |Ramp:           |
+00000090  20 20 20 20 20 20 20 20  ff ff ff ff 00 00 02 00  |        ........|
+000000a0  00 03 0f ff 00 00 00 00  00 00 08 00 06 00 00 00  |................|
+000000b0  00 ff 00 00 3e 3e 00 00  9c 9c ff 07 01 fc fc 01  |....>>..........|
+000000c0  00 ff cd ff 01 01 ff ff  00 00 16 09 64 01 01 ff  |............d...|
+000000d0  ff 08 00 82 32 c8 01 01  ff ff 04 00 c0 2c 20 87  |....2........, .|
+000000e0  02 77 76 76 e1 14 d7 01  19 05 82 05 cd ff 01 78  |.wvv...........x|
+000000f0  a5 ff 01 64 0f fa 01 64  46 fa 01 64 0c 01 06     |...d...dF..d...|
+#+END_EXAMPLE
+
+The Data that can be extracted via the stringtable glitch overlaps with these pages. The following has been extracted from v1.6:
+
+#+BEGIN_EXAMPLE
+00000000: 5368 7574 204f 6666 2050 6f77 6572 2121  Shut Off Power!!
+00000010: 5365 6c66 5465 7374 204f 4b20 5631 2e36  SelfTest OK V1.6
+00000020: 2863 2920 2730 3420 4572 6f73 2054 656b  (c) '04 Eros Tek
+00000030: 4572 6f73 2054 656b 2045 542d 3331 3220  Eros Tek ET-312 
+00000040: 5072 6573 7320 416e 7920 4b65 792e 2e2e  Press Any Key...
+00000050: b320 b420 5365 6c65 6374 7320 4d6f 6465  . . Selects Mode
+00000060: 5072 6573 7320 b320 b420 6f72 204f 4b20  Press . . or OK 
+00000070: 5374 6172 7420 5261 6d70 2055 703f 2020  Start Ramp Up?  
+00000080: 5365 7420 5370 6c69 7420 4d6f 6465 3f20  Set Split Mode? 
+00000090: 5365 7420 4173 2046 6176 6f72 6974 653f  Set As Favorite?
+000000a0: 5365 7420 5077 7220 4c65 7665 6c3f 2020  Set Pwr Level?  
+000000b0: 4c69 6e6b 2053 6c61 7665 2055 6e69 743f  Link Slave Unit?
+000000c0: 5361 7665 2053 6574 7469 6e67 733f 2020  Save Settings?  
+000000d0: 5265 7365 7420 5365 7474 696e 6773 3f20  Reset Settings? 
+000000e0: 4164 6a75 7374 2041 6476 616e 6365 643f  Adjust Advanced?
+000000f0: 5261 6d70 3a20 2020 20b3 b43d 4d6f 6465  Ramp:    ..=Mode
+00000100: 2020 2020 2020 2020 2020 2020 2020 2020                  
+00000110: 2020 2020 2020 2020 5365 6c65 6374 3a20          Select: 
+00000120: 4261 7474 6572 793a 4661 696c 7572 6520  Battery:Failure 
+00000130: 5077 7220 4c65 763a 2041 646a 7573 743f  Pwr Lev: Adjust?
+00000140: 4d65 6e75 733a 2020 204c 6f77 2020 2020  Menus:   Low    
+00000150: 204e 6f72 6d61 6c20 2048 6967 6820 2020   Normal  High   
+00000160: 5261 6d70 4c65 766c 5261 6d70 5469 6d65  RampLevlRampTime
+00000170: 2020 2044 6570 7468 2020 2054 656d 706f     Depth   Tempo
+00000180: 2020 2046 7265 712e 2020 4566 6665 6374     Freq.  Effect
+00000190: 2020 2057 6964 7468 2020 2020 5061 6365     Width    Pace
+000001a0: 2057 6176 6573 2020 2053 7472 6f6b 6520   Waves   Stroke 
+000001b0: 2043 6c69 6d62 2020 2043 6f6d 626f 2020   Climb   Combo  
+000001c0: 2049 6e74 656e 7365 2052 6879 7468 6d20   Intense Rhythm 
+000001d0: 2041 7564 696f 2031 2041 7564 696f 2032   Audio 1 Audio 2
+000001e0: 2041 7564 696f 2033 2053 706c 6974 2020   Audio 3 Split  
+000001f0: 2052 616e 646f 6d31 2052 616e 646f 6d32   Random1 Random2
+00000200: 2054 6f67 676c 6520 204f 7267 6173 6d20   Toggle  Orgasm 
+00000210: 2054 6f72 6d65 6e74 2050 6861 7365 2031   Torment Phase 1
+00000220: 2050 6861 7365 2032 2050 6861 7365 2033   Phase 2 Phase 3
+00000230: 2055 7365 7220 3120 2055 7365 7220 3220   User 1  User 2 
+00000240: 2055 7365 7220 3320 2055 7365 7220 3420   User 3  User 4 
+00000250: 2055 7365 7220 3520 2055 7365 7220 3620   User 5  User 6 
+00000260: 2055 7365 7220 3720 5370 6c69 7420 413a   User 7 Split A:
+00000270: 5370 6c69 7420 423a 5365 6c20 4661 763a  Split B:Sel Fav:
+00000280: 5261 6d70 696e 6720 5361 7665 6421 2020  Ramping Saved!  
+00000290: 4c69 6e6b 6564 2120 4d61 7374 6572 2020  Linked! Master  
+000002a0: 536c 6176 6520 2020 2020 2020 2520 2020  Slave       %   
+000002b0: 4120 2020 4220 2020 5261 6d70 3a20 2020  A   B   Ramp:   
+000002c0: 2020 2020 2020 2020 2020 2020 2020 2020                  
+000002d0: ffff ffff 0000 0200 0003 0fff 0000 0000  ................
+000002e0: 0000 0800 0600 0000 00ff 0000 3e3e 0000  ............>>..
+000002f0: 9c9c ff07 01fc fc01 00ff cdff 0101 ffff  ................
+00000300: 0000 1609 6401 01ff ff08 0082 32c8 0101  ....d.......2...
+00000310: ffff 0400 c02c 2087 0277 7676 e114 d701  ....., ..wvv....
+00000320: 1905 8205 cdff 0178 a5ff 0164 0ffa 0164  .......x...d...d
+00000330: 46fa 0164 0c01 0600 8502 b202 aeff b30a  F..d............
+#+END_EXAMPLE
+
+
 ***** Other Interesting Stuff
 Interesting facts from playing with memory using the protocol:
 
@@ -225,7 +393,7 @@ If we format the XOR output into blocks of 6 bytes each, some
 repetition starts to show up:
 
 #+BEGIN_EXAMPLE 
-6800 0068 0000
+0000 6800 0068
 0000 6800 0068
 0000 0000 0000
 e800 0058 8600
@@ -320,6 +488,9 @@ firmware. For instance, usually the AVR IVT is at the top of the flash
 address space, so there's a chance that the matching portions of the
 first sections of the 2 files are the IVTs, which probably don't
 change much. However, this idea hasn't gotten very far in practice.
+
+This may be an LFSR, see [[https://twitter.com/qDot/status/722620349653786624][this thread on twitter]]
+
 *** Brute Force Writing
 **** Basic Idea
 More a mapping technique than an attack, but by changing every Nth
@@ -476,6 +647,3 @@ Mode Names, in order of appearance while pressing "up" button:
 - Phase 1
 - Phase 2
 - Phase 3
-
-
-
