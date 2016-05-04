@@ -1,0 +1,6 @@
+* ET312 failure modes
+
+| Failure | Description                                                                     |
+|---------|---------------------------------------------------------------------------------|
+| 4       | Serial error (for instance, not using a crossover cable when linking 2 boxes)   |
+| 21      | ??DAC error?                                                                    |
