@@ -3,4 +3,10 @@
 | Failure | Description                                                                     |
 |---------|---------------------------------------------------------------------------------|
 | 4       | Serial error (for instance, not using a crossover cable when linking 2 boxes)   |
+| 10      |                                                                                 |
+| 15      | ??scaling/divide by 0                                                           |
+| 16      | ??power level not 0-3                                                           |
+| 20      |                                                                                 |
 | 21      | ??DAC error?                                                                    |
+| 72      | ??comm buffer full?                                                             |
+| 80      | ??invalid action/command                                                        |
