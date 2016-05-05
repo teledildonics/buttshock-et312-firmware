@@ -32,12 +32,6 @@ CFLAGS += -mrelax
 CFLAGS += -ggdb
 CFLAGS += -flto -fwhole-program
 
-## Assembly specific flags
-ASMFLAGS = $(COMMON)
-ASMFLAGS += $(CFLAGS)
-ASMFLAGS += $(CIPHER_FLAGS)
-ASMFLAGS += -x assembler-with-cpp -Wa,-g
-
 APPLICATION_ADDRESS = 0x2000
 
 ## Linker flags
