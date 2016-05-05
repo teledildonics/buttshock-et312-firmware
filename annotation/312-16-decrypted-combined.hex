@@ -76,7 +76,7 @@ Label_0x64:
   64:   15 fd           skipif (!bit(r17,5))
   66:   0e 94 2c 0c     Function_0x1858();
   6a:   40 fc           skipif (!bit(r4,0))
-  6c:   97 d2           Function_0x59c();
+  6c:   97 d2           update_current_channel_multi_adjust_value();
   6e:   12 fd           skipif (!bit(r17,2))
   70:   15 c0           goto Label_0x9c;
   72:   56 fe           skipif (bit(r5,6))
@@ -292,13 +292,13 @@ Label_0x186:
 Label_0x190:
  190:   a4 30           cmp(r26, 0x04);                     ; 4
  192:   41 f7           if (c1 != c2) goto Label_0x164;
- 194:   fd d0           Function_0x390();
+ 194:   fd d0           load_r30_min_156_div_4_load_r18_Z+_load_r0_Z_pop_Z();
 
 ; Referenced from offset 0x184 <Main> by rjmp
 ; Referenced from offset 0x18e <Main> by rjmp
 Label_0x196:
  196:   24 fc           skipif (!bit(r2,4))
- 198:   07 d1           Function_0x3a8();
+ 198:   07 d1           load_from_fla_unknown_0x1fec();
  19a:   20 83           Memory[r30:r31] = r18;
  19c:   e3 cf           goto Label_0x164;
 
@@ -325,7 +325,7 @@ Label_0x1b0:
 Label_0x1ba:
  1ba:   a0 32           cmp(r26, 0x20);                     ; 32
  1bc:   19 f4           if (c1 != c2) goto Label_0x1c4;
- 1be:   e8 d0           Function_0x390();
+ 1be:   e8 d0           load_r30_min_156_div_4_load_r18_Z+_load_r0_Z_pop_Z();
  1c0:   20 2d           r18 = r0;
  1c2:   01 c0           goto Label_0x1c6;
 
@@ -338,7 +338,7 @@ Label_0x1c4:
 ; Referenced from offset 0x1c2 <Main> by rjmp
 Label_0x1c6:
  1c6:   27 fc           skipif (!bit(r2,7))
- 1c8:   ef d0           Function_0x3a8();
+ 1c8:   ef d0           load_from_fla_unknown_0x1fec();
  1ca:   a2 2d           r26 = r2;
  1cc:   a7 d0           set_routine_timer();                ; Parameter r26:r27, returns r0, sets T flag
  1ce:   56 f6           if (T == 0) goto Label_0x164;
@@ -369,7 +369,7 @@ Label_0x1ee:
 Label_0x1f8:
  1f8:   a4 30           cmp(r26, 0x04);                     ; 4
  1fa:   11 f4           if (c1 != c2) goto Label_0x200;
- 1fc:   c9 d0           Function_0x390();
+ 1fc:   c9 d0           load_r30_min_156_div_4_load_r18_Z+_load_r0_Z_pop_Z();
  1fe:   01 c0           goto Label_0x202;
 
 ; Referenced from offset 0x1fa <Main> by brne
@@ -381,7 +381,7 @@ Label_0x200:
 ; Referenced from offset 0x1fe <Main> by rjmp
 Label_0x202:
  202:   24 fc           skipif (!bit(r2,4))
- 204:   d1 d0           Function_0x3a8();
+ 204:   d1 d0           load_from_fla_unknown_0x1fec();
  206:   21 83           Memory[[r30:r31]+1] = r18;
  208:   a0 81           r26 = Memory[r30:r31];
  20a:   c4 81           r28 = Memory[[r30:r31]+4];
@@ -597,7 +597,7 @@ Label_0x2f6:
 ; Referenced from offset 0x2f8 <Main> by rjmp
 ; Referenced from offset 0x2fe <Main> by brcs
 Label_0x30e:
- 30e:   0e 94 3e 0d     fun_unknown_0x1a7c();               ; Parameters r9,r8,r7
+ 30e:   0e 94 3e 0d     Function_0x1a7c();                  ; Parameters r9,r8,r7
  312:   0e 94 fe 0a     Function_0x15fc();
  316:   0e 94 dc 0a     Function_0x15b8();                  ; Parameter r28:r29, r6
  31a:   9c ce           goto Main;
@@ -697,7 +697,7 @@ Label_0x38c:
 ; Referenced from offset 0x194 <Main> by rcall
 ; Referenced from offset 0x1be <Main> by rcall
 ; Referenced from offset 0x1fc <Main> by rcall
-Function_0x390:
+load_r30_min_156_div_4_load_r18_Z+_load_r0_Z_pop_Z:
  390:   ff 93           push    r31
  392:   ef 93           push    r30
  394:   ec 59           r30 -= 156;                         ; 0x9c, no carry
@@ -715,7 +715,7 @@ Function_0x390:
 ; Referenced from offset 0x198 <Main> by rcall
 ; Referenced from offset 0x1c8 <Main> by rcall
 ; Referenced from offset 0x204 <Main> by rcall
-Function_0x3a8:
+load_from_fla_unknown_0x1fec:
  3a8:   ff 93           push    r31
  3aa:   ef 93           push    r30
  3ac:   ec 59           r30 -= 156;                         ; 0x9c, no carry
@@ -724,7 +724,7 @@ Function_0x3a8:
  3b2:   08 f0           if (Carry) goto Label_0x3b6;
  3b4:   ea 95           r30--;
 
-; Referenced from offset 0x3b2 <Function_0x3a8> by brcs
+; Referenced from offset 0x3b2 <load_from_fla_unknown_0x1fec> by brcs
 Label_0x3b6:
  3b6:   be 2f           r27 = r30;
  3b8:   ec ee           r30 = 236;                          ; 0xec
@@ -1039,8 +1039,8 @@ Label_0x58e:
  58e:   62 cd           goto Main;
 
 ; Referenced from offset 0x526 <Main> by rjmp
-; Referenced from offset 0x16d8 <fun_unknown_0x16b8> by jmp
-; Referenced from offset 0x16f8 <fun_unknown_0x16b8> by jmp
+; Referenced from offset 0x16d8 <Function_0x16b8> by jmp
+; Referenced from offset 0x16f8 <Function_0x16b8> by jmp
 Label_0x590:
  590:   aa ec           r26 = 202;                          ; 0xca
  592:   ac d6           show_Text_on_Display();             ; Parameter r26
@@ -1049,7 +1049,7 @@ Label_0x590:
  598:   0c 94 43 0b     goto Label_0x1686;
 
 ; Referenced from offset 0x6c <Main> by rcall
-Function_0x59c:
+update_current_channel_multi_adjust_value:
  59c:   ac 8d           r26 = Memory[[r28:r29]+28];
  59e:   bd 8d           r27 = Memory[[r28:r29]+29];
  5a0:   ee 8d           r30 = Memory[[r28:r29]+30];
@@ -1061,26 +1061,26 @@ Function_0x59c:
  5ac:   fb 2f           r31 = r27;
  5ae:   02 c0           goto Label_0x5b4;
 
-; Referenced from offset 0x5a6 <Function_0x59c> by rjmp
+; Referenced from offset 0x5a6 <update_current_channel_multi_adjust_value> by rjmp
 Label_0x5b0:
  5b0:   ea 1b           r30 -= r26;                         ; No carry
  5b2:   fb 0b           r31 += r27;                         ; With carry
 
-; Referenced from offset 0x5ae <Function_0x59c> by rjmp
+; Referenced from offset 0x5ae <update_current_channel_multi_adjust_value> by rjmp
 Label_0x5b4:
  5b4:   f2 30           cmp(r31, 0x02);                     ; 2
  5b6:   08 f4           if (!Carry) goto Label_0x5ba;
  5b8:   08 95           return;
 
 
-; Referenced from offset 0x5b6 <Function_0x59c> by brcc
+; Referenced from offset 0x5b6 <update_current_channel_multi_adjust_value> by brcc
 Label_0x5ba:
  5ba:   f6 30           cmp(r31, 0x06);                     ; 6
  5bc:   08 f0           if (Carry) goto Label_0x5c0;
  5be:   08 95           return;
 
 
-; Referenced from offset 0x5bc <Function_0x59c> by brcs
+; Referenced from offset 0x5bc <update_current_channel_multi_adjust_value> by brcs
 Label_0x5c0:
  5c0:   a0 e1           r26 = 16;                           ; 0x10
  5c2:   1a 27           r17 ^= r26;
@@ -1093,12 +1093,12 @@ Label_0x5c0:
  5d2:   eb 2e           r14 = r27;
  5d4:   02 c0           goto Label_0x5da;
 
-; Referenced from offset 0x5ce <Function_0x59c> by brcs
+; Referenced from offset 0x5ce <update_current_channel_multi_adjust_value> by brcs
 Label_0x5d6:
  5d6:   9b 2e           r9 = r27;
  5d8:   ea 2e           r14 = r26;
 
-; Referenced from offset 0x5d4 <Function_0x59c> by rjmp
+; Referenced from offset 0x5d4 <update_current_channel_multi_adjust_value> by rjmp
 Label_0x5da:
  5da:   90 92 b7 00     channel_a_current_width_modulation_value = r9; ; 0x00b7
  5de:   e0 92 b7 01     channel_b_current_width_modulation_value = r14; ; 0x01b7
@@ -2063,10 +2063,10 @@ CallTable_36:
 
 
 ; Referenced from offset 0x58c <Main> by rcall
-; Referenced from offset 0x16c0 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x16c6 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x16cc <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1788 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x16c0 <Function_0x16b8> by rcall
+; Referenced from offset 0x16c6 <Function_0x16b8> by rcall
+; Referenced from offset 0x16cc <Function_0x16b8> by rcall
+; Referenced from offset 0x1788 <Function_0x16b8> by rcall
 enable_ADC_and_set_r17[3]:     ; CallTable_34
  b1e:   a1 e0           r26 = 1;                            ; 0x01
  b20:   a7 b9           IO[ADMUX] = r26;
@@ -2077,8 +2077,8 @@ enable_ADC_and_set_r17[3]:     ; CallTable_34
 
 
 ; Referenced from offset 0xb78 <Function_0xb58> by rcall
-; Referenced from offset 0x17a2 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x17ac <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17a2 <Function_0x16b8> by rcall
+; Referenced from offset 0x17ac <Function_0x16b8> by rcall
 ; Referenced from offset 0x18e0 <Function_0x1858> by rcall
 prng_next:     ; Result in r26 and X[18]
  b2a:   2f 93           push    r18
@@ -3494,9 +3494,9 @@ Label_0x124e:
 
 
 ; Referenced from offset 0xaf6 <CallTable_19> by rcall
-; Referenced from offset 0x17f4 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1810 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1836 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17f4 <Function_0x16b8> by rcall
+; Referenced from offset 0x1810 <Function_0x16b8> by rcall
+; Referenced from offset 0x1836 <Function_0x16b8> by rcall
 display_char_r30_at_position_r31_on_display:     ; Parameter r30, r31
 1278:   ff 93           push    r31
 127a:   f0 68           r31 |= 128;                         ; 0x80
@@ -3508,7 +3508,7 @@ display_char_r30_at_position_r31_on_display:     ; Parameter r30, r31
 
 ; Referenced from offset 0x7e8 <CallTable_2> by rcall
 ; Referenced from offset 0x7ee <CallTable_2> by rcall
-; Referenced from offset 0x1830 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1830 <Function_0x16b8> by rcall
 display_number_on_display_scaled:     ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-99)
 1284:   af 93           push    r26
 1286:   bf 93           push    r27
@@ -3546,14 +3546,14 @@ Label_0x12a0:
 ; Referenced from offset 0xb02 <CallTable_20> by rcall
 ; Referenced from offset 0xbaa <CallTable_22> by rcall
 ; Referenced from offset 0x1684 <error_handler> by rcall
-; Referenced from offset 0x175c <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x176a <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1776 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x177c <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1782 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x178a <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1790 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1796 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x175c <Function_0x16b8> by rcall
+; Referenced from offset 0x176a <Function_0x16b8> by rcall
+; Referenced from offset 0x1776 <Function_0x16b8> by rcall
+; Referenced from offset 0x177c <Function_0x16b8> by rcall
+; Referenced from offset 0x1782 <Function_0x16b8> by rcall
+; Referenced from offset 0x178a <Function_0x16b8> by rcall
+; Referenced from offset 0x1790 <Function_0x16b8> by rcall
+; Referenced from offset 0x1796 <Function_0x16b8> by rcall
 display_number_on_display:     ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 12b8:   af 93           push    r26
 12ba:   bf 93           push    r27
@@ -3588,8 +3588,8 @@ Label_0x12d6:
 ; Referenced from offset 0x932 <CallTable_3> by rcall
 ; Referenced from offset 0xa26 <CallTable_4> by rcall
 ; Referenced from offset 0x1688 <Main> by rcall
-; Referenced from offset 0x1814 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x183a <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1814 <Function_0x16b8> by rcall
+; Referenced from offset 0x183a <Function_0x16b8> by rcall
 ; Referenced from offset 0x188c <Function_0x1858> by rcall
 show_Text_on_Display2:     ; Parameter r26
 12dc:   ef 93           push    r30
@@ -3625,10 +3625,10 @@ show_Text_on_Display2:     ; Parameter r26
 ; Referenced from offset 0xb0a <CallTable_21> by rcall
 ; Referenced from offset 0x167a <error_handler> by rcall
 ; Referenced from offset 0x167e <error_handler> by rcall
-; Referenced from offset 0x17ee <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1802 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1824 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1828 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17ee <Function_0x16b8> by rcall
+; Referenced from offset 0x1802 <Function_0x16b8> by rcall
+; Referenced from offset 0x1824 <Function_0x16b8> by rcall
+; Referenced from offset 0x1828 <Function_0x16b8> by rcall
 ; Referenced from offset 0x1890 <Function_0x1858> by rcall
 ; Referenced from offset 0x1894 <Function_0x1858> by rcall
 show_Text_on_Display:     ; Parameter r26
@@ -3723,8 +3723,8 @@ Label_0x1356:
 ; Referenced from offset 0x560 <Main> by rcall
 ; Referenced from offset 0x15d6 <Function_0x15b8> by rcall
 ; Referenced from offset 0x1630 <Function_0x15fc> by rcall
-; Referenced from offset 0x1714 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1a98 <fun_unknown_0x1a7c> by rcall
+; Referenced from offset 0x1714 <Function_0x16b8> by rcall
+; Referenced from offset 0x1a98 <Function_0x1a7c> by rcall
 delay_0x1362:     ; Parameter r30
 1362:   af 93           push    r26
 1364:   bf 93           push    r27
@@ -3881,7 +3881,7 @@ rotate_right:     ; Parameter r30:r31 r26
 1404:   08 95           return;
 
 
-; Referenced from offset 0x1722 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1722 <Function_0x16b8> by rcall
 Function_0x1406:
 1406:   af ef           r26 = 0xff;                         ; 255
 1408:   6a 2e           r6 = r26;
@@ -3993,7 +3993,7 @@ Label_0x1492:
 ; Referenced from offset 0x1418 <Function_0x1406> by rcall
 ; Referenced from offset 0x1434 <Function_0x1406> by rcall
 ; Referenced from offset 0x148a <Function_0x1406> by rcall
-; Referenced from offset 0x179a <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x179a <Function_0x16b8> by rcall
 send_data_to_spdr:
 1496:   94 98           IO_BIT[PORTD,4] = false;            ; 0x10 = 16
 1498:   a4 e0           r26 = 4;                            ; 0x04
@@ -4082,7 +4082,7 @@ Label_0x14bc:
 1514:   59 de           initialize_lcd();
 1516:   1a d0           copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29(); ; CallTable_24
 1518:   3b d0           copy_flash_0x1fdc_to_memory_0x01f0();
-151a:   ce d0           fun_unknown_0x16b8();               ; Parameter r28:r29
+151a:   ce d0           Function_0x16b8();                  ; Parameter r28:r29
 151c:   f8 94           Disable_Interrupts();
 151e:   af e0           r26 = 15;                           ; 0x0f
 1520:   a5 bf           IO[MCUCR] = r26;
@@ -4162,8 +4162,8 @@ Label_0x1584:
 ; Referenced from offset 0x942 <CallTable_3> by rcall
 ; Referenced from offset 0x1518 <RESET> by rcall
 ; Referenced from offset 0x157a <copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3> by rcall
-; Referenced from offset 0x17da <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x17e4 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17da <Function_0x16b8> by rcall
+; Referenced from offset 0x17e4 <Function_0x16b8> by rcall
 ; Referenced from offset 0x1896 <Function_0x1858> by rcall
 copy_flash_0x1fdc_to_memory_0x01f0:
 1590:   a0 ef           r26 = 240;                          ; 0xf0
@@ -4183,8 +4183,8 @@ Label_0x1598:
 
 ; Referenced from offset 0x926 <CallTable_3> by rcall
 ; Referenced from offset 0x944 <CallTable_3> by rcall
-; Referenced from offset 0x17dc <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x17e6 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17dc <Function_0x16b8> by rcall
+; Referenced from offset 0x17e6 <Function_0x16b8> by rcall
 copy_flash_0x01f3_to_eeprom_0x8_length_12:
 15a4:   e3 ef           r30 = 243;                          ; 0xf3
 15a6:   f1 e0           r31 = 1;                            ; 0x01
@@ -4206,7 +4206,7 @@ Label_0x15ac:
 ; Referenced from offset 0x1416 <Function_0x1406> by rcall
 ; Referenced from offset 0x1432 <Function_0x1406> by rcall
 ; Referenced from offset 0x1488 <Function_0x1406> by rcall
-; Referenced from offset 0x1798 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1798 <Function_0x16b8> by rcall
 Function_0x15b8:     ; Parameter r28:r29, r6
 15b8:   af 93           push    r26
 15ba:   bf 93           push    r27
@@ -4342,7 +4342,7 @@ Label_0x1674:
 ; Referenced from offset 0x13c4 <divide_word> by rjmp
 ; Referenced from offset 0x1494 <Function_0x1406> by rjmp
 ; Referenced from offset 0x15fa <Function_0x15b8> by rjmp
-; Referenced from offset 0x16e4 <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x16e4 <Function_0x16b8> by rjmp
 ; Referenced from offset 0x1a1e <write_r26_to_com_buffer> by rjmp
 error_handler:     ; CallTable_23_37_38_39
 1676:   2a 2f           r18 = r26;
@@ -4389,26 +4389,26 @@ Label_0x16a4:
 16b6:   f5 cf           goto Label_0x16a2;
 
 ; Referenced from offset 0x151a <RESET> by rcall
-fun_unknown_0x16b8:     ; Parameter r28:r29
+Function_0x16b8:     ; Parameter r28:r29
 16b8:   a6 e5           r26 = 86;                           ; 0x56
 16ba:   aa 83           Memory[[r28:r29]+2] = r26;
 16bc:   a5 e8           r26 = 133;                          ; 0x85
 16be:   ab 83           Memory[[r28:r29]+3] = r26;
 16c0:   2e da           enable_ADC_and_set_r17[3]();        ; CallTable_34
 
-; Referenced from offset 0x16c4 <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x16c4 <Function_0x16b8> by rjmp
 Label_0x16c2:
 16c2:   13 fd           skipif (!bit(r17,3))
 16c4:   fe cf           goto Label_0x16c2;
 16c6:   2b da           enable_ADC_and_set_r17[3]();        ; CallTable_34
 
-; Referenced from offset 0x16ca <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x16ca <Function_0x16b8> by rjmp
 Label_0x16c8:
 16c8:   13 fd           skipif (!bit(r17,3))
 16ca:   fe cf           goto Label_0x16c8;
 16cc:   28 da           enable_ADC_and_set_r17[3]();        ; CallTable_34
 
-; Referenced from offset 0x16d0 <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x16d0 <Function_0x16b8> by rjmp
 Label_0x16ce:
 16ce:   13 fd           skipif (!bit(r17,3))
 16d0:   fe cf           goto Label_0x16ce;
@@ -4417,7 +4417,7 @@ Label_0x16ce:
 16d6:   10 f4           if (!Carry) goto Label_0x16dc;
 16d8:   0c 94 c8 02     goto Label_0x590;
 
-; Referenced from offset 0x16d6 <fun_unknown_0x16b8> by brcc
+; Referenced from offset 0x16d6 <Function_0x16b8> by brcc
 Label_0x16dc:
 16dc:   ba 81           r27 = Memory[[r28:r29]+2];
 16de:   b2 39           cmp(r27, 0x92);                     ; 146
@@ -4425,14 +4425,14 @@ Label_0x16dc:
 16e2:   a5 e1           r26 = 21;                           ; 0x15
 16e4:   c8 cf           goto error_handler;
 
-; Referenced from offset 0x16e0 <fun_unknown_0x16b8> by brcs
+; Referenced from offset 0x16e0 <Function_0x16b8> by brcs
 Label_0x16e6:
 16e6:   ee 27           r30 = 0x00;                         ; 0
 16e8:   a2 3b           cmp(r26, 0xb2);                     ; 178
 16ea:   08 f4           if (!Carry) goto Label_0x16ee;
 16ec:   e1 60           r30 |= 1;                           ; 0x01
 
-; Referenced from offset 0x16ea <fun_unknown_0x16b8> by brcc
+; Referenced from offset 0x16ea <Function_0x16b8> by brcc
 Label_0x16ee:
 16ee:   b0 34           cmp(r27, 0x40);                     ; 64
 16f0:   20 f0           if (Carry) goto Label_0x16fa;
@@ -4441,7 +4441,7 @@ Label_0x16ee:
 16f6:   10 f4           if (!Carry) goto Label_0x16fc;
 16f8:   0c 94 c8 02     goto Label_0x590;
 
-; Referenced from offset 0x16f6 <fun_unknown_0x16b8> by brcc
+; Referenced from offset 0x16f6 <Function_0x16b8> by brcc
 Label_0x16fc:
 16fc:   e0 93 15 02     Memory[0x0215] = r30;               ; 533
 1700:   b2 e9           r27 = 146;                          ; 0x92
@@ -4452,7 +4452,7 @@ Label_0x16fc:
 170a:   08 f4           if (!Carry) goto Label_0x170e;
 170c:   ee 27           r30 = 0x00;                         ; 0
 
-; Referenced from offset 0x170a <fun_unknown_0x16b8> by brcc
+; Referenced from offset 0x170a <Function_0x16b8> by brcc
 Label_0x170e:
 170e:   e3 31           cmp(r30, 0x13);                     ; 19
 1710:   18 f4           if (!Carry) goto Label_0x1718;
@@ -4460,11 +4460,11 @@ Label_0x170e:
 1714:   26 de           delay_0x1362();                     ; Parameter r30
 1716:   01 c0           goto Label_0x171a;
 
-; Referenced from offset 0x1710 <fun_unknown_0x16b8> by brcc
+; Referenced from offset 0x1710 <Function_0x16b8> by brcc
 Label_0x1718:
 1718:   ef ef           r30 = 0xff;                         ; 255
 
-; Referenced from offset 0x1716 <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x1716 <Function_0x16b8> by rjmp
 Label_0x171a:
 171a:   e0 93 03 02     Memory[0x0203] = r30;               ; 515
 171e:   a0 e1           r26 = 16;                           ; 0x10
@@ -4481,8 +4481,8 @@ Label_0x171a:
 1734:   09 f4           if (c1 != c2) goto Label_0x1738;
 1736:   53 c0           goto Label_0x17de;
 
-; Referenced from offset 0x1728 <fun_unknown_0x16b8> by breq
-; Referenced from offset 0x1734 <fun_unknown_0x16b8> by brne
+; Referenced from offset 0x1728 <Function_0x16b8> by breq
+; Referenced from offset 0x1734 <Function_0x16b8> by brne
 Label_0x1738:
 1738:   91 9a           IO_BIT[PORTD,1] = true;             ; 0x02 = 2
 173a:   a2 e0           r26 = 2;                            ; 0x02
@@ -4495,7 +4495,7 @@ Label_0x1738:
 1748:   80 99           skipif (!IO_BIT[PIND,0])            ; 0x01 = 1
 174a:   2b c0           goto Label_0x17a2;
 
-; Referenced from offset 0x17a0 <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x17a0 <Function_0x16b8> by rjmp
 Label_0x174c:
 174c:   89 d1           lcd_putchar();                      ; Parameter r29
 174e:   b1 3a           cmp(r27, 0xa1);                     ; 161
@@ -4541,9 +4541,9 @@ Label_0x174c:
 179e:   4f d0           delay_0x183e();                     ; Parameter r26
 17a0:   d5 cf           goto Label_0x174c;
 
-; Referenced from offset 0x1740 <fun_unknown_0x16b8> by rjmp
-; Referenced from offset 0x174a <fun_unknown_0x16b8> by rjmp
-; Referenced from offset 0x1750 <fun_unknown_0x16b8> by breq
+; Referenced from offset 0x1740 <Function_0x16b8> by rjmp
+; Referenced from offset 0x174a <Function_0x16b8> by rjmp
+; Referenced from offset 0x1750 <Function_0x16b8> by breq
 Label_0x17a2:
 17a2:   c3 d9           prng_next();                        ; Result in r26 and X[18]
 17a4:   0a 2e           r0 = r26;
@@ -4558,7 +4558,7 @@ Label_0x17a2:
 17b6:   a4 e0           r26 = 4;                            ; 0x04
 17b8:   b0 e0           r27 = 0;                            ; 0x00
 
-; Referenced from offset 0x17c2 <fun_unknown_0x16b8> by brcs
+; Referenced from offset 0x17c2 <Function_0x16b8> by brcs
 Label_0x17ba:
 17ba:   0d 2e           r0 = r29;
 17bc:   1a d1           write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
@@ -4579,7 +4579,7 @@ Label_0x17ba:
 17da:   da de           copy_flash_0x1fdc_to_memory_0x01f0();
 17dc:   e3 de           copy_flash_0x01f3_to_eeprom_0x8_length_12();
 
-; Referenced from offset 0x1736 <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x1736 <Function_0x16b8> by rjmp
 Label_0x17de:
 17de:   40 d1           lcd_putchar();                      ; Parameter r29
 17e0:   b1 3a           cmp(r27, 0xa1);                     ; 161
@@ -4587,7 +4587,7 @@ Label_0x17de:
 17e4:   d5 de           copy_flash_0x1fdc_to_memory_0x01f0();
 17e6:   de de           copy_flash_0x01f3_to_eeprom_0x8_length_12();
 
-; Referenced from offset 0x17e2 <fun_unknown_0x16b8> by brne
+; Referenced from offset 0x17e2 <Function_0x16b8> by brne
 Label_0x17e8:
 17e8:   a0 e7           r26 = 112;                          ; 0x70
 17ea:   a2 bb           IO[PORTD] = r26;
@@ -4595,7 +4595,7 @@ Label_0x17e8:
 17ee:   7e dd           show_Text_on_Display();             ; Parameter r26
 17f0:   f0 e4           r31 = 64;                           ; 0x40
 
-; Referenced from offset 0x17fe <fun_unknown_0x16b8> by brcs
+; Referenced from offset 0x17fe <Function_0x16b8> by brcs
 Label_0x17f2:
 17f2:   ef ef           r30 = 0xff;                         ; 255
 17f4:   41 dd           display_char_r30_at_position_r31_on_display(); ; Parameter r30, r31
@@ -4613,7 +4613,7 @@ Label_0x17f2:
 180e:   e2 e4           r30 = 66;                           ; 0x42
 1810:   33 dd           display_char_r30_at_position_r31_on_display(); ; Parameter r30, r31
 
-; Referenced from offset 0x180a <fun_unknown_0x16b8> by rjmp
+; Referenced from offset 0x180a <Function_0x16b8> by rjmp
 Label_0x1812:
 1812:   a1 e0           r26 = 1;                            ; 0x01
 1814:   63 dd           show_Text_on_Display2();            ; Parameter r26
@@ -4633,7 +4633,7 @@ Label_0x1812:
 1834:   e5 e2           r30 = 37;                           ; 0x25
 1836:   20 dd           display_char_r30_at_position_r31_on_display(); ; Parameter r30, r31
 
-; Referenced from offset 0x1820 <fun_unknown_0x16b8> by breq
+; Referenced from offset 0x1820 <Function_0x16b8> by breq
 Label_0x1838:
 1838:   a4 e0           r26 = 4;                            ; 0x04
 183a:   50 dd           show_Text_on_Display2();            ; Parameter r26
@@ -4642,11 +4642,11 @@ Label_0x1838:
 
 ; Referenced from offset 0x16a6 <Main> by rcall
 ; Referenced from offset 0x16b0 <Main> by rcall
-; Referenced from offset 0x173c <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1746 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x179e <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x17f8 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x1818 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x173c <Function_0x16b8> by rcall
+; Referenced from offset 0x1746 <Function_0x16b8> by rcall
+; Referenced from offset 0x179e <Function_0x16b8> by rcall
+; Referenced from offset 0x17f8 <Function_0x16b8> by rcall
+; Referenced from offset 0x1818 <Function_0x16b8> by rcall
 delay_0x183e:     ; Parameter r26
 183e:   bf 93           push    r27
 1840:   cf 93           push    r28
@@ -4967,7 +4967,7 @@ Label_0x19ce:
 
 ; Referenced from offset 0x756 <Function_0x604> by call
 ; Referenced from offset 0x1584 <copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3> by rcall
-; Referenced from offset 0x172e <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x172e <Function_0x16b8> by rcall
 ; Referenced from offset 0x1920 <Function_0x1858> by rcall
 read_from_eeprom:     ; Parameter r26:r27, returns r0
 19dc:   cf 93           push    r28
@@ -4988,12 +4988,12 @@ Label_0x19de:
 
 ; Referenced from offset 0x8ce <CallTable_3> by call
 ; Referenced from offset 0x15ae <copy_flash_0x01f3_to_eeprom_0x8_length_12> by rcall
-; Referenced from offset 0x17aa <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x17b2 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x17bc <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x17cc <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x17d4 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x17d8 <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x17aa <Function_0x16b8> by rcall
+; Referenced from offset 0x17b2 <Function_0x16b8> by rcall
+; Referenced from offset 0x17bc <Function_0x16b8> by rcall
+; Referenced from offset 0x17cc <Function_0x16b8> by rcall
+; Referenced from offset 0x17d4 <Function_0x16b8> by rcall
+; Referenced from offset 0x17d8 <Function_0x16b8> by rcall
 ; Referenced from offset 0x196a <serial_protocol_write_com_buffer_to_eeprom> by rcall
 write_to_eeprom:     ; Parameter r26:r27 (address), r0 (value)
 19f2:   a8 95           wdr
@@ -5083,9 +5083,9 @@ Label_0x1a56:
 1a5e:   08 95           return;
 
 
-; Referenced from offset 0x1724 <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x174c <fun_unknown_0x16b8> by rcall
-; Referenced from offset 0x17de <fun_unknown_0x16b8> by rcall
+; Referenced from offset 0x1724 <Function_0x16b8> by rcall
+; Referenced from offset 0x174c <Function_0x16b8> by rcall
+; Referenced from offset 0x17de <Function_0x16b8> by rcall
 lcd_putchar:     ; Parameter r29
 1a60:   a1 ef           r26 = 241;                          ; 0xf1
 1a62:   a5 bb           IO[PORTC] = r26;
@@ -5108,32 +5108,32 @@ reset_device:
 1a7a:   15 cd           goto RESET;
 
 ; Referenced from offset 0x30e <Main> by call
-fun_unknown_0x1a7c:     ; Parameters r9,r8,r7
+Function_0x1a7c:     ; Parameters r9,r8,r7
 1a7c:   e8 94           clt
 1a7e:   aa 27           r26 = 0x00;                         ; 0
 1a80:   b8 2d           r27 = r8;
 1a82:   e7 2d           r30 = r7;
 1a84:   f9 2d           r31 = r9;
 
-; Referenced from offset 0x1af0 <fun_unknown_0x1a7c> by rjmp
+; Referenced from offset 0x1af0 <Function_0x1a7c> by rjmp
 Label_0x1a86:
 1a86:   ee 5c           r30 -= 206;                         ; 0xce, no carry
 1a88:   08 f4           if (!Carry) goto Label_0x1a8c;
 1a8a:   ee 27           r30 = 0x00;                         ; 0
 
-; Referenced from offset 0x1a88 <fun_unknown_0x1a7c> by brcc
+; Referenced from offset 0x1a88 <Function_0x1a7c> by brcc
 Label_0x1a8c:
 1a8c:   f2 53           r31 -= 50;                          ; 0x32, no carry
 1a8e:   08 f4           if (!Carry) goto Label_0x1a92;
 1a90:   f1 e0           r31 = 1;                            ; 0x01
 
-; Referenced from offset 0x1a8e <fun_unknown_0x1a7c> by brcc
+; Referenced from offset 0x1a8e <Function_0x1a7c> by brcc
 Label_0x1a92:
 1a92:   f4 3a           cmp(r31, 0xa4);                     ; 164
 1a94:   08 f0           if (Carry) goto Label_0x1a98;
 1a96:   f3 ea           r31 = 163;                          ; 0xa3
 
-; Referenced from offset 0x1a94 <fun_unknown_0x1a7c> by brcs
+; Referenced from offset 0x1a94 <Function_0x1a7c> by brcs
 Label_0x1a98:
 1a98:   64 dc           delay_0x1362();                     ; Parameter r30
 1a9a:   00 24           r0 = 0x00;                          ; 0
@@ -5142,13 +5142,13 @@ Label_0x1a98:
 1aa0:   f6 95           r31 >>= 1;                          ; _BV(7) = 0, Carry = _BV(0) (logical shift)
 1aa2:   e7 95           r30 >>= 1;                          ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
 
-; Referenced from offset 0x1ab4 <fun_unknown_0x1a7c> by brne
+; Referenced from offset 0x1ab4 <Function_0x1a7c> by brne
 Label_0x1aa4:
 1aa4:   10 f4           if (!Carry) goto Label_0x1aaa;
 1aa6:   2a 0e           r2 += r26;                          ; No carry
 1aa8:   0b 1e           r0 += r27;                          ; With carry
 
-; Referenced from offset 0x1aa4 <fun_unknown_0x1a7c> by brcc
+; Referenced from offset 0x1aa4 <Function_0x1a7c> by brcc
 Label_0x1aaa:
 1aaa:   07 94           r0 >>= 1;                           ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
 1aac:   27 94           r2 >>= 1;                           ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
@@ -5158,7 +5158,7 @@ Label_0x1aaa:
 1ab4:   b9 f7           if (c1 != c2) goto Label_0x1aa4;
 1ab6:   2d e0           r18 = 13;                           ; 0x0d
 
-; Referenced from offset 0x1ac4 <fun_unknown_0x1a7c> by brne
+; Referenced from offset 0x1ac4 <Function_0x1a7c> by brne
 Label_0x1ab8:
 1ab8:   88 94           clc
 1aba:   07 94           r0 >>= 1;                           ; _BV(7) = Carry, Carry = _BV(0) (rotate right)
@@ -5186,7 +5186,7 @@ Label_0x1ab8:
 1aee:   fe 2d           r31 = r14;
 1af0:   ca cf           goto Label_0x1a86;
 
-; Referenced from offset 0x1acc <fun_unknown_0x1a7c> by brts
+; Referenced from offset 0x1acc <Function_0x1a7c> by brts
 store_z_pointer_at_0x020e_and_move_r13_to_r2_and_set_r18_to_negative_r30:
 1af2:   e0 93 0e 02     Memory[0x020e] = r30;               ; 526
 1af6:   f0 93 0f 02     Memory[0x020f] = r31;               ; 527
@@ -9588,7 +9588,7 @@ Label_0x3e7e:
 Label_0x3e86:
 3e86:   03 e4           r16 = 67;                           ; 0x43
 3e88:   0c b9           IO[UDR] = r16;
-3e8a:   8b d0           Function_0x3fa2();
+3e8a:   8b d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
 3e8c:   24 eb           r18 = 180;                          ; 0xb4
 3e8e:   43 e4           r20 = 67;                           ; 0x43
 3e90:   31 e0           r19 = 1;                            ; 0x01
@@ -9604,7 +9604,7 @@ Label_0x3e86:
 Label_0x3e94:
 3e94:   5f 99           skipif (!IO_BIT[UCSRA,7])           ; 0x80 = 128
 3e96:   0c c0           goto Label_0x3eb0;
-3e98:   8d d0           Function_0x3fb4();
+3e98:   8d d0           get_TOV1_flag();
 3e9a:   e1 f7           if (c1 != c2) goto Label_0x3e94;
 3e9c:   a2 b3           r26 = IO[PORTD];
 3e9e:   b0 e6           r27 = 96;                           ; 0x60
@@ -9617,7 +9617,7 @@ Label_0x3e94:
 ; Referenced from offset 0x3ea6 <bootloader> by brne
 Label_0x3eaa:
 3eaa:   4c b9           IO[UDR] = r20;
-3eac:   7a d0           Function_0x3fa2();
+3eac:   7a d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
 3eae:   f2 cf           goto Label_0x3e94;
 
 ; Referenced from offset 0x3e96 <bootloader> by rjmp
@@ -9629,11 +9629,11 @@ Label_0x3eb0:
 3eb8:   69 f7           if (c1 != c2) goto Label_0x3e94;
 3eba:   06 e0           r16 = 6;                            ; 0x06
 3ebc:   0c b9           IO[UDR] = r16;
-3ebe:   71 d0           Function_0x3fa2();
+3ebe:   71 d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
 
 ; Referenced from offset 0x3ec2 <bootloader> by brne
 Label_0x3ec0:
-3ec0:   79 d0           Function_0x3fb4();
+3ec0:   79 d0           get_TOV1_flag();
 3ec2:   f1 f7           if (c1 != c2) goto Label_0x3ec0;
 3ec4:   dc cf           goto Label_0x3e7e;
 
@@ -9648,7 +9648,7 @@ Label_0x3ec6:
 Label_0x3ece:
 3ece:   a0 e0           r26 = 0;                            ; 0x00
 3ed0:   b3 e0           r27 = 3;                            ; 0x03
-3ed2:   67 d0           Function_0x3fa2();
+3ed2:   67 d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
 3ed4:   00 c0           goto Label_0x3ed6;
 
 ; Referenced from offset 0x3ed4 <bootloader> by rjmp
@@ -9657,19 +9657,19 @@ Label_0x3ece:
 Label_0x3ed6:
 3ed6:   5f 99           skipif (!IO_BIT[UCSRA,7])           ; 0x80 = 128
 3ed8:   06 c0           goto Label_0x3ee6;
-3eda:   6c d0           Function_0x3fb4();
+3eda:   6c d0           get_TOV1_flag();
 3edc:   e1 f7           if (c1 != c2) goto Label_0x3ed6;
 
 ; Referenced from offset 0x3efa <bootloader> by brne
 Label_0x3ede:
 3ede:   05 e1           r16 = 21;                           ; 0x15
 3ee0:   0c b9           IO[UDR] = r16;
-3ee2:   5f d0           Function_0x3fa2();
+3ee2:   5f d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
 3ee4:   d7 cf           goto Label_0x3e94;
 
 ; Referenced from offset 0x3ed8 <bootloader> by rjmp
 Label_0x3ee6:
-3ee6:   5d d0           Function_0x3fa2();
+3ee6:   5d d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
 3ee8:   0c b1           r16 = IO[UDR];
 3eea:   0d 93           Memory[[r26:r27]++] = r16;
 3eec:   a4 38           cmp(r26, 0x84);                     ; 132
@@ -9688,7 +9688,7 @@ Label_0x3ee6:
 3f08:   04 c0           goto Label_0x3f12;
 3f0a:   06 e0           r16 = 6;                            ; 0x06
 3f0c:   0c b9           IO[UDR] = r16;
-3f0e:   49 d0           Function_0x3fa2();
+3f0e:   49 d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
 3f10:   c1 cf           goto Label_0x3e94;
 
 ; Referenced from offset 0x3f08 <bootloader> by rjmp
@@ -9787,7 +9787,7 @@ Label_0x3f92:
 3f98:   33 95           r19++;
 3f9a:   06 e0           r16 = 6;                            ; 0x06
 3f9c:   0c b9           IO[UDR] = r16;
-3f9e:   01 d0           Function_0x3fa2();
+3f9e:   01 d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
 3fa0:   79 cf           goto Label_0x3e94;
 
 ; Referenced from offset 0x3e8a <bootloader> by rcall
@@ -9798,7 +9798,7 @@ Label_0x3f92:
 ; Referenced from offset 0x3ee6 <bootloader> by rcall
 ; Referenced from offset 0x3f0e <bootloader> by rcall
 ; Referenced from offset 0x3f9e <bootloader> by rcall
-Function_0x3fa2:
+set_TCNT1_0xe17b_and_rest_TOV1_flag:
 3fa2:   0f 93           push    r16
 3fa4:   01 ee           r16 = 225;                          ; 0xe1
 3fa6:   0d bd           IO[TCNT1H] = r16;
@@ -9813,7 +9813,7 @@ Function_0x3fa2:
 ; Referenced from offset 0x3e98 <bootloader> by rcall
 ; Referenced from offset 0x3ec0 <bootloader> by rcall
 ; Referenced from offset 0x3eda <bootloader> by rcall
-Function_0x3fb4:
+get_TOV1_flag:
 3fb4:   0f 93           push    r16
 3fb6:   1f 93           push    r17
 3fb8:   08 b7           r16 = IO[TIFR];
