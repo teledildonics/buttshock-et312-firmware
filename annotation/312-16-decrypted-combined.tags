@@ -20,6 +20,7 @@
 0x0048	L		IVT_IRQ2
 0x004c	L		IVT_TIMER0_COMP
 0x0050	L		IVT_SPMRDY
+
 0x14a6	L		RESET
 0x0e66	L		IRQ0_Handler
 0x0e7c	L		IRQ1_Handler
@@ -175,6 +176,7 @@
 0x00c0	M	B	1	space_for_user_routine_scratchpad_a
 0x0180	M	B	1	write_lcd_parameter
 0x0181	M	B	1	write_lcd_position
+0x0185	M	B	8	mem_unknown_0x185				
 0x0188	M	B	8	mem_unknown_0x188				Copied from 0x1fa4
 0x0190	M	B	1	channel_a_current_gate_value			Copied from 0x1fa4+8, 0 when no output
 0x0191	M	B	1	mem_unknown_0x191				Copied from 0x1fa4+9
@@ -231,6 +233,10 @@
 0x020a	M	B	1	mem_unknown_0x20a
 0x020b	M	B	2	OCR1_addition
 0x020d	M	B	1	current_multi_adjust_value
+0x020e	M	B	1	mem_unknown_0x20e
+0x020f	M	B	1	mem_unknown_0x20f
+0x0210	M	B	1	mem_unknown_0x210
+0x0211	M	B	1	mem_unknown_0x211
 0x0212	M	B	1	mem_unknown_0x212
 0x0213	M	B	1	cipher_key
 0x0214	M	B	1	com_buffer_incrementer
