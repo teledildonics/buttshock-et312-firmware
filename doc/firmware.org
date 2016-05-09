@@ -1,82 +1,252 @@
-* ET-312 Firmware Reverse Engineering
+* ET-312 Firmware / Hardware Reverse Engineering
 ** Introduction
-This document contains notes about the reverse engineering efforts
-against the firmware of the [[http://shop.erostek.com/products/ET312B-Power-Unit.html][ET-312B Electrostimulation Device]],
-including what is currently known about the firmware, and different
-attack vectors. The goal is to provide an unencrypted version of the
-ET-312B firmware that can be modified and upgraded.
+This document contains notes about the reverse engineering efforts against the
+firmware of the
+[[http://shop.erostek.com/products/ET312B-Power-Unit.html][ET-312B
+Electrostimulation Device]]. 
 
-This will hopefully be updated as progress continues, mainly so I
-don't have to repeat myself over IRC/Twitter/Telegram/Etc.
+This box has been on the market since 2001, and is still being sold. Firmware
+development has stopped around the year 2004, despite many known bugs and
+limitations. Still, the ET-312B remains one of the most popular E-Stim units.
+The motivation behind the reverse engineering efforts is allowing long standing
+bugs to be fixed, and its functionality to be extended by opening up firmware
+development to the community.
 
-There's also a good chance we're missing something obvious, so if you
-see something here we've missed, please [[https://github.com/metafetish/erosoutsider/issues][file a github issue and let us
-know!]]
+Since the firmware is closely tied to the physical implementation of the box,
+it is also necessary to map the ET-312 schematics and document the interaction
+between soft- and hardware. Because different hardware revisions exist, and not
+all of them are firmware compatible, the differences between revisions need to
+be analyzed.
 
-** tl;dr Problem Summary
+** Goals
 
-For those that are just curious what we're up to and what we're
-running into:
+- Extract image from encrypted vendor firmware update files
+- Extract the bootloader from existing boxes, creating a raw image that can be used to flash a blank chip
+- Create custom firmware update files that can safely be flashed without require hardware modifications
+- Analyze firmware and map out any hidden functionality
+- Create a system to easily patch/augment existing firmware
+- Create full schematics, including differences between board revisions
+- Decompile and annotate the stock firmware
+- Create an easy to use firmware development toolchain
+- Create a firmware version that works on all box revisions
+- Re-Write a custom firmware functionally equivalent to stock firmare as a basis for future developments
 
-We want an unencrypted version of the firmware for the ET-312B, which
-has an ATMega16 in it.
+** Hardware Overview
+*** Main Processor
+The ET-312B runs on an ATMega16 microcontroller. There is no external memory,
+everything exists in memory on the chip. From the factory, all fuses are set on
+the chip, locking out JTAG access or the ability to read out the flash or
+bootloader via SPI. Starting with V1.4 or higher, the main firmware is field
+upgradeable via the built in serial port. The only way to upgrade older units
+or to flash your own bootloader is to unsolder the microcontroller, and either
+erase it with an external programmer or replace it with your own chip. The I/O
+Pins are used as follows:
 
-We have:
+#+BEGIN_EXAMPLE
 
-- An ET-312B Box
-- 2 Firmware upgrade files for the box, [[https://github.com/metafetish/erosoutsider/tree/master/firmware][available here]]
+01 PB0    Pulse A Push
+02 PB1    Pulse A Pull
+03 PB2    Pulse B Push
+04 PB3    Pulse B Pull
+05 PB4    Radio (U6 Pin2)
+06 PB5    DAC / Data (U8 Pin4)
+07 PB6    Radio (U6 Pin6)
+08 PB7    DAC / Clock (U8 Pin5) + Radio (U6 Pin7)
+09 RESET  Reset
+10 VCC    +5V
+11 GND    GND
+12 XTAL2  Quartz (X1 Pin 1)
+13 XTAL1  Quartz (X1 Pin 3)
+14 RXD    UART RXD
+15 TXD    UART TXD
+16 PD2    Audio Digital A (U2 Pin 14)
+17 PD3    Audio Digital B (U2 Pin 8)
+18 PD4    DAC / CS (U8 Pin3)
+19 PD5    LED Channel B (low active)
+20 PD6    LED CHannel A (low active)
+21 PD7    LCD Backlight (LCD Pin 16)
+22 PC0    MUX LCD/Switches (U3 Pin 5,6,12,13)
+23 PC1    (LCD Pin 5 = R/W)
+24 PC2    (LCD Pin 6 = ENABLE)
+25 PC3    (LCD Pin 4 = RS)
+26 PC4    LCD Data Bus 4 (LCD Pin 11 = DB4) / Button Down (via U3)
+27 PC5    LCD Data Bus 5 (LCD Pin 12 = DB5) / Button OK   (via U3)
+28 PC6    LCD Data Bus 6 (LCD Pin 13 = DB6) / Button Up   (via U3)
+29 PC7    LCD Data Bus 7 (LCD Pin 14 = DB7) / Button Menu (via U3)
+30 AVCC   +5V
+31 GND    GND
 
-These files are somehow obfuscated or encrypted, and the bootloader on
-the ATMega16 undoes that encryption when we upload the firmware to the
-chip. Due to fuses being set on the chip, we can't access the flash or
-bootloader through JTAG or other hardware debugging methods. Due to
-the chip being a harvard architecture, we can't screw with the stack
-and inject instructions 'cause we don't have access to code space.
-While we know that the flash will contain AVR assembly, strings, etc,
-we aren't sure what order the upgrade file is in, or where those
-things might be in it.
+#+END_EXAMPLE
 
-** What We Know Currently
-*** System Specifics
-The ET-312B runs on an ATMega16A chip. There is no external
-RAM/EEPROM/etc, everything exists in memory on the chip.
+*** Display / LEDs / Buttons
 
-All fuses are set on the chip, locking out JTAG access or the ability
-to read out the flash or bootloader.
-*** Firmware Versions
-**** Known Versions
+The Display is a Winstar WH1602A two-line 16 character LCD. It has the usual
+hd44780/st066u interface, but the pins are out of order. It is used in 4-bit
+mode and can be conrolled via ports PC1-PC7. The backlight is controlled via
+PD7. There are two red LEDs in the front panel connected to D5/D6, low active.
+The front panel tact switches share lines PC4-PC7 and are multiplexed with a
+cd4066 switch IC which is connected to port PC0. That means, you have to pull
+PC0 low each time you want to read the buttons, and high when you want to write
+to the LCD. 
 
-***** v1.0 (2001)
+*** Potentiometers
+
+The A/B Level Potentiometers go straight to ADC5 and ADC6, so they are stricly
+used as input devices. They have no other electrical function. The "Multi
+Adjust" pot is a complicated afair. It is a stereo pot which sets both the
+audio input level and certain program parameters inside the MCU. The audio
+signal is directly routed through the pot, which acts as a straightforward
+volume adjustment. Additionally, there is a bias voltage added to channel A,
+which is later routed to ADC1 so the firmware can measure the position of the
+pot independenty from any audio input. 
+
+*** Audio Input
+
+You night have noticed that the two audio channels never seem to react quite
+the same, even if you supply them with exactly the same input level. This is
+because there is a bit of trickery going on. Channel A is AC coupled, and
+Channel B is DC coupled, which enables Channel B to be used as a sort of wired
+remote control by feeding between 0 and 2V DC into the audio jack. This feature
+is actually documented in the users manual, but it is only available on Channel
+B - because Channel A already uses DC internally to detect the multi adjust
+potentiometer position. The microphone signal is mixed in with the Channel B
+Audio input, and the amplification is appropriate for a typial  electret
+"Soundblaster" microphone. 
+
+*** Power Supply
+
+The box runs on a main supply voltage between 12 and 15V, either supplied by an
+internal 12000mAh Lead/Acid gel battery or an external charger. There are two
+versions of the box "ET-312" and "ET-312B" and only the latter will have the
+built in battery. The power supply will run the box at 12V, but 15V are
+required to charge the battery. Charge current is regulated via a LM2941CT.
+Internally, the 12V rails is regulated down to a 5V rail for the digital part
+via a 78m05 and to two 9V rails, one for each output channel, via a 78m09.
+
+The power supply voltages can be monitored via the MCU through ADC2 (External
+Power) and ADC3 (Battery Power). The firmware will shut the unit down when
+undervoltage is detected.
+
+*** Output Stage
+
+The output stage is identical for both channels. The input voltage is supplied
+via an external DAC, which differes between board revisions. Boards up to Rev.F
+use the MAX548, newer revisions use the LTC1661. The two DACs are not
+compatible, and require differences in Firmware. Data, Clock and Chip Select go
+to PB5, PB7 and PD4. The actual power stage is similar to an amplifier in
+push/pull configuration, each side driven by a digital pin on the MCU
+(PB0-PB3). A step up transformer (approx 1:4.7 ratio) then feeds the
+electrodes.
+
+*** Radio Control
+
+Earlier Boards (Revision D+E) have a few unpopulated pads, and their layout and
+silkscreen markers hint at a planned radio module that was apparantly never
+implemented - most likely for economical reasons. The layout suggests that it
+might fit a standard 443 Mhz module like it is used in the ET302. It is
+connected via the unpopulated U6 to PB4, PB6 and PB7. If the software side is
+implemented, it might be possible to retrofit older units.
+
+*** Serial Port
+
+The "Link" jack goes through a buffer circuit directly to the UART lines of the
+MCU. The default transfer settings are 19200/8/n/1. The serial port can be used
+to control the box during operation, see
+https://github.com/metafetish/buttshock-protocol-docs for documentation. In
+bootloader mode, it can also be used to upload firmware updates.
+
+** Hardware Revisions
+
+These are the hardware revisions that have been spotted in the wild so far. If
+your box comes with Firmware V1.5 or earlier, you will likely have board
+Revision E or earlier. The only way to determine the exact hardware revision is
+to open the box, and look at the version number on the silkscreen.
+
+*** Revision D
+
+- Silkscreen: Rev.D / (C) 2001 ETP
+- DAC: MAX648
+- Firmware: 1.0-1.3 (Possibly compatible to 1.4/1.5, but no upgrade via serial)
+- Unpopulated Radio Module: Yes
+- Chips covered with potting compound: Yes
+
+*** Revision E
+
+- Silkscreen: Rev.E / (C) 2001 ETP
+- DAC: MAX648
+- Firmware: 1.4-1.5
+- Unpopulated Radio Module: Yes
+- Chips covered with potting compound: Yes
+
+*** Rev G
+
+- Silkscreen: Rev.G (C) 2001-2003 ETP
+- DAC: LTC1661
+- Firmware: 1.6
+- Unpopulated Radio Module: No
+- Chips covered with potting compound: No
+
+*** Rev H
+
+- Silkscreen: Rev.H (C) 2001-2006 ETP
+- DAC: LTC1661
+- Firmware: 1.6
+- Unpopulated Radio Module: No
+- Chips covered with potting compound: No
+
+*** Rev I
+
+- Silkscreen: Rev.I (C) 2001-2014 ETP
+- DAC: LTC1661
+- Firmware: 1.6
+- Unpopulated Radio Module: No
+- Chips covered with potting compound: No
+
+** Software Revisions
+
+(This information is gathered from internal changelogs sent to beta testers and through firmware analysis)
+
+*** Known Versions
+
+**** v1.0 (2001)
 
 - Initial Release
 
-***** v1.1:
-***** v1.2:
-***** v1.3:
+**** v1.1:
+**** v1.2:
+**** v1.3:
+
 - Improved battery charge display on power up. 
 - Improved audio processing for phaser/rxtc/stereostim files 
 - A few modes were tweaked slightly 
 
-***** V1.4: 
+**** V1.4: 
 
 - Hardware/firmware modified to allow field firmware upgrades 
 - Bug fixed in random number generation routine 
 - MultiAdjust calculation improved 
 
-***** V1.5 (2002 / 2003): 
+**** V1.5 (2002 / 2003): 
+
 - Bug fixed that causes a shutdown condition on a very small number of units 
 
-***** V1.6 (2004): 
+**** V1.6 (2004): 
+
 - Support new hardware revision. 
 - Cures "Failure 77" error on new hardware revision
 
-***** Compatibility
+**** Compatibility
 
-There are at least three incompatible hardware revisions. Old boxes run firmware v1.3 or earlier, and do not allow field updates via serial. Some boxes will run firmware v1.4 and v1.5 and allow field updates. The newest hardware revision only run v1.6. 
+There are at least three incompatible hardware revisions. Old boxes run
+firmware v1.3 or earlier, and do not allow field updates via serial. Some boxes
+will run firmware v1.4 and v1.5 and allow field updates. The newest hardware
+revision only run v1.6. 
 
 ***** Inconsistencies
 
-There seem to be two variations of v1.5 Firmware out in the wild. They show the same version Number but different copyright dates. The v1.5 image from the ErosTek download site says:
+There seem to be two variations of v1.5 Firmware out in the wild. They show the
+same version Number but different copyright dates. The v1.5 image from the
+ErosTek download site says:
 
 #+BEGIN_EXAMPLE
 (c) '02 ErosTek
@@ -115,535 +285,56 @@ firmware upgrade website:
 These files (312-15.upg and 312-16.upg), are also available in the
 [[http://github.com/metafetish/erosoutsider/][Erosoutsider Repo]].
 
-**** Analysis and Assumptions
-Some assumptions about the upgrade files:
+**** Encryption
 
-- Neither file is a plaintext flash image. They've been at least
-  obfuscated, if not fully encrypted, and possibly rearranged. Since
-  we don't have access to the bootloader code, there's no telling what
-  they could be. We just know that somewhere in here is the code to
-  run the ET312.
-- Both firmware files are 15872 bytes, which is 16384 - 512. Since the
-  bootloader takes up 512 bytes of the Flash, there's a good chance
-  the upgrade files could just be images of the rest of the flash.
-- It is assumed that these files are encrypted via some sort of stream
-  cipher, mainly due to the patterns that emerge when comparing them
-  (see below). The serial protocol used a simple XOR cipher [[../doc/et312-protocol.org][(more
-  information on this is available in the serial protocol
-  documentation)]], so there's a chance this could be similarly simple.
+The firmware files use a simple XOR stream cypher. Bytes are encoded in groups
+of three, with a different transform being performed on each key byte in the
+group. In python it looks roughly like this (check fw-utils.py for the full
+story):
+
+#+BEGIN_EXAMPLE
+ KEYS = [0x65, 0xed, 0x83]
+ IV = [0xb9, 0xfe, 0x8f]
+
+ def decrypt(self):
+        funcs = {0: lambda x: ((x ^ 0x62) + 0x41) & 0xff,
+                 1: lambda x: (n >> 4) | ((n & 0x0f) << 4),
+                 2: lambda x: x}
+
+        for i in range(0, len(self.input_file)):
+            n = self.input_file[i]
+            choice = i % 3
+            output = funcs[choice](n) ^ self.iv[choice] ^ self.KEYS[choice]
+            self.output_file.write(bytearray([output]))
+            self.iv[choice] = n
+#+END_EXAMPLE
+
+*** Checksum
+
+The firmware image itself containts three checksum bytes at offset 0x3DF0 which
+are checked by the bootloader. The first byte is a simple XOR of all bytes from
+0x0000-0x3DEF. Byte two and three are an equally simple 16-bit sum of all byte
+values.
+
+#+BEGIN_EXAMPLE
+    def generate_crc(self):
+        xor = 0
+        add = 0
+        for c in range(15872 - 16):
+            xor ^= self.input_file[c]
+            add += self.input_file[c]
+        return [xor, (add & 0xff), ((add >> 8) & 0xff)]
+#+END_EXAMPLE
 
 *** Upload/Upgrade Process
-To upgrade the firmware on the box, the upgrade file is simply
-transferred via the [[https://en.wikipedia.org/wiki/XMODEM][XMODEM protocol]]. Full instructions for upgrading
-are listed in the Reference section of this document.
-** Methods
-*** JTAG/Stack Smashing/Etc to Get At Flash
-**** Basic Idea
-Use either hardware debuggers or screwing with the stack in RAM to get
-at the flash
-**** Activity/Progress
-No luck here.
 
-JTAG or hardware debugging in general is dead from the start despite
-there being a JTAG header on the board, due to the fuses being set.
+To upgrade the firmware on the box, you need to first enter bootloader mode by
+holding the MENU/UP buttons while turning the unit on. The upgrade file is then
+simply transferred via the [[https://en.wikipedia.org/wiki/XMODEM][XMODEM
+protocol]] over the serial line. (Bits per second=19200, Data bits=8,
+Parity=None, Stop bits=1, Flow control=None). Only the original XMODEM with 128
+byte packets will work, 1024 byte packets are not supported. The Ch A and Ch B
+lights will flash randomly as the data is transferred to the ET-312. DO NOT
+interrupt this process in any way. When the transfer is completed, the ET-312
+will reset and the display should show the new version of the software.
 
-Screwing with the stack doesn't do use much good because this is a
-harvard architecture chip, so we can't really inject instructions in a
-useful manner since all of the code sits in another address space
-anyways. The best we might be able to do is play with return addresses
-to figure out where things are in flash and try to match that to the
-upgrade file in order to produce plaintext.
-
-*** Serial Protocol Work
-**** Basic Idea
-The basics of the Serial Protocol is already reverse engineered. It
-provides a peek/poke interface on top of a weird virtual memory like
-system, able to access parts of the ROM, RAM, and EEPROM.
-
-More information on the serial protocol is available at
-
-https://github.com/metafetish/erosoutsider/wiki/Serial-Protocol
-
-**** Activity
-This is probably the best vector for retrieving the firmware. The RAM
-address space contains all of the processor registers, IO registers,
-and the stack. All of those areas are writable, giving us a lot of
-freedom in what we can do.
-
-***** Mode String Glitching Method 
-
-For instance, using the [[https://github.com/metafetish/erosoutsider-py][erosoutsider-py]] library, we can run the
-following code (eo refers to an ErosOutsider object):
-
-#+BEGIN_SRC python
-e = ErosOutsiderSerial("/dev/ttyUSB0")
-e.perform_handshake()
-eo.write_sync(0x4014, 0x09)
-eo.write_sync(0x4015, 0x04)
-eo.write_sync(0x4016, 0x03)
-eo.write_sync(0x4017, 0x24)
-#+END_SRC
-
-This block overwrites r14-r17, causing the box to error and display a
-"Shut Down Power!!" message on the LCD screen. If we then hit the "Up"
-button, we are taken to the mode menu, but the string offset is wrong,
-so instead of showing the mode name, we get random parts of other
-strings.
-
-Assuming the "Up" button is pressed enough times, we start getting
-gibberish on the LCD screen, meaning we've jumped over the string
-boundaries and are in program space.
-
-The CPU is most likely talking I2C or SPI to the LCD controller board,
-so assuming we can come up with a script that can glitch this
-correctly and play with the string offset, we could use a logic
-analyzer to dump the firmware via the LCD, and reassemble it on the
-host machine.
-
-*Update:* The LCD panel is a standard HD44780 compatible board, and is interfaced via a parallel port.
-
-*** Partial ROM dumps
-
-By reading virtual adresse $0000-$00ff we can get 256 bytes of ROM content. ErosLink uses this page to extract the ROM version number.
-
-Dump from v1.5
-
-#+BEGIN_EXAMPLE
-00000000  20 55 73 65 72 20 32 20  20 55 73 65 72 20 33 20  | User 2  User 3 |
-00000010  20 55 73 65 72 20 34 20  20 55 73 65 72 20 35 20  | User 4  User 5 |
-00000020  20 55 73 65 72 20 36 20  20 55 73 65 72 20 37 20  | User 6  User 7 |
-00000030  53 70 6c 69 74 20 41 3a  53 70 6c 69 74 20 42 3a  |Split A:Split B:|
-00000040  53 65 6c 20 46 61 76 3a  52 61 6d 70 69 6e 67 20  |Sel Fav:Ramping |
-00000050  53 61 76 65 64 21 20 20  4c 69 6e 6b 65 64 21 20  |Saved!  Linked! |
-00000060  4d 61 73 74 65 72 20 20  53 6c 61 76 65 20 20 20  |Master  Slave   |
-00000070  20 20 20 20 25 20 20 20  41 20 20 20 42 20 20 20  |    %   A   B   |
-00000080  52 61 6d 70 3a 20 20 20  20 20 20 20 20 20 20 20  |Ramp:           |
-00000090  20 20 20 20 20 20 20 20  00 00 00 00 00 00 02 00  |        ........|
-000000a0  00 03 0f ff 00 00 00 00  00 00 08 00 06 00 00 00  |................|
-000000b0  00 ff 00 00 3e 3e 00 00  9c 9c ff 07 01 fc fc 01  |....>>..........|
-000000c0  00 ff cd ff 01 01 ff ff  00 00 16 09 64 01 01 ff  |............d...|
-000000d0  ff 08 00 82 32 c8 01 01  ff ff 04 00 c0 2c 20 87  |....2........, .|
-000000e0  02 77 76 76 e1 14 d7 01  19 05 82 05 cd ff 01 78  |.wvv...........x|
-000000f0  a5 ff 01 64 0f fa 01 64  46 fa 01 64 0c 01 05 00  |...d...dF..d....|
-#+END_EXAMPLE
-
-Dump from v1.6
-
-#+BEGIN_EXAMPLE
-00000000  20 55 73 65 72 20 32 20  20 55 73 65 72 20 33 20  | User 2  User 3 |
-00000010  20 55 73 65 72 20 34 20  20 55 73 65 72 20 35 20  | User 4  User 5 |
-00000020  20 55 73 65 72 20 36 20  20 55 73 65 72 20 37 20  | User 6  User 7 |
-00000030  53 70 6c 69 74 20 41 3a  53 70 6c 69 74 20 42 3a  |Split A:Split B:|
-00000040  53 65 6c 20 46 61 76 3a  52 61 6d 70 69 6e 67 20  |Sel Fav:Ramping |
-00000050  53 61 76 65 64 21 20 20  4c 69 6e 6b 65 64 21 20  |Saved!  Linked! |
-00000060  4d 61 73 74 65 72 20 20  53 6c 61 76 65 20 20 20  |Master  Slave   |
-00000070  20 20 20 20 25 20 20 20  41 20 20 20 42 20 20 20  |    %   A   B   |
-00000080  52 61 6d 70 3a 20 20 20  20 20 20 20 20 20 20 20  |Ramp:           |
-00000090  20 20 20 20 20 20 20 20  ff ff ff ff 00 00 02 00  |        ........|
-000000a0  00 03 0f ff 00 00 00 00  00 00 08 00 06 00 00 00  |................|
-000000b0  00 ff 00 00 3e 3e 00 00  9c 9c ff 07 01 fc fc 01  |....>>..........|
-000000c0  00 ff cd ff 01 01 ff ff  00 00 16 09 64 01 01 ff  |............d...|
-000000d0  ff 08 00 82 32 c8 01 01  ff ff 04 00 c0 2c 20 87  |....2........, .|
-000000e0  02 77 76 76 e1 14 d7 01  19 05 82 05 cd ff 01 78  |.wvv...........x|
-000000f0  a5 ff 01 64 0f fa 01 64  46 fa 01 64 0c 01 06     |...d...dF..d...|
-#+END_EXAMPLE
-
-The Data that can be extracted via the stringtable glitch overlaps with these pages. The following has been extracted from v1.6:
-
-#+BEGIN_EXAMPLE
-00000000: 5368 7574 204f 6666 2050 6f77 6572 2121  Shut Off Power!!
-00000010: 5365 6c66 5465 7374 204f 4b20 5631 2e36  SelfTest OK V1.6
-00000020: 2863 2920 2730 3420 4572 6f73 2054 656b  (c) '04 Eros Tek
-00000030: 4572 6f73 2054 656b 2045 542d 3331 3220  Eros Tek ET-312 
-00000040: 5072 6573 7320 416e 7920 4b65 792e 2e2e  Press Any Key...
-00000050: b320 b420 5365 6c65 6374 7320 4d6f 6465  . . Selects Mode
-00000060: 5072 6573 7320 b320 b420 6f72 204f 4b20  Press . . or OK 
-00000070: 5374 6172 7420 5261 6d70 2055 703f 2020  Start Ramp Up?  
-00000080: 5365 7420 5370 6c69 7420 4d6f 6465 3f20  Set Split Mode? 
-00000090: 5365 7420 4173 2046 6176 6f72 6974 653f  Set As Favorite?
-000000a0: 5365 7420 5077 7220 4c65 7665 6c3f 2020  Set Pwr Level?  
-000000b0: 4c69 6e6b 2053 6c61 7665 2055 6e69 743f  Link Slave Unit?
-000000c0: 5361 7665 2053 6574 7469 6e67 733f 2020  Save Settings?  
-000000d0: 5265 7365 7420 5365 7474 696e 6773 3f20  Reset Settings? 
-000000e0: 4164 6a75 7374 2041 6476 616e 6365 643f  Adjust Advanced?
-000000f0: 5261 6d70 3a20 2020 20b3 b43d 4d6f 6465  Ramp:    ..=Mode
-00000100: 2020 2020 2020 2020 2020 2020 2020 2020                  
-00000110: 2020 2020 2020 2020 5365 6c65 6374 3a20          Select: 
-00000120: 4261 7474 6572 793a 4661 696c 7572 6520  Battery:Failure 
-00000130: 5077 7220 4c65 763a 2041 646a 7573 743f  Pwr Lev: Adjust?
-00000140: 4d65 6e75 733a 2020 204c 6f77 2020 2020  Menus:   Low    
-00000150: 204e 6f72 6d61 6c20 2048 6967 6820 2020   Normal  High   
-00000160: 5261 6d70 4c65 766c 5261 6d70 5469 6d65  RampLevlRampTime
-00000170: 2020 2044 6570 7468 2020 2054 656d 706f     Depth   Tempo
-00000180: 2020 2046 7265 712e 2020 4566 6665 6374     Freq.  Effect
-00000190: 2020 2057 6964 7468 2020 2020 5061 6365     Width    Pace
-000001a0: 2057 6176 6573 2020 2053 7472 6f6b 6520   Waves   Stroke 
-000001b0: 2043 6c69 6d62 2020 2043 6f6d 626f 2020   Climb   Combo  
-000001c0: 2049 6e74 656e 7365 2052 6879 7468 6d20   Intense Rhythm 
-000001d0: 2041 7564 696f 2031 2041 7564 696f 2032   Audio 1 Audio 2
-000001e0: 2041 7564 696f 2033 2053 706c 6974 2020   Audio 3 Split  
-000001f0: 2052 616e 646f 6d31 2052 616e 646f 6d32   Random1 Random2
-00000200: 2054 6f67 676c 6520 204f 7267 6173 6d20   Toggle  Orgasm 
-00000210: 2054 6f72 6d65 6e74 2050 6861 7365 2031   Torment Phase 1
-00000220: 2050 6861 7365 2032 2050 6861 7365 2033   Phase 2 Phase 3
-00000230: 2055 7365 7220 3120 2055 7365 7220 3220   User 1  User 2 
-00000240: 2055 7365 7220 3320 2055 7365 7220 3420   User 3  User 4 
-00000250: 2055 7365 7220 3520 2055 7365 7220 3620   User 5  User 6 
-00000260: 2055 7365 7220 3720 5370 6c69 7420 413a   User 7 Split A:
-00000270: 5370 6c69 7420 423a 5365 6c20 4661 763a  Split B:Sel Fav:
-00000280: 5261 6d70 696e 6720 5361 7665 6421 2020  Ramping Saved!  
-00000290: 4c69 6e6b 6564 2120 4d61 7374 6572 2020  Linked! Master  
-000002a0: 536c 6176 6520 2020 2020 2020 2520 2020  Slave       %   
-000002b0: 4120 2020 4220 2020 5261 6d70 3a20 2020  A   B   Ramp:   
-000002c0: 2020 2020 2020 2020 2020 2020 2020 2020                  
-000002d0: ffff ffff 0000 0200 0003 0fff 0000 0000  ................
-000002e0: 0000 0800 0600 0000 00ff 0000 3e3e 0000  ............>>..
-000002f0: 9c9c ff07 01fc fc01 00ff cdff 0101 ffff  ................
-00000300: 0000 1609 6401 01ff ff08 0082 32c8 0101  ....d.......2...
-00000310: ffff 0400 c02c 2087 0277 7676 e114 d701  ....., ..wvv....
-00000320: 1905 8205 cdff 0178 a5ff 0164 0ffa 0164  .......x...d...d
-00000330: 46fa 0164 0c01 0600 8502 b202 aeff b30a  F..d............
-#+END_EXAMPLE
-
-
-***** Other Interesting Stuff
-Interesting facts from playing with memory using the protocol:
-
-- Reading from the EEPROM, there's strings stored in 8 byte chunks,
-  with spaces around them to buffer up to 8 characters if they aren't
-  already, and no null terminators. This may be a common way to
-  storing strings in the system, as for instance the pattern mode
-  names are all <=8 characters.
-
-*** File Comparison/Analysis
-**** Basic Idea
-Armed with a spec sheet, knowledge of AVR assembly and binary tools,
-pick at the upgrade files until either something makes sense or the
-heat death of the universe consumes us all.
-**** Activity/Progress
-While entropy tests run against the files using the [[https://www.phy.duke.edu/~rgb/General/dieharder.php][Dieharder Test
-Suite]] show that the files themselves are fairly random, comparing the
-files to each other shows some patterns. For instance, here is the
-first 256 bytes of each file:
-
-312-15.upg
-
-#+BEGIN_EXAMPLE
-00000000: ed78 3723 9920 5637 af04 4e2b 4e73 9382  .x7#. V7..N+Ns..
-00000010: 2984 f9ec 0ba5 a382 e9ad 4828 c45f 25e2  ).........H(._%.
-00000020: d0f1 4359 35a3 f574 24e2 4b1c 6d1b b5e6  ..CY5..t$.K.m...
-00000030: 53cc 5e99 d249 e453 c6b6 984d fc1e f530  S.^..I.S...M...0
-00000040: ffe2 4f81 6d1f 75e4 57c0 5c95 124b e85f  ..O.m.u.W.\..K._
-00000050: c4ba 984d bc39 6669 4774 deba 5b2a 6428  ...M.9fiGt..[*d(
-00000060: 62d1 acab 92d2 1dbe 4d51 3132 00e0 a335  b.......MQ12...5
-00000070: 81e0 a729 6ba3 b669 7dec 496e 903a 0129  ...)k..i}.In.:.)
-00000080: c36b 46d3 08ba f630 f5b5 d899 9085 7d46  .kF....0......}F
-00000090: c506 6a6c 12c7 0ac6 e14f 7fad 92de 86bf  ..jl.....O......
-000000a0: 99bc d2df 10c5 9118 1888 b1da 64a6 36f0  ............d.6.
-000000b0: 0509 2947 4f93 31cb 1895 6f31 360c df11  ..)GO.1...o16...
-000000c0: 4869 33ee eabf 080a 143a dc99 5f79 0aef  Hi3......:.._y..
-000000d0: 791d 2523 3c4c 96cf 2fb4 551f af73 fa7d  y.%#<L../.U..s.}
-000000e0: 5395 0736 7734 1f92 846c cc8b 697e 2c43  S..6w4...l..i~,C
-000000f0: 02ad 65ef aff1 f32b 71a3 2c58 4286 24a1  ..e....+q.,XB.$.
-#+END_EXAMPLE
-
-312-16.upg
-
-#+BEGIN_EXAMPLE
-00000000: ed78 5f23 9948 5637 c704 4e43 4e73 9382  .x_#.HV7..NCNs..
-00000010: 2984 11ec 0bfd 2582 31c5 4870 425f ed8a  ).....%.1.HpB_..
-00000020: d0b9 4359 eda3 f52c 24e2 961c 6d44 d4e6  ..CY...,$...mD..
-00000030: 8eda 36c2 b321 d145 aebd f925 f108 f53f  ..6..!.E...%...?
-00000040: 9ee2 aa97 6d78 92e4 b2be 34fe f523 e521  ....mx....4..#.!
-00000050: acb1 f925 b12f 0e62 261c d7ac 335d 0540  ...%./.b&...3].@
-00000060: 97c7 d4dc f3aa 14a8 055e 507a 09f6 eb32  .........^Pz...2
-00000070: e0a8 a23f 23a4 d721 44fa 0151 f172 383f  ...?#..!D..Q.r8?
-00000080: 8b50 279b 2dac be17 94fd f98f d8aa 1c0e  .P'.-...........
-00000090: e410 224f 738f 2bd0 a96c 1ee5 b3c8 ce9c  .."Os.+..l......
-000000a0: f8f4 f3c9 58ea f050 319e f9ed 05ee 03e6  ....X..P1.......
-000000b0: 4d3a 480f 7e85 79f8 79dd 5e27 7e3f be59  M:H.~.y.y.^'~?.Y
-000000c0: 757f 7bcd 8bf7 251c 5c11 bdd1 766f 42c4  u.{...%.\...voB.
-000000d0: 1855 0035 746b f787 0aa2 1d38 ce3b df6b  .U.5tk.....8.;.k
-000000e0: 1bbe 667e 5e22 57b5 e524 e59d 2151 4d0b  ..f~^"W..$..!QM.
-000000f0: 2fbb 2dc0 ceb9 de3d 398c 4d10 6f90 6c8a  /.-....=9.M.o.l.
-#+END_EXAMPLE
-
-However, XORing the two files together, interesting patterns emerge:
-
-#+BEGIN_EXAMPLE 
-00000000: 0000 6800 0068 0000 6800 0068 0000 0000  ..h..h..h..h....
-00000010: 0000 e800 0058 8600 d868 0058 8600 c868  .....X...h.X...h
-00000020: 0048 0000 d800 0058 0000 dd00 005f 6100  .H.....X....._a.
-00000030: dd16 685b 6168 3516 680b 6168 0d16 000f  ..h[ah5.h.ah....
-00000040: 6100 e516 0067 e700 e57e 686b e768 0d7e  a....g...~hk.h.~
-00000050: 680b 6168 0d16 680b 6168 0916 6877 6168  h.ah..h.ah..hwah
-00000060: f516 7877 6178 0916 480f 6148 0916 4807  ..xwax..H.aH..H.
-00000070: 6148 0516 4807 6148 3916 483f 6148 3916  aH..H.aH9.H?aH9.
-00000080: 483b 6148 2516 4827 6148 2116 482f 6148  H;aH%.H'aH!.H/aH
-00000090: 2116 4823 6148 2116 4823 6148 2116 4823  !.H#aH!.H#aH!.H#
-000000a0: 6148 2116 482f 6148 2916 4837 6148 3516  aH!.H/aH).H7aH5.
-000000b0: 4833 6148 3116 4833 6148 3116 4833 6148  H3aH1.H3aH1.H3aH
-000000c0: 3d16 4823 6148 2d16 482b 6148 2916 482b  =.H#aH-.H+aH).H+
-000000d0: 6148 2516 4827 6148 2516 4827 6148 2516  aH%.H'aH%.H'aH%.
-000000e0: 482b 6148 2916 4827 6148 2916 482f 6148  H+aH).H'aH).H/aH
-000000f0: 2d16 482f 6148 2d16 482f 6148 2d16 482b  -.H/aH-.H/aH-.H+
-#+END_EXAMPLE
-
-If we format the XOR output into blocks of 6 bytes each, some
-repetition starts to show up:
-
-#+BEGIN_EXAMPLE 
-0000 6800 0068
-0000 6800 0068
-0000 0000 0000
-e800 0058 8600
-d868 0058 8600
-c868 0048 0000
-d800 0058 0000
-dd00 005f 6100
-dd16 685b 6168
-3516 680b 6168
-0d16 000f 6100
-e516 0067 e700
-e57e 686b e768
-0d7e 680b 6168
-0d16 680b 6168
-0916 6877 6168
-f516 7877 6178
-0916 480f 6148
-0916 4807 6148
-0516 4807 6148
-3916 483f 6148
-3916 483b 6148
-2516 4827 6148
-2116 482f 6148
-2116 4823 6148
-2116 4823 6148
-2116 4823 6148
-2116 482f 6148
-2916 4837 6148
-3516 4833 6148
-3116 4833 6148
-3116 4833 6148
-3d16 4823 6148
-2d16 482b 6148
-2916 482b 6148
-2516 4827 6148
-2516 4827 6148
-2516 482b 6148
-2916 4827 6148
-2916 482f 6148
-2d16 482f 6148
-2d16 482f 6148
-2d16 482b 6148
-#+END_EXAMPLE
-
-There are also blocks of the XOR'd files where things turn to
-randomess:
-
-#+BEGIN_EXAMPLE 
-000010a0: 6446 ee64 c6ee 6442 ee64 c2ee 644e ee64  dF.d..dB.d..dN.d
-000010b0: ceee 644e ee64 c2ee 6442 ee64 c2ee 6442  ..dN.d..dB.d..dB
-000010c0: ee64 c2ee 644e ee64 c2ee 6442 ee64 c6ee  .d..dN.d..dB.d..
-000010d0: 6442 ee64 ceee 644e ee64 f2ee 6472 ee64  dB.d..dN.d..dr.d
-000010e0: f2ee 6472 ee64 f2ee 6472 fe15 0f24 7d47  ..dr.d..dr...$}G
-000010f0: cf93 990e 94b2 90b7 5f7b cf4c 60fd 3f0a  ........_{.L`.?.
-00001100: 9708 7021 4b21 535c 0431 2663 7125 53b1  ..p!K!S\.1&cq%S.
-00001110: fc23 e831 4d54 3188 5b1b 2a99 01d9 aa27  .#.1MT1.[.*....'
-00001120: 5dd2 5395 df5b 52fc e545 6462 7a6e a191  ].S..[R..Edbzn..
-00001130: 67ec 6883 c796 9443 d004 35a0 1459 db38  g.h....C..5..Y.8
-00001140: 4e17 3cc9 7139 d387 4533 47d1 ce81 5540  N.<.q9..E3G...U@
-00001150: f0c6 4551 4bea e24b 1647 cf42 8c70 dd8a  ..EQK..K.G.B.p..
-#+END_EXAMPLE
-
-Though the patterns start up against a bit later:
-
-#+BEGIN_EXAMPLE 
-00001c20: bb19 bf61 04b5 2dc0 e83f e9fe e7da ff6e  ...a..-..?.....n
-00001c30: 78ad 30e6 f7c1 1231 d5ad a7ca 8358 4e38  x.0....1.....XN8
-00001c40: 58c2 8358 4238 58c2 8358 5e38 58de 8358  X..XB8X..X^8X..X
-00001c50: 5e38 58a2 8358 a638 58ba 8358 be38 58b2  ^8X..X.8X..X.8X.
-00001c60: 8358 f3c7 a704 8358 65c7 a796 8358 97c7  .X.....Xe....X..
-00001c70: 5891 7c58 97c7 5899 7c58 9bc7 5899 7c58  X.|X..X.|X..X.|X
-#+END_EXAMPLE
-
-And then back to randomness a little later, until the end of the XOR
-file:
-
-#+BEGIN_EXAMPLE 
-000021a0: 7f7e 0ef7 7e0e 7f7e 0ef7 7e12 7f7e 1ef7  .~..~..~..~..~..
-000021b0: 7e1e 7f7e 1ef7 7e1e 7f7e 1af7 7e1a 7f7e  ~..~..~..~..~..~
-000021c0: 1af7 7e16 7f7e 2af7 7ad3 6dab 66d7 bb50  ..~..~*.z.m.f..P
-000021d0: 0b0d 2746 c850 2e5c a52b bed2 ee31 fb33  ..'F.P.\.+...1.3
-000021e0: 15e6 f6c8 d8b3 3bc4 54d9 cb38 b2d7 a9f3  ......;.T..8....
-000021f0: a8d4 4496 6ef7 7217 9c25 b590 3a92 1a76  ..D.n.r..%..:..v
-#+END_EXAMPLE
-
-It's doubtful that the actual firmware is 100% valid data, so there's
-a good chance that whatever utility was used to build the upgrade file
-might just be filling it with randomness.
-
-There's also assumptions that could be made about the order of the
-firmware. For instance, usually the AVR IVT is at the top of the flash
-address space, so there's a chance that the matching portions of the
-first sections of the 2 files are the IVTs, which probably don't
-change much. However, this idea hasn't gotten very far in practice.
-
-This may be an LFSR, see [[https://twitter.com/qDot/status/722620349653786624][this thread on twitter]]
-
-*** Brute Force Writing
-**** Basic Idea
-More a mapping technique than an attack, but by changing every Nth
-byte by a known value, we may be able to map parts of the upgrade file
-as we see strings change in the UI on the box.
-
-For instance, we can increase every 10th byte in a block of the
-firmware by a value of 1. Assuming the firmware runs, we can watch for
-misspelled/changed strings around the box UI.
-
-This is still perilous at best. Flash only has a certain number of
-guaranteed writes (yes it's in the 1000s but let's assume we're really
-bad at this and also the fact that...), and we've only got 1 box, so
-if that chip gets ruined before we figure this out, we have a problem
-(and no warranty).
-
-**** Activity/Progress
-The last 13 bytes of the firmware can be set to any value, and the box
-will still boot. Changing any other values will cause the box to boot
-directly into firmware upgrade mode, meaning there's probably a CRC
-check in the bootloader that's checking the integrity of the bits and
-not jumping if it finds an error. 
-
-Complete guess, but it's probably a CRC-16 that's the last 2 bytes.
-However, if those bytes are also encrypted, we're out of luck for
-changing much.
-
-*** LED Signals during Firmware Upload
-**** Basic Idea
-From step 12 of the "Upgrade Instructions" in the References section:
-
-12. Click Send and the file transfer should begin. The Ch A and Ch B
-    lights will flash randomly as the data is transferred to the
-    ET-312. DO NOT interrupt this process in any way.
-
-Nothing ever happens randomly.
-**** Activity/Progress
-Mapped LED A to be controlled by Pin 20 of the ATMega16, attached to a
-logic analyzer. During firmware upload, there's a signal that happens
-on this pin between packet upload and ACK response in the XMODEM
-protocol. The signal is repeatable between uploads. Further analysis
-required, but doubtful this is going anywhere.
-
-*** RF/Power Sidechannel channel/Glitching
-**** Basic Idea
-The fuuuuuuuuuuuuuuuuuture! While now feasible with projects like
-ChipWhisperer, not sure if it's all that applicable here.
-
-That said, if we could write one XMODEM packet then possibly see
-what's happening in the chip that way? Sure. But it's magic to us at
-the moment.
-**** Activity/Progress
-No real direction with this, require advice of grown up and/or magic
-person.
-
-*** Chip Uncapping
-**** Basic Idea
-Ship the chip and $800 or so somewhere and have them pop the top off
-and do magic to it.
-**** Activity/Progress
-What fun is that? :(
-*** Just Ask The Manufacturer to Open Source The Firmware
-**** Basic Idea
-Put on a nice outfit. Knock politely on the front door.
-**** Activity/Progress
-What fun is that? :(
-** References
-*** Upgrade Instructions
-This is a copy of the text from the Eroslink ET-312 Upgrade Instructions PDF, available at
-
-[[http://media.erostek.com.s3.amazonaws.com/support/312-16_firmware_upgrade.pdf][http://media.erostek.com.s3.amazonaws.com/support/312-16_firmware_upgrade.pdf]]
-
-Firmware Upgrade Instructions: ET-312 Version 1.6
-1. Connect the ErosLink cable to an unused Serial port on your PC.
-2. With the ET-312 off, connect the ErosLink cable to the Link jack of the ET-312.
-3. Go to the Start, Programs, Accessories, menu in Windows and find
-   Hyperterminal. It may be under Communications depending on which
-   version of windows you have.
-4. When Hyperterminal starts, wait for the welcome screen to go away
-   and then enter any name in the New Connection box such as "ET312"
-   and click OK.
-5. In the Connect To box, select the serial port used in Step 1 from
-   the Connect Using pull down menu. This will usually be COM1 - COM4.
-   Then click OK.
-6. In the Properties box, select the following options: Bits per
-   second=19200, Data bits=8, Parity=None, Stop bits=1, Flow
-   control=None and click OK.
-7. Hold down the Menu and Up buttons on the ET-312 at the same time,
-   then turn on the ET-312 while keeping them held down. The display
-   should be blank and the Ch A and Ch B LEDs should blink slowly. If
-   the ET-312 powers up normally, you did not hold down the buttons
-   correctly as try again.
-8. In Hyperterminal you should see a string of "C" characters appear
-   at about 1 per second. If you don't see anything or you see
-   different characters, Hyperterminal is not configured correctly or
-   there is a problem with the serial port. Shut down Hyperterminal
-   and try again selecting other available COM ports and make sure the
-   properties in Step 6 are correct.
-9. When you see the string of "C" characters in Hyperterminal, select
-   the Transfer menu and Send file. If you wait too long, you'll have
-   to power the ET-312 off and try again (the LEDs will stop
-   blinking).
-10. In the Send File box, make sure you select Xmodem as the protocol
-    (NOT Zmodem or 1k Xmodem).
-11. After Xmodem is selected, enter or Browse to the filename of the
-    new firmware. For example, the version 1.6 upgrade file is called
-    "312-16.upg".
-12. Click Send and the file transfer should begin. The Ch A and Ch B
-    lights will flash randomly as the data is transferred to the
-    ET-312. DO NOT interrupt this process in any way.
-13. When the transfer is completed, the ET-312 will power up normally
-    and the display should show the new version of the software. If
-    anything goes wrong, try again starting over from Step 1. If you
-    still can't make it work, contact ErosTek or SexTek for further
-    assistance.
-14. Once the transfer is complete, you can turn the ET-312 off, unplug
-    the cable, and close Hyperterminal (you do not need to save the
-    Hyperterminal session).
-*** Serial Protocol
-[[https://github.com/metafetish/erosoutsider/blob/master/doc/et312-protocol.org][Link to Serial Protocol Documentation]]
-*** Strings
-This is a partial list of strings found just playing around with the
-UI. Yes, we realize this makes us the human version of the "strings"
-utility.
-
-UI Strings:
-- Eros Tek ET312-B
-- SelfTest OK v1.6
-- (c) '04 Eros Tek
-- Press Any Key...
-- Ramp:
-- Battery:
-- Selects Mode
-
-(There's way more of these, will enter more later)
-
-Mode Names, in order of appearance while pressing "up" button:
-
-- Waves
-- Stroke
-- Climb
-- Combo
-- Intense
-- Rhythm
-- Audio 1
-- Audio 2
-- Audio 3
-- Split
-- Random1
-- Random2
-- Toggle
-- Orgasm
-- Torment
-- Phase 1
-- Phase 2
-- Phase 3
