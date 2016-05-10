@@ -5457,11 +5457,11 @@ Source: www.linear.com</description>
 <part name="P+11" library="supply1" deviceset="VCC" device="" value="+9V 1"/>
 <part name="IC7" library="adafruit" deviceset="78*" device="T" technology="05" value="7805"/>
 <part name="GND20" library="supply1" deviceset="GND" device=""/>
-<part name="P+12" library="supply1" deviceset="VCC" device="" value="+5V"/>
 <part name="R22" library="eagle-ltspice" deviceset="R" device="0207/10" value="100k"/>
 <part name="P+13" library="supply1" deviceset="VCC" device="" value="+9V 1"/>
 <part name="GND21" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="SUPPLY6" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
+<part name="SUPPLY7" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5507,7 +5507,7 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <instance part="P+11" gate="VCC" x="48.26" y="73.66"/>
 <instance part="IC7" gate="A1" x="68.58" y="71.12"/>
 <instance part="GND20" gate="1" x="68.58" y="58.42"/>
-<instance part="P+12" gate="VCC" x="83.82" y="73.66"/>
+<instance part="SUPPLY7" gate="G$1" x="86.36" y="73.66"/>
 </instances>
 <busses>
 </busses>
@@ -5641,6 +5641,12 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <junction x="99.06" y="124.46"/>
 <junction x="99.06" y="127"/>
 </segment>
+<segment>
+<pinref part="IC7" gate="A1" pin="VO"/>
+<wire x1="78.74" y1="71.12" x2="86.36" y2="71.12" width="0.1524" layer="91"/>
+<pinref part="SUPPLY7" gate="G$1" pin="5V"/>
+<wire x1="86.36" y1="71.12" x2="86.36" y2="73.66" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="JTAG7" class="0">
 <segment>
@@ -5682,14 +5688,14 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <label x="40.64" y="127" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="N$6" class="0">
+<net name="PB6" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="(MISO)PB6"/>
 <wire x1="147.32" y1="119.38" x2="157.48" y2="119.38" width="0.1524" layer="91"/>
 <label x="157.48" y="119.38" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="N$9" class="0">
+<net name="PB4" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="(SS)PB4"/>
 <wire x1="147.32" y1="114.3" x2="157.48" y2="114.3" width="0.1524" layer="91"/>
@@ -5715,10 +5721,138 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <wire x1="40.64" y1="71.12" x2="48.26" y2="71.12" width="0.1524" layer="91"/>
 <pinref part="P+11" gate="VCC" pin="VCC"/>
 </segment>
+</net>
+<net name="PB3" class="0">
 <segment>
-<pinref part="IC7" gate="A1" pin="VO"/>
-<pinref part="P+12" gate="VCC" pin="VCC"/>
-<wire x1="78.74" y1="71.12" x2="83.82" y2="71.12" width="0.1524" layer="91"/>
+<pinref part="U1" gate="G$1" pin="(AIN1/OC0)PB3"/>
+<wire x1="147.32" y1="111.76" x2="157.48" y2="111.76" width="0.1524" layer="91"/>
+<label x="157.48" y="111.76" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PB2" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(AIN0/INT2)PB2"/>
+<wire x1="147.32" y1="109.22" x2="157.48" y2="109.22" width="0.1524" layer="91"/>
+<label x="157.48" y="109.22" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PB1" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(T1)PB1"/>
+<wire x1="147.32" y1="106.68" x2="157.48" y2="106.68" width="0.1524" layer="91"/>
+<label x="157.48" y="106.68" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PB0" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(T0/XCK)PB0"/>
+<wire x1="147.32" y1="104.14" x2="157.48" y2="104.14" width="0.1524" layer="91"/>
+<label x="157.48" y="104.14" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PB5" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(MOSI)PB5"/>
+<wire x1="147.32" y1="116.84" x2="157.48" y2="116.84" width="0.1524" layer="91"/>
+<label x="157.48" y="116.84" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PB7" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(SCK)PB7"/>
+<wire x1="147.32" y1="121.92" x2="157.48" y2="121.92" width="0.1524" layer="91"/>
+<label x="157.48" y="121.92" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PA0" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(ADC0)PA0"/>
+<wire x1="147.32" y1="127" x2="157.48" y2="127" width="0.1524" layer="91"/>
+<label x="157.48" y="127" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PA2" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(ADC2)PA2"/>
+<wire x1="147.32" y1="132.08" x2="157.48" y2="132.08" width="0.1524" layer="91"/>
+<label x="157.48" y="132.08" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PA3" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(ADC3)PA3"/>
+<wire x1="147.32" y1="134.62" x2="157.48" y2="134.62" width="0.1524" layer="91"/>
+<label x="157.48" y="134.62" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PA6" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(ADC6)PA6"/>
+<wire x1="147.32" y1="142.24" x2="157.48" y2="142.24" width="0.1524" layer="91"/>
+<label x="157.48" y="142.24" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PA7" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(ADC7)PA7"/>
+<wire x1="147.32" y1="144.78" x2="157.48" y2="144.78" width="0.1524" layer="91"/>
+<label x="157.48" y="144.78" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PD0" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(RXD)PD0"/>
+<wire x1="147.32" y1="58.42" x2="157.48" y2="58.42" width="0.1524" layer="91"/>
+<label x="157.48" y="58.42" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PD1" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(TXD)PD1"/>
+<wire x1="147.32" y1="60.96" x2="157.48" y2="60.96" width="0.1524" layer="91"/>
+<label x="157.48" y="60.96" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PD2" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(INT0)PD2"/>
+<wire x1="147.32" y1="63.5" x2="157.48" y2="63.5" width="0.1524" layer="91"/>
+<label x="157.48" y="63.5" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PD3" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(INT1)PD3"/>
+<wire x1="147.32" y1="66.04" x2="157.48" y2="66.04" width="0.1524" layer="91"/>
+<label x="157.48" y="66.04" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PD4" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(OC1B)PD4"/>
+<wire x1="147.32" y1="68.58" x2="157.48" y2="68.58" width="0.1524" layer="91"/>
+<label x="157.48" y="68.58" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PD5" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(OC1A)PD5"/>
+<wire x1="147.32" y1="71.12" x2="157.48" y2="71.12" width="0.1524" layer="91"/>
+<label x="157.48" y="71.12" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PD6" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(ICP)PD6"/>
+<wire x1="147.32" y1="73.66" x2="157.48" y2="73.66" width="0.1524" layer="91"/>
+<label x="157.48" y="73.66" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PD7" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="(OC2)PD7"/>
+<wire x1="147.32" y1="76.2" x2="157.48" y2="76.2" width="0.1524" layer="91"/>
+<label x="157.48" y="76.2" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
@@ -6229,10 +6363,9 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <wire x1="165.1" y1="175.26" x2="167.64" y2="175.26" width="0.1524" layer="91"/>
 <wire x1="165.1" y1="172.72" x2="165.1" y2="175.26" width="0.1524" layer="91"/>
 <junction x="165.1" y="175.26"/>
-<wire x1="165.1" y1="175.26" x2="30.48" y2="175.26" width="0.1524" layer="91"/>
-<wire x1="30.48" y1="175.26" x2="30.48" y2="134.62" width="0.1524" layer="91"/>
-<wire x1="30.48" y1="134.62" x2="-12.7" y2="134.62" width="0.1524" layer="91"/>
-<label x="-12.7" y="134.62" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="165.1" y1="175.26" x2="119.38" y2="175.26" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="175.26" x2="114.3" y2="170.18" width="0.1524" layer="91"/>
+<label x="114.3" y="170.18" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="PB2" class="0">
@@ -6241,11 +6374,9 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <pinref part="R4" gate="G$1" pin="2"/>
 <wire x1="154.94" y1="114.3" x2="157.48" y2="114.3" width="0.1524" layer="91"/>
 <wire x1="154.94" y1="111.76" x2="154.94" y2="114.3" width="0.1524" layer="91"/>
-<wire x1="154.94" y1="114.3" x2="50.8" y2="114.3" width="0.1524" layer="91"/>
 <junction x="154.94" y="114.3"/>
-<wire x1="50.8" y1="114.3" x2="50.8" y2="132.08" width="0.1524" layer="91"/>
-<wire x1="50.8" y1="132.08" x2="-12.7" y2="132.08" width="0.1524" layer="91"/>
-<label x="-12.7" y="132.08" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="154.94" y1="114.3" x2="119.38" y2="114.3" width="0.1524" layer="91"/>
+<label x="119.38" y="114.3" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="N$18" class="0">
@@ -6359,13 +6490,11 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <segment>
 <pinref part="R13" gate="G$1" pin="1"/>
 <wire x1="167.64" y1="86.36" x2="165.1" y2="86.36" width="0.1524" layer="91"/>
-<wire x1="165.1" y1="86.36" x2="48.26" y2="86.36" width="0.1524" layer="91"/>
-<wire x1="48.26" y1="86.36" x2="48.26" y2="129.54" width="0.1524" layer="91"/>
-<wire x1="-12.7" y1="129.54" x2="48.26" y2="129.54" width="0.1524" layer="91"/>
+<wire x1="165.1" y1="86.36" x2="119.38" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="R12" gate="G$1" pin="2"/>
 <wire x1="165.1" y1="83.82" x2="165.1" y2="86.36" width="0.1524" layer="91"/>
 <junction x="165.1" y="86.36"/>
-<label x="-12.7" y="129.54" size="1.778" layer="95" rot="R180" xref="yes"/>
+<label x="119.38" y="86.36" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="N$24" class="0">
@@ -6423,11 +6552,9 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <wire x1="152.4" y1="25.4" x2="152.4" y2="27.94" width="0.1524" layer="91"/>
 <pinref part="R14" gate="G$1" pin="1"/>
 <wire x1="152.4" y1="27.94" x2="154.94" y2="27.94" width="0.1524" layer="91"/>
-<wire x1="45.72" y1="127" x2="45.72" y2="27.94" width="0.1524" layer="91"/>
-<wire x1="152.4" y1="27.94" x2="45.72" y2="27.94" width="0.1524" layer="91"/>
 <junction x="152.4" y="27.94"/>
-<wire x1="-12.7" y1="127" x2="45.72" y2="127" width="0.1524" layer="91"/>
-<label x="-12.7" y="127" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="152.4" y1="27.94" x2="106.68" y2="27.94" width="0.1524" layer="91"/>
+<label x="106.68" y="27.94" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="PB7" class="0">
@@ -6456,15 +6583,13 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <wire x1="205.74" y1="172.72" x2="205.74" y2="111.76" width="0.1524" layer="91"/>
 <pinref part="Q2" gate="G$1" pin="S"/>
 <wire x1="205.74" y1="111.76" x2="180.34" y2="111.76" width="0.1524" layer="91"/>
-<wire x1="-12.7" y1="149.86" x2="25.4" y2="149.86" width="0.1524" layer="91"/>
-<wire x1="25.4" y1="149.86" x2="25.4" y2="190.5" width="0.1524" layer="91"/>
-<wire x1="25.4" y1="190.5" x2="205.74" y2="190.5" width="0.1524" layer="91"/>
+<wire x1="177.8" y1="190.5" x2="205.74" y2="190.5" width="0.1524" layer="91"/>
 <wire x1="205.74" y1="190.5" x2="205.74" y2="172.72" width="0.1524" layer="91"/>
 <junction x="205.74" y="172.72"/>
 <wire x1="205.74" y1="83.82" x2="205.74" y2="111.76" width="0.1524" layer="91"/>
 <junction x="205.74" y="83.82"/>
 <junction x="205.74" y="111.76"/>
-<label x="-12.7" y="149.86" size="1.778" layer="95" rot="R180" xref="yes"/>
+<label x="177.8" y="190.5" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="N$33" class="0">
@@ -6559,10 +6684,8 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <pinref part="IC5" gate="-1" pin="SDI"/>
 <wire x1="93.98" y1="139.7" x2="99.06" y2="139.7" width="0.1524" layer="91"/>
 <wire x1="99.06" y1="139.7" x2="99.06" y2="132.08" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="132.08" x2="60.96" y2="132.08" width="0.1524" layer="91"/>
-<wire x1="60.96" y1="132.08" x2="60.96" y2="139.7" width="0.1524" layer="91"/>
-<wire x1="-12.7" y1="139.7" x2="60.96" y2="139.7" width="0.1524" layer="91"/>
-<label x="-12.7" y="139.7" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="99.06" y1="132.08" x2="55.88" y2="132.08" width="0.1524" layer="91"/>
+<label x="55.88" y="132.08" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 </nets>
