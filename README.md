@@ -76,16 +76,33 @@ disassembly, use the following command, with paths changed as needed
 (this command assumes the avrdisas repo is next to this repo):
 
 ```
-bin/avrdisas -a1 -o1 -c1 -p1 -l1 -mm16 -t../erosoutsider-et312-firmware/annotation/312-16-decrypted.tags ../erosoutsider-et312-firmware/firmware/312-16-decrypted.bin > 312-16-decrypted.hex
+bin/avrdisas -a1 -o1 -c1 -p1 -l1 -mm16 -t../buttshock-et312-firmware/annotation/312-16-decrypted.tags ../buttshock-et312-firmware/firmware/312-16-decrypted.bin > 312-16-decrypted.hex
 ```
 
-## Other Erosoutsider Projects
+## Hardware Images and Schematics
 
-For more information on other Erosoutsider projects, including serial
+Images of various revisions of the ET-312 circuit board are available
+as a submodule to this repo. To download these images, use the
+following command while in the directory for this repo:
+
+```
+git submodule update --init
+```
+
+Note that the images directory is about 220mb, and therefore might
+take a bit to download. They will be downloaded into the
+hardware/images directory.
+
+Datasheets, schematic drawings and Eagle files for Revision E of the
+board are also available in the hardware directory.
+
+## Other Buttshock Projects
+
+For more information on other Buttshock projects, including serial
 control for various boxes and other firmware, please see the main
-erosoutsider repo README at
+metafetish organization page at
 
-https://github.com/metafetish/erosoutsider
+https://github.com/metafetish/
 
 ## FAQ
 
@@ -110,7 +127,7 @@ their box, it saves a lot of trouble for everyone involved.
 
 ## License
 
-All original code and documentation for the Erosoutsider Firmware is
+All original code and documentation for the Buttshock Firmware is
 covered under the following BSD license:
 
     Copyright (c) 2016, The Buttshock Project
@@ -131,13 +148,13 @@ covered under the following BSD license:
     THIS SOFTWARE IS PROVIDED BY The Buttshock Project ''AS IS'' AND
     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
     THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-    PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Kyle
-    Machulis/Nonpolynomial Labs BE LIABLE FOR ANY DIRECT, INDIRECT,
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-    OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-    EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
+    PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL The Buttshock
+    Project BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+    EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+    TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+    ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+    THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+    SUCH DAMAGE
 
