@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 import argparse
 import copy
+import urllib.request
+import os
 
 
 class ET312FirmwareUtils(object):
@@ -82,6 +84,28 @@ class ET312FirmwareUtils(object):
         modem.send(io.BytesIO(self.input_file))
 
 
+def download_firmware_file(path, filename):
+    # If this url ever goes away, just attach
+    # https://web.archive.org/web/20150915223802/ to the front of it.
+    url = 'http://media.erostek.com.s3.amazonaws.com/support/%s' % (filename)
+    dl = os.path.join(path, filename)
+    print("Downloading %s to %s..." % (url, path))
+    urllib.request.urlretrieve(url, dl)
+
+
+def download_firmware():
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    path = os.path.realpath(os.path.join(script_dir, "..", "firmware"))
+    os.makedirs(path, exist_ok=True)
+    for f in ["312-15.upg", "312-16.upg"]:
+        download_firmware_file(path, f)
+        dcfw = os.path.join(path, f.split(".")[0] + "-decrypted.bin")
+        print("Making decrypted version at %s" % (dcfw))
+        etfw = ET312FirmwareUtils(os.path.join(path, f),
+                                  dcfw)
+        etfw.decrypt()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input", dest="input_file",
@@ -94,11 +118,19 @@ def main():
                         help="Encrypt input file, store in output file."
                         " Adds checksum to output by default.")
     parser.add_argument("-u", "--upload", dest="upload",
-                        help="Upload input file to box, expects com port as argument."
-                        "(requires serial and xmodem packages)")
+                        help="Upload input file to box, expects com port as " +
+                        "argument. (requires serial and xmodem packages)")
     parser.add_argument("-c", "--crc", dest="crc", action="store_true",
                         help="Output xor/checksum for input file")
+    parser.add_argument("-f", "--downloadfw", dest="download", action="store_true",
+                        help="Downloads encrypted update files from website, " +
+                        "as they cannot be stored with repo/project due to " +
+                        "copyright. Decrypts files after downloading.")
     args = parser.parse_args()
+
+    if args.download:
+        download_firmware()
+        return 0
 
     if not args.input_file:
         print("ERROR: Input file required to run.")

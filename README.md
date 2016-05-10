@@ -25,18 +25,33 @@ In the scripts directory, there is a python script named fw-utils.py.
 This utility allows users to encrypt/decrypt their own firmware, as
 well as handling checksum calcuation.
 
-For instance, to decrypt the .upg files in the firmware directory,
-simply run
+### Downloading Firmware
+
+Due to copyright, we cannot distribute firmware files with the
+Buttshock repo. The python script has the capability to download them
+from the web, making it easy to quickly retreive them and start
+working.
 
 ```
-scripts/fw-utils.py --decrypt -i firmware/312-16-encrypted.upg -o firmware/312-16-decrypted.bin
+scripts/fw-utils.py --downloadfw
+```
+
+This command will download the firmware, and place both encrypted and
+unencrypted versions in the "firmware" directory.
+
+### Encrypting/Decrypting Firmware
+
+To decrypt the .upg files in the firmware directory, simply run
+
+```
+scripts/fw-utils.py --decrypt -i firmware/312-16.upg -o firmware/312-16-decrypted.bin
 ```
 
 After the decrypted firmware has been changed, it can be encrypted
 again using a similar comment with the --encrypt action.
 
 ```
-scripts/fw-utils.py --encrypt -i firmware/312-16-decrypted.upg -o firmware/312-16-new.bin
+scripts/fw-utils.py --encrypt -i firmware/312-16-decrypted.bin -o firmware/312-16-new.bin
 ```
 
 This file can then be uploaded to the ET-312.
