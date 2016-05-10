@@ -31,9 +31,9 @@
 0x1178	L		USART_RX_Complete
 
 0x031c	L		set_routine_timer					Parameter r26:r27, returns r0, sets T flag
-0x0352	L		CallTable_29						Parameter r28:r29
-0x0390	L		load_r30_min_156_div_4_load_r18_Z+_load_r0_Z_pop_Z
-0x03a8	L		load_from_fla_unknown_0x1fec
+0x0352	L		CallTable_29						Parameter r28:r29, set up registers r4-r14 with current A and B values
+0x0390	L		load_two_bytes_relative_to_Z		Parameter: r30:r31 (Z), returns r18, r0
+0x03a8	L		sum_two_bytes_from_fla_unknown_0x1fec_plus_offset_at_z_minus_156_and_add_r18		Parameter r18, return value r18
 0x059c	L		update_current_channel_multi_adjust_value
 0x05fe	L		CallTable_18						Parameter r28:r29
 0x0604	L		Function_0x604
@@ -59,16 +59,16 @@
 0x0a66	L		CallTable_13
 0x0a94	L		CallTable_14
 0x0ab8	L		CallTable_26						Parameter r26
-0x0ac8	L		CallTable_27
-0x0ad8	L		CallTable_25
-0x0aee	L		CallTable_19
-0x0afa	L		CallTable_20
-0x0b06	L		CallTable_21
-0x0b0e	L		CallTable_35
-0x0b16	L		CallTable_36
-0x0b1e	L		enable_ADC_and_set_r17[3]				CallTable_34
-0x0b2a	L		prng_next								Result in r26 and X[18]
-0x0b58	L		Function_0xb58
+0x0ac8	L		copy_mem_0x018c_to_mem_0x008c_length_52					CallTable_27
+0x0ad8	L		copy_mem_0x008c_to_mem_0x018c_and_back_length_52		CallTable_25
+0x0aee	L		display_lcd_parameters_as_char							CallTable_19
+0x0afa	L		display_lcd_parameters_as_int							CallTable_20
+0x0b06	L		display_lcd_parameters_as_string						CallTable_21
+0x0b0e	L		set_lcd_parameters_as_position							CallTable_35
+0x0b16	L		set_lcd_parameters_as_position_redundant				CallTable_36
+0x0b1e	L		enable_ADC_and_set_r17[3]								CallTable_34
+0x0b2a	L		prng_next												Result in r26 and X[18]
+0x0b58	L		r26_is_random_between_mem0x8D_and_mem0x8E
 0x0b94	L		endless_loop
 0x0b96	L		rjmp_main
 0x0b98	L		CallTable_22
@@ -144,8 +144,10 @@
 0x0086	M	B	1	multi_adjust_range_high_end			Copied from 0x1f9c+6
 0x0087	M	B	1	multi_adjust_range_low_end			Copied from 0x1f9c+7
 0x0088	M	B	1	routine_timer_low
-0x0089	M	B	1	routine_timer_high
-0x008a	M	B	14	mem_unknown_0x8a
+0x0089	M	B	1	routine_timer_mid
+0x008a	M	B	1	routine_timer_high
+0x008b	M	B	1	routine_timer2
+0x008c	M	B	12	mem_unknown_0x8b
 0x0098	M	B	1	channel_a_current_gate_on_time
 0x0099	M	B	1	channel_a_current_gate_off_time
 0x009a	M	B	1	channel_a_current_select
@@ -216,93 +218,144 @@
 0x01fd	M	B	1	advanced_parameter_effect
 0x01fe	M	B	1	advanced_parameter_width
 0x01ff	M	B	1	advanced_parameter_pace
+0x0200	M	B	1	mem_unknown_0x200						Referenced by CallTable_7
+0x0201	M	B	1	mem_unknown_0x201
+0x0202	M	B	1	mem_unknown_0x202
+0x0203	M	B	1	battery_level_percentage
+0x0204	M	B	1	mem_unknown_0x204
+0x0205	M	B	1	mem_unknown_0x205
+0x0206	M	B	1	mem_unknown_0x206
+0x0207	M	B	1	mem_unknown_0x207
+0x0208	M	B	1	spi_transfer_length
+0x0209	M	B	1	mem_unknown_0x209
+0x020a	M	B	1	mem_unknown_0x20a
+0x020b	M	B	2	OCR1_addition
 0x020d	M	B	1	current_multi_adjust_value
 0x0212	M	B	1	mem_unknown_0x212
 0x0213	M	B	1	cipher_key
 0x0214	M	B	1	com_buffer_incrementer
-0x0218	M	B	1	mem_unknown_0x218
+0x0215	M	B	1	power_status_bits
+0x021a	M	B	1	mem_unknown_0x21a
 0x0220	M	B	12	com_input_buffer
 0x022C	M	B	12	com_output_buffer
 0x0500	M	B	1	unkown_spdr_value_0
 0x0501	M	B	1	unkown_spdr_value_1
 0x0503	M	B	1	unkown_spdr_value_3
 
+0x1b0c	P	W	2	FFFF
 0x1b10	P	S	4	fla_unknown_0x1b10	
 0x1c36	P	W	4	FFFF
-0x1c3e	P	W	21	fla_unknown_0x1c3e
+
+0x1c3e	P	B	1	program_lookup_0x1c3e+0
+0x1c3f	P	B	1	program_lookup_0x1c3e+1
+0x1c40	P	B	1	program_lookup_0x1c3e+2_intenseb
+0x1c41	P	B	1	program_lookup_0x1c3e+3_strokeb
+0x1c42	P	B	1	program_lookup_0x1c3e+4_strokeb
+0x1c43	P	B	1	program_lookup_0x1c3e+5_climba
+0x1c44	P	B	1	program_lookup_0x1c3e+6
+0x1c45	P	B	1	program_lookup_0x1c3e+7
+0x1c46	P	B	1	program_lookup_0x1c3e+8_climbb
+0x1c47	P	B	1	program_lookup_0x1c3e+9
+0x1c48	P	B	1	program_lookup_0x1c3e+10
+0x1c49	P	B	1	program_lookup_0x1c3e+11_wavesa
+0x1c4a	P	B	1	program_lookup_0x1c3e+12_wavesb
+0x1c4b	P	B	1	program_lookup_0x1c3e+13_comboa
+0x1c4c	P	B	1	program_lookup_0x1c3e+14_intensea
+0x1c4d	P	B	1	program_lookup_0x1c3e+15_rhythm
+0x1c4e	P	B	1	program_lookup_0x1c3e+16
+0x1c4f	P	B	1	program_lookup_0x1c3e+17
+0x1c50	P	B	1	program_lookup_0x1c3e+18_toggle
+0x1c51	P	B	1	program_lookup_0x1c3e+19
+0x1c52	P	B	1	program_lookup_0x1c3e+20_phase1a
+0x1c53	P	B	1	program_lookup_0x1c3e+21_phase2a
+0x1c54	P	B	1	program_lookup_0x1c3e+22_phase3
+0x1c55	P	B	1	program_lookup_0x1c3e+23_audio12
+0x1c56	P	B	1	program_lookup_0x1c3e+24_orgasm
+0x1c57	P	B	1	program_lookup_0x1c3e+25
+0x1c58	P	B	1	program_lookup_0x1c3e+26
+0x1c59	P	B	1	program_lookup_0x1c3e+27
+0x1c5A	P	B	1	program_lookup_0x1c3e+28_tormnt
+0x1c5B	P	B	1	program_lookup_0x1c3e+29
+0x1c5C	P	B	1	program_lookup_0x1c3e+30
+0x1c5D	P	B	1	program_lookup_0x1c3e+31
+0x1c5E	P	B	1	program_lookup_0x1c3e+32_random2
+0x1c5F	P	B	1	program_lookup_0x1c3e+33_combob
+0x1c60	P	B	1	program_lookup_0x1c3e+34_audio3
+0x1c61	P	B	1	program_lookup_0x1c3e+35_phase2b
+0x1c62	P	B	6	program_lookup_0x1c3e+36
 0x1c68	P	W	4	FFFF
 0x1c70	P	W	40 	CallTable
 0x1cc0	P	W	4	FFFF
-0x1cc8	P	6	1	Shut Off Power!!
-0x1cd8	P	6	1	SelfTest OK V1.6
-0x1ce8	P	6	1	Copyright
-0x1cf8	P	6	1	Product Name
-0x1d08	P	6	1	Press any key
-0x1d18	P	6	1	Selects Mode
-0x1d28	P	6	1	Press or OK
-0x1d38	P	6	1	Start Ramp Up
-0x1d48	P	6	1	Set Split Mode
-0x1d58	P	6	1	Set As Favorite
-0x1d68	P	6	1	Set Pwr Level
-0x1d78	P	6	1	Link Slave Unit
-0x1d88	P	6	1	Save Settings
-0x1d98	P	6	1	Reset Settings
-0x1da8	P	6	1	Adjust Advanced
-0x1db8	P	6	1	Ramp Mode
-0x1dc8	P	6	1	Space16
-0x1dd8	P	8	1	Space8
-0x1de0	P	8	1	Select
-0x1de8	P	8	1	Battery
-0x1df0	P	8	1	Failure
-0x1df8	P	8	1	Pwr Lev
-0x1e00	P	8	1	Adjust
-0x1e08	P	8	1	Menus
-0x1e10	P	8	1	Low
-0x1e18	P	8	1	Normal
-0x1e20	P	8	1	High
-0x1e28	P	8	1	RampLevl
-0x1e30	P	8	1	RampTime
-0x1e38	P	8	1	Depth
-0x1e40	P	8	1	Tempo
-0x1e48	P	8	1	Freq
-0x1e50	P	8	1	Effect
-0x1e58	P	8	1	Width
-0x1e60	P	8	1	Pace
-0x1e68	P	8	1	Waves
-0x1e70	P	8	1	Stroke
-0x1e78	P	8	1	Climb
-0x1e80	P	8	1	Combo
-0x1e88	P	8	1	Intense
-0x1e90	P	8	1	Rhythm
-0x1e98	P	8	1	Audio1
-0x1ea0	P	8	1	Audio2
-0x1ea8	P	8	1	Audio3
-0x1eb0	P	8	1	Split
-0x1eb8	P	8	1	Random1
-0x1ec0	P	8	1	Random2
-0x1ec8	P	8	1	Toggle
-0x1ed0	P	8	1	Orgasm
-0x1ed8	P	8	1	Torment
-0x1ee0	P	8	1	Phase1
-0x1ee8	P	8	1	Phase2
-0x1ef0	P	8	1	Phase3
-0x1ef8	P	8	1	User1
-0x1f00	P	8	1	User2
-0x1f08	P	8	1	User3
-0x1f10	P	8	1	User4
-0x1f18	P	8	1	User5
-0x1f20	P	8	1	User6
-0x1f28	P	8	1	User7
-0x1f30	P	8	1	SplitA
-0x1f38	P	8	1	SplitB
+0x1cc8	P	6	1	00-Shut Off Power!!
+0x1cd8	P	6	1	01-SelfTest OK V1.6
+0x1ce8	P	6	1	02-Copyright
+0x1cf8	P	6	1	03-Product Name
+0x1d08	P	6	1	04-Press any key
+0x1d18	P	6	1	05-Selects Mode
+0x1d28	P	6	1	06-Press or OK
+0x1d38	P	6	1	07-Start Ramp Up
+0x1d48	P	6	1	08-Set Split Mode
+0x1d58	P	6	1	09-Set As Favorite
+0x1d68	P	6	1	0A-Set Pwr Level
+0x1d78	P	6	1	0B-Link Slave Unit
+0x1d88	P	6	1	0C-Save Settings
+0x1d98	P	6	1	0D-Reset Settings
+0x1da8	P	6	1	0E-Adjust Advanced
+0x1db8	P	6	1	0F-Ramp Mode
+0x1dc8	P	6	1	10-Space16
+0x1dd8	P	8	1	64-Space8
+0x1de0	P	8	1	65-Select
+0x1de8	P	8	1	66-CA-Battery
+0x1df0	P	8	1	67-CB-Failure
+0x1df8	P	8	1	68-CC-Pwr Lev
+0x1e00	P	8	1	69-Adjust
+0x1e08	P	8	1	6A-Menus
+0x1e10	P	8	1	6B-Low
+0x1e18	P	8	1	6C-Normal
+0x1e20	P	8	1	6D-High
+0x1e28	P	8	1	6E-D2-RampLevl
+0x1e30	P	8	1	6F-D3-RampTime
+0x1e38	P	8	1	70-D4-Depth
+0x1e40	P	8	1	71-D5-Tempo
+0x1e48	P	8	1	72-D6-Freq
+0x1e50	P	8	1	73-D7-Effect
+0x1e58	P	8	1	74-D8-Width
+0x1e60	P	8	1	75-D9-Pace
+0x1e68	P	8	1	76-Waves
+0x1e70	P	8	1	77-Stroke
+0x1e78	P	8	1	78-Climb
+0x1e80	P	8	1	79-Combo
+0x1e88	P	8	1	7A-Intense
+0x1e90	P	8	1	7B-Rhythm
+0x1e98	P	8	1	7C-Audio1
+0x1ea0	P	8	1	7D-Audio2
+0x1ea8	P	8	1	7E-Audio3
+0x1eb0	P	8	1	7F-Split
+0x1eb8	P	8	1	80-Random1
+0x1ec0	P	8	1	81-Random2
+0x1ec8	P	8	1	82-Toggle
+0x1ed0	P	8	1	83-Orgasm
+0x1ed8	P	8	1	84-Torment
+0x1ee0	P	8	1	85-Phase1
+0x1ee8	P	8	1	86-Phase2
+0x1ef0	P	8	1	87-Phase3
+0x1ef8	P	8	1	88-User1
+0x1f00	P	8	1	89-User2
+0x1f08	P	8	1	8A-User3
+0x1f10	P	8	1	8B-User4
+0x1f18	P	8	1	8C-User5
+0x1f20	P	8	1	8D-User6
+0x1f28	P	8	1	8E-User7
+0x1f30	P	8	1	F3-SplitA
+0x1f38	P	8	1	F4-SplitB
 0x1f40	P	8	1	Sel Fav
 0x1f48	P	8	1	Ramping
-0x1f50	P	8	1	Saved
-0x1f58	P	8	1	Linked
+0x1f50	P	8	1	F7-Saved
+0x1f58	P	8	1	F8-Linked
 0x1f60	P	8	1	Master
 0x1f68	P	8	1	Slave
 0x1f70	P	8	1	Percent
-0x1f78	P	8	1	A B
+0x1f78	P	8	1	FC-A B
 0x1f80	P	8	1	Ramp
 0x1f88	P	8	1	Space8_2
 0x1f90	P	8	1	Space8_3
@@ -313,3 +366,194 @@
 0x1fec	P	W	5	fla_unknown_0x1fec	ref from 0x3be
 0x1ff6	P	W	3845	Garbage
 0x3ff8	P	S	1	authors_initials
+0x438	T	look if we need to run a command (0x0070-$4070-execute_command)
+0x444	T	look if we need to run a command (0x0071-$4071-execute_command-2)
+0x45c	T	Sometimes run calltable31 with menu-state (0x0073-$4073-some-timer)
+0x464	T	(0x006d-$406D-menu_state)
+0x46c	T	Sometimes run the code at 0x474 (0x0073-$4073-some-timer)
+0x474	T	(0x0074-$4074-random1-mode)
+0x47e	T	(0x006A-$406A-some-counter)
+0x480	T	(0x0075-$4075-unknown) did we reach time to change mode?
+0x488	T	(0x008D-$408D)=0x76
+0x48c	T	(0x008E-$408E)=0x7B
+0x490	T	(0x0074-$4074-random1-mode) is random number between "0x76" and "0x7b"
+0x494	T	(0x008D-$408D)=0x14
+0x498	T	(0x008E-$408E)=0x78
+0x4ac	T	0x4184 is random number beween 140 and 184
+0x4a0	T	0x4075 is (0x406A_counter)+number between 20 and 120
+0x76	T	(0x0067-$4067-Audio Input Level B (Half wave) (ADC7))
+0x8a	T	(0x0066-$4066-Audio Input Level A (Half wave) (ADC6))
+0xa2	T	(0x0073-$4073-some-timer)
+0xaa	T	increment counter (0x006A-$406A-some-counter)
+0xb8	T	This increments the routine timer (3 bytes)
+0xbc	T	(0x0088-$4088-routine-timer-low)
+0xbe	T	(0x0089-$4089-routine-timer-mid)
+0xc0	T	(0x008A-$408A-routine-timer-high)
+0xd4	T	run a timer in 0x8b eight times slower than the routine timer in 0x88/9/a
+0xdc	T	(0x008B-$408b-routine-timer-slower)
+0xe2	T	(0x0096-$4096-unknown)
+0xee	T	(0x0094-$4094-unknown)
+0xf2	T	(0x0095-$4095-unknown)
+0xfa	T	(0x0094-$4094-unknown)
+0xfc	T	(0x0097-$4097-unknown)
+0x104	T	(0x0097-$4097-unknown)
+0x4bc	T	Read hardware 4 buttons, depending on what is pressed do calltable based on r19,r20,r21,r22
+0xa36	T	Set button actions, menu=show_main_menu, ok=0x1, up=switch_next_mode, down=switch_previous_mode
+0x7d6	T	Set button actions, menu=show_main_menu, ok=0x1, up=switch_next_mode, down=switch_previous_mode
+0x830	T	Set button actions, up=next_menu_item, down=previous_menu_item, ok=select_menu_item, menu=exit_menu
+0x934	T	Set button actions, they run calltable 0 which starts favourite mode
+0x9da	T	Set button actions, advanced value down, advanced value up
+0x822	T	Call table "show main menu" caused by button press, set min/current menu item to 7, max to 14
+0x840	T	Call table "display next menu item" caused by button press, updates 0x078-$4078 between range of 0x79 and 0x7a and displays it on first line of lcd
+0x854	T	Call table "previous next menu item" caused by button press, updates 0x078-$4078 between range of 0x79 and 0x7a and displays it on first line of lcd
+0x7c0	T	0x79-$4079-lowest-menu-option = 0x76
+0x7c6	T	0x80-$4080-highest-menu-option = current_top_mode (0x1f3-$41f3)
+0x7cc	T	0x81-$4081-current-menu-option = favourite_mode (0x1f7-$41f7)
+0x8aa	T	Set min/current menu item to split_mode_number_a, max menu item to 0x7e, buttons up/down call next_mode, previous_mode
+0x898	T	Menu option 7 selected do this (start ramp up)
+0x8a4	T	Menu option 8 selected do this (set split mode)
+0x8c2	T	Menu option 9 selected do this (set as favourite)
+0x8d8	T	Menu option 10 selected do this (set power level)
+0x8f8	T	Menu option 11 selected do this (link slave unit) (send 0xe expect a 0x5 set r17[bit7])
+0x926	T	Menu option 12 selected do this (save settings)
+0x942	T	Menu option 13 selected do this (reset settings)
+0x94e	T	Menu option 14 selected do this (show advanced menu)
+0x954	T	Set menu min/current to 210, max to 217
+0x95e	T	Set button actions, exit_advanced, next_menu_item, previous_menu_item, exit_menu
+0x9a8	T	Edit the advanced option chosen in 0x81-$4081-current-menu-option
+0x868	T	Switch to Next Mode, run New Mode
+0x87e	T	Switch to Previous Mode, run New Mode
+0x8dc	T	Set menu min to 6b, max to 6d, current to comm_power-level (0x1f4-$81f4)
+0x8ee	T	Set button menu to show_main_menu, ok to set_power_level
+0x96a	T	split mode settings menu, set menu min to 0x76, max to 0x7e, current to split_mode_number_b
+0x982	T	Set button ok to activate_split_mode, menu to show_main_menu
+0x958	T	"Adjust"
+0x592	T	display "Battery Low"
+0x7d2	T	display "Selects Mode"
+0x7e2	T	display "AB" and A&B levels
+0x7fc	T	display "Ramp"
+0x818	T	display "Selects Mode"
+0x82e	T	display "Press or OK"
+0x8a6	T	display "SplitA"
+0x8da	T	display "Pwr Lev"
+0x928	T	display "Saved" "Press any Key"
+0x970	T	display "SplitB"
+0xa26	T	display "Selects Mode"
+0x167a	T	display "Failure", spaces, failure num
+0x1688	T	display "Shut off power"
+0x17ee	T	display "Copyright"
+0x1802	T	display "Product Name"
+0x1804	T	display a B at end of product name (if 0x0215[bit0] is set, we have a battery)
+0x1814	T	display "SelfTest OK"
+0x1824	T	display "Battery" and spaces, battery percent from 0x0203, "%"
+0x1838	T	display "Press any key"
+0x188c	T	display "Product Name", spaces
+0x1894	T	display "Linked"
+0x17f8	T	draw the self-test bargraph with a delay between characters
+0x16ea	T	our box has a battery
+0xb4	T	bit 2 of r16 is set if we're slave to another box
+0x516	T	bit 2 of r16 is set if we're slave to another box, in which case all the hardware buttons do nothing
+0x1880	T	if we got a 0x0e we're a slave box, send back a 0x05 and set bit 2 of r16
+0x91e	T	display "Linked" (master)
+0x3d8	T	if r17 bit 7 is set we're a linked master
+0x3f2	T	bug? this infinite loop if we get the wrong thing from a linked slave?
+0x3e4	T	$4082
+0x3fe	T	write 6 bytes to $4004 (r4-r9) (or maybe $400a if r16[bit6] isn't set, r10-r14)
+0x424	T	write our registers (r4-9 or r10-r14) to the serial port (or 0's if r15[bit2] isn't set)
+0x18fc	T	if we get a 0x_8 0xaa over serial then reset the box
+0x2a4	T	line above is 0x91=$4091
+0x2c2	T	0x91=$4091
+0x2cc	T	line above is 0x92=$4092
+0x2ee	T	0x92=$4092
+0x2fa	T	(0x0066-$4066-Audio Input Level A (Half wave) (ADC6))
+0x304	T	0x83=$4083 Output Control Flags - COMM_CONTROL_FLAG
+0x30a	T	0x6F=$406F
+0x354	T	above line r4=[0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x358	T	r5=[x90] Channel A: Current Gate Value (0 when no output)
+0x35a	T	r6=[x9C] Mode Switch Ramp Value Counter
+0x35c	T	r7=[xA5] Channel A: Current Intensity Modulation Value
+0x35e	T	r8=min(9,[xAE] Channel A: Current Frequency Modulation Value)
+0x368	T	r9=min(50,[xB7] Channel A: Current Width Modulation Value)
+0x374	T	r10=[x190] (Channel B version of r5)
+0x376	T	r11=[x19C] (Channel B version of r6)
+0x378	T	r12=[x1A5] (Channel B version of r7)
+0x37a	T	r13=min(9,[x1AE]) (Channel B version of r8)
+0x384	T	r14=min(50,[x1B7]) (Channel B version of r9)
+0x78c	T	0x73=$4073
+0x7e6	T	0x4064-Level Pot A - CBLOCK_POT_A_OFFSET (ADC4)
+0x7ec	T	0x4065-Level Pot B - CBLOCK_POT_B_OFFSET (ADC5)
+0x7f0	T	0x409C-Mode Switch Ramp Value Counter
+0x800	T	display r6 (mode switch ramp value counter)
+0xeec	T	pin D6 is led A (on)
+0xef0	T	pin D5 is led B (on)
+0xf0e	T	pin D6 is led A (off)
+0xf12	T	pin D5 is led B (off)
+0xfe0	T	pin D5 is led B (on)
+0xffe	T	pin D5 is led B (off)
+0x10e2	T	pin D4 is DAC CS
+0x111e	T	pin D4 is DAC CS
+0x1498	T	pin D4 is DAC CS
+0x1692	T	turns off D
+0x2bc	T	look at state of q5,6,7,8 outputs
+0x2e8	T	look at state of q5,6,7,8 outputs
+0x586	T	look at state of q5,6,7,8 outputs
+0xe98	T	q5
+0xe9c	T	q5
+0xea0	T	q8
+0xea6	T	above is q6
+0xea8	T	q6
+0xeb4	T	q6
+0xeb8	T	q6
+0xebc	T	q7
+0xec2	T	above is q5
+0xec4	T	q5
+0xf48	T	q6
+0xf4c	T	q5
+0xf50	T	q8
+0xf68	T	q5
+0xf6c	T	q6
+0xf70	T	q7
+0xf94	T	q7
+0xf98	T	q7
+0xf9e	T	above is q8
+0xfa0	T	q8
+0xfac	T	q8
+0xfb0	T	q8
+0xfb6	T	above is q7
+0xfb8	T	q7
+0x1034	T	q8
+0x1038	T	q7
+0x1050	T	q7
+0x1054	T	q8
+0x1440	T	q5=1 q6=1 q8=0 q7=0
+0x1446	T	q5=0 q6=0 q8=1 q7=1
+0x1456	T	q5,6,7,8=0
+0x14aa	T	q5,6,7,8=0
+0x14ea	T	set pin b4 high
+0x185a	T	above pin B4 isn't used
+0x198c	T	pin B4 isn't used
+0x1a38	T	pin B4 isn't used
+0xb42	T	bug? I think they wanted to use PIND so they get more audio data into the entropy mix?
+0xb3c	T	0x72-$4072 last random number
+0xb2e	T	gather all the input ADC lowest bits to make something a bit random
+0xb64	T	0x8D-0x408D
+0xb66	T	0x8E-0x408E
+0x644	T	0x85-0x4085
+0x64c	T	Mode: Waves (11 or 12)
+0x65e	T	Mode: Stroke (3 or 4)
+0x670	T	Mode: Climb (5 or 8)
+0x682	T	Mode: Combo (13 or 33)
+0x694	T	Mode: Intense (14 or 2)
+0x6aa	T	Mode: Rhythm (15)
+0x6b4	T	Mode: Audio1 (23)
+0x6ce	T	Mode: Audio2 (23)
+0x6d4	T	Mode: Audio3 (103 or 34)
+0x6f2	T	Mode: Random1 (sets 0x74 $4074 random1mode to 1)
+0x6fc	T	Mode: Random2 (32)
+0x706	T	Mode: Toggle (18)
+0x710	T	Mode: Orgasm (24)
+0x71a	T	Mode: Torment (28)
+0x728	T	Mode: Phase1/2 (20 or 21 or 35)
+0x74a	T	Mode: Phase3 (22)
+0x756	T	Mode: User1-7 read from eprom 0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e (start vector user1-7)
+0x47c	T	If 0x74-$4074 is a 1 then we want to start Random1 mode (if it's 0 we're not in Random1 mode)
