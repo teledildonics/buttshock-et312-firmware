@@ -5409,13 +5409,12 @@ Source: www.linear.com</description>
 <part name="Q3" library="transistor-fet-1" deviceset="IRL530" device="N-H" value="IRF9Z24"/>
 <part name="IC4" library="adafruit" deviceset="78*" device="T" technology="05" value="7809"/>
 <part name="GND7" library="supply1" deviceset="GND" device=""/>
-<part name="C1" library="SparkFun-Passives" deviceset="CAP_POL" device="PTH1"/>
+<part name="C1" library="SparkFun-Passives" deviceset="CAP_POL" device="PTH1" value="470uF"/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="C2" library="SparkFun-Passives" deviceset="CAP" device="PTH"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
-<part name="IC5" library="linear-technology" deviceset="LTC26*" device="MS8" technology="02C" value="LTC1661"/>
+<part name="U8" library="linear-technology" deviceset="LTC26*" device="MS8" technology="02C" value="LTC1661"/>
 <part name="P+1" library="supply1" deviceset="VCC" device="" value="+5V"/>
-<part name="P+2" library="supply1" deviceset="VCC" device="" value="+5V"/>
 <part name="R6" library="eagle-ltspice" deviceset="R" device="0207/10" value="100k"/>
 <part name="R7" library="eagle-ltspice" deviceset="R" device="0207/10" value="100k"/>
 <part name="R8" library="eagle-ltspice" deviceset="R" device="0207/10" value="100k"/>
@@ -5452,16 +5451,17 @@ Source: www.linear.com</description>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
 <part name="IC6" library="adafruit" deviceset="78*" device="T" technology="05" value="7809"/>
 <part name="GND18" library="supply1" deviceset="GND" device=""/>
-<part name="C4" library="SparkFun-Passives" deviceset="CAP_POL" device="PTH1"/>
+<part name="C4" library="SparkFun-Passives" deviceset="CAP_POL" device="PTH1" value="470uF"/>
 <part name="GND19" library="supply1" deviceset="GND" device=""/>
 <part name="P+11" library="supply1" deviceset="VCC" device="" value="+9V 1"/>
-<part name="IC7" library="adafruit" deviceset="78*" device="T" technology="05" value="7805"/>
+<part name="U9" library="adafruit" deviceset="78*" device="T" technology="05" value="7805"/>
 <part name="GND20" library="supply1" deviceset="GND" device=""/>
 <part name="R22" library="eagle-ltspice" deviceset="R" device="0207/10" value="100k"/>
 <part name="P+13" library="supply1" deviceset="VCC" device="" value="+9V 1"/>
 <part name="GND21" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="SUPPLY6" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
 <part name="SUPPLY7" library="SparkFun-Aesthetics" deviceset="5V" device=""/>
+<part name="P+10" library="supply1" deviceset="VCC" device="" value="+5V"/>
 </parts>
 <sheets>
 <sheet>
@@ -5505,7 +5505,7 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <instance part="C4" gate="G$1" x="40.64" y="63.5"/>
 <instance part="GND19" gate="1" x="40.64" y="53.34"/>
 <instance part="P+11" gate="VCC" x="48.26" y="73.66"/>
-<instance part="IC7" gate="A1" x="68.58" y="71.12"/>
+<instance part="U9" gate="A1" x="68.58" y="71.12"/>
 <instance part="GND20" gate="1" x="68.58" y="58.42"/>
 <instance part="SUPPLY7" gate="G$1" x="86.36" y="73.66"/>
 </instances>
@@ -5545,7 +5545,7 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 </segment>
 <segment>
 <pinref part="GND20" gate="1" pin="GND"/>
-<pinref part="IC7" gate="A1" pin="GND"/>
+<pinref part="U9" gate="A1" pin="GND"/>
 <wire x1="68.58" y1="60.96" x2="68.58" y2="63.5" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -5642,7 +5642,7 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <junction x="99.06" y="127"/>
 </segment>
 <segment>
-<pinref part="IC7" gate="A1" pin="VO"/>
+<pinref part="U9" gate="A1" pin="VO"/>
 <wire x1="78.74" y1="71.12" x2="86.36" y2="71.12" width="0.1524" layer="91"/>
 <pinref part="SUPPLY7" gate="G$1" pin="5V"/>
 <wire x1="86.36" y1="71.12" x2="86.36" y2="73.66" width="0.1524" layer="91"/>
@@ -6259,9 +6259,8 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <instance part="Q3" gate="G$1" x="187.96" y="144.78"/>
 <instance part="C2" gate="G$1" x="182.88" y="129.54"/>
 <instance part="GND9" gate="1" x="149.86" y="129.54"/>
-<instance part="IC5" gate="-1" x="81.28" y="147.32"/>
-<instance part="P+1" gate="VCC" x="66.04" y="165.1"/>
-<instance part="P+2" gate="VCC" x="99.06" y="147.32"/>
+<instance part="U8" gate="-1" x="71.12" y="132.08"/>
+<instance part="P+1" gate="VCC" x="55.88" y="149.86"/>
 <instance part="R6" gate="G$1" x="149.86" y="157.48"/>
 <instance part="R7" gate="G$1" x="127" y="132.08" rot="R90"/>
 <instance part="R8" gate="G$1" x="127" y="149.86" rot="R90"/>
@@ -6294,12 +6293,13 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <instance part="P+9" gate="VCC" x="127" y="73.66"/>
 <instance part="R21" gate="G$1" x="152.4" y="20.32" rot="R90"/>
 <instance part="GND15" gate="1" x="152.4" y="10.16"/>
-<instance part="GND16" gate="1" x="66.04" y="127"/>
+<instance part="GND16" gate="1" x="55.88" y="111.76"/>
 <instance part="R22" gate="G$1" x="116.84" y="53.34"/>
 <instance part="P+13" gate="VCC" x="149.86" y="152.4"/>
 <instance part="GND21" gate="1" x="243.84" y="149.86"/>
 <instance part="SUPPLY6" gate="G$1" x="243.84" y="157.48"/>
 <instance part="FRAME6" gate="G$1" x="0" y="0"/>
+<instance part="P+10" gate="VCC" x="88.9" y="149.86"/>
 </instances>
 <busses>
 </busses>
@@ -6351,9 +6351,10 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <wire x1="152.4" y1="12.7" x2="152.4" y2="15.24" width="0.1524" layer="91"/>
 </segment>
 <segment>
+<pinref part="U8" gate="-1" pin="GND"/>
+<wire x1="58.42" y1="124.46" x2="55.88" y2="124.46" width="0.1524" layer="91"/>
 <pinref part="GND16" gate="1" pin="GND"/>
-<pinref part="IC5" gate="-1" pin="GND"/>
-<wire x1="66.04" y1="129.54" x2="68.58" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="55.88" y1="124.46" x2="55.88" y2="114.3" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PB3" class="0">
@@ -6417,11 +6418,6 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 </net>
 <net name="VCC" class="0">
 <segment>
-<pinref part="IC5" gate="-1" pin="REF"/>
-<wire x1="93.98" y1="144.78" x2="99.06" y2="144.78" width="0.1524" layer="91"/>
-<pinref part="P+2" gate="VCC" pin="VCC"/>
-</segment>
-<segment>
 <pinref part="R9" gate="G$1" pin="2"/>
 <pinref part="P+3" gate="VCC" pin="VCC"/>
 <wire x1="139.7" y1="167.64" x2="139.7" y2="170.18" width="0.1524" layer="91"/>
@@ -6441,11 +6437,6 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <wire x1="190.5" y1="124.46" x2="190.5" y2="139.7" width="0.1524" layer="91"/>
 <wire x1="175.26" y1="124.46" x2="182.88" y2="124.46" width="0.1524" layer="91"/>
 <junction x="182.88" y="124.46"/>
-</segment>
-<segment>
-<pinref part="IC5" gate="-1" pin="VCC"/>
-<pinref part="P+1" gate="VCC" pin="VCC"/>
-<wire x1="68.58" y1="154.94" x2="66.04" y2="162.56" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="P+7" gate="VCC" pin="VCC"/>
@@ -6471,6 +6462,18 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <segment>
 <pinref part="IC3" gate="G1" pin="V+"/>
 <pinref part="P+13" gate="VCC" pin="VCC"/>
+</segment>
+<segment>
+<pinref part="P+1" gate="VCC" pin="VCC"/>
+<wire x1="55.88" y1="147.32" x2="55.88" y2="139.7" width="0.1524" layer="91"/>
+<pinref part="U8" gate="-1" pin="VCC"/>
+<wire x1="55.88" y1="139.7" x2="58.42" y2="139.7" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U8" gate="-1" pin="REF"/>
+<pinref part="P+10" gate="VCC" pin="VCC"/>
+<wire x1="83.82" y1="129.54" x2="88.9" y2="129.54" width="0.1524" layer="91"/>
+<wire x1="88.9" y1="129.54" x2="88.9" y2="147.32" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$22" class="0">
@@ -6559,16 +6562,16 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 </net>
 <net name="PB7" class="0">
 <segment>
-<wire x1="55.88" y1="144.78" x2="68.58" y2="144.78" width="0.1524" layer="91"/>
-<pinref part="IC5" gate="-1" pin="SCK"/>
-<label x="55.88" y="144.78" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="45.72" y1="129.54" x2="58.42" y2="129.54" width="0.1524" layer="91"/>
+<pinref part="U8" gate="-1" pin="SCK"/>
+<label x="45.72" y="129.54" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="PD4" class="0">
 <segment>
-<pinref part="IC5" gate="-1" pin="!CS/LD"/>
-<wire x1="55.88" y1="149.86" x2="68.58" y2="149.86" width="0.1524" layer="91"/>
-<label x="55.88" y="149.86" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="U8" gate="-1" pin="!CS/LD"/>
+<wire x1="45.72" y1="134.62" x2="58.42" y2="134.62" width="0.1524" layer="91"/>
+<label x="45.72" y="134.62" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="PA0" class="0">
@@ -6594,11 +6597,11 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 </net>
 <net name="N$33" class="0">
 <segment>
-<pinref part="IC5" gate="-1" pin="VOUTB"/>
+<pinref part="U8" gate="-1" pin="VOUTB"/>
 <pinref part="R22" gate="G$1" pin="1"/>
-<wire x1="111.76" y1="53.34" x2="104.14" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="53.34" x2="104.14" y2="149.86" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="149.86" x2="93.98" y2="149.86" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="53.34" x2="93.98" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="53.34" x2="93.98" y2="134.62" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="134.62" x2="83.82" y2="134.62" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$34" class="0">
@@ -6673,19 +6676,17 @@ Seeing as this box has been around for 16 years now, there are probably hundreds
 <net name="N$42" class="0">
 <segment>
 <pinref part="R11" gate="G$1" pin="1"/>
-<wire x1="111.76" y1="139.7" x2="106.68" y2="139.7" width="0.1524" layer="91"/>
-<wire x1="106.68" y1="139.7" x2="106.68" y2="154.94" width="0.1524" layer="91"/>
-<pinref part="IC5" gate="-1" pin="VOUTA"/>
-<wire x1="106.68" y1="154.94" x2="93.98" y2="154.94" width="0.1524" layer="91"/>
+<pinref part="U8" gate="-1" pin="VOUTA"/>
+<wire x1="111.76" y1="139.7" x2="83.82" y2="139.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PB5" class="0">
 <segment>
-<pinref part="IC5" gate="-1" pin="SDI"/>
-<wire x1="93.98" y1="139.7" x2="99.06" y2="139.7" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="139.7" x2="99.06" y2="132.08" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="132.08" x2="55.88" y2="132.08" width="0.1524" layer="91"/>
-<label x="55.88" y="132.08" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="U8" gate="-1" pin="SDI"/>
+<wire x1="83.82" y1="124.46" x2="88.9" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="88.9" y1="124.46" x2="88.9" y2="116.84" width="0.1524" layer="91"/>
+<wire x1="88.9" y1="116.84" x2="45.72" y2="116.84" width="0.1524" layer="91"/>
+<label x="45.72" y="116.84" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 </nets>
