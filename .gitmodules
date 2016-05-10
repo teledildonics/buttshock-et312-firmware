@@ -1,0 +1,3 @@
+[submodule "hardware/images"]
+	path = hardware/images
+	url = https://github.com/metafetish/buttshock-et312-images
