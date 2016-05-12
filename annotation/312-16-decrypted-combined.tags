@@ -36,29 +36,29 @@
 0x0390	L		load_two_bytes_relative_to_Z		Parameter: r30:r31 (Z), returns r18, r0
 0x03a8	L		sum_two_bytes_from_fla_unknown_0x1fec_plus_offset_at_z_minus_156_and_add_r18		Parameter r18, return value r18
 0x059c	L		update_current_channel_multi_adjust_value
-0x05fe	L		CallTable_18						Parameter r28:r29
+0x05fe	L		CallTable_18_select_new_mode					Parameter r28:r29
 0x0604	L		Function_0x604
 0x0790	L		run_call_table						Parameter r30 (0-39) CallTable_31
 0x07bc	L		CallTable_1						noop
 0x07be	L		CallTable_0_5
 0x07e0	L		CallTable_2
-0x0820	L		CallTable_10
-0x083e	L		CallTable_8
-0x0852	L		CallTable_9
-0x0866	L		CallTable_16
-0x087c	L		CallTable_17
-0x0892	L		CallTable_3
-0x094e	L		CallTable_15
-0x0968	L		CallTable_11
-0x0988	L		CallTable_12
-0x099a	L		CallTable_6
-0x09a4	L		CallTable_7
+0x0820	L		CallTable_10_Show_main_menu
+0x083e	L		CallTable_8_Display_next_menu_item
+0x0852	L		CallTable_9_Display_prev_menu_item
+0x0866	L		CallTable_16_Switch_to_next_mode
+0x087c	L		CallTable_17_Switch_to_prev_mode
+0x0892	L		CallTable_3_Select_Current_Menu_Item
+0x094e	L		CallTable_15_Show_advanced_menu
+0x0968	L		CallTable_11_Show_split_mode_settings
+0x0988	L		CallTable_12_Activate_split_mode
+0x099a	L		CallTable_6_Set_Power_Level
+0x09a4	L		CallTable_7_Edit_Advanced_Parameter
 0x09e6	L		CallTable_32
 0x09fe	L		CallTable_33
-0x0a1c	L		CallTable_4
+0x0a1c	L		CallTable_4_Exit_Menu
 0x0a40	L		Function_0xa40
-0x0a66	L		CallTable_13
-0x0a94	L		CallTable_14
+0x0a66	L		CallTable_13_advanced_menu_prev_item
+0x0a94	L		CallTable_14_advanced_menu_next_item
 0x0ab8	L		CallTable_26						Parameter r26
 0x0ac8	L		copy_mem_0x018c_to_mem_0x008c_length_52					CallTable_27
 0x0ad8	L		copy_mem_0x008c_to_mem_0x018c_and_back_length_52		CallTable_25
@@ -497,10 +497,13 @@
 0x1880	T	if we got a 0x0e we're a slave box, send back a 0x05 and set bit 2 of r16
 0x91e	T	display "Linked" (master)
 0x3d8	T	if r17 bit 7 is set we're a linked master
-0x3f2	T	bug? this infinite loop if we get the wrong thing from a linked slave?
-0x3e4	T	$4082
-0x3fe	T	write 6 bytes to $4004 (r4-r9) (or maybe $400a if r16[bit6] isn't set, r10-r14)
+0x3f2	T	bug? this infinite loop if we fail to get the right handshake back from slave; should try 4 times?
+0x3d4	T	above is x73-$4073
+0x3dc	T	we're a linked master, so if we got a 06 back from the box, send some more registers
+0x3e4	T	$4082-retry-counter.  If we didn't get a 06 back we're meant to retry 4 times then error out
+0x3fe	T	write 6 bytes to $4004 (r4-r9) (or if r16[bit6] isn't set, $400a r10-r14)
 0x424	T	write our registers (r4-9 or r10-r14) to the serial port (or 0's if r15[bit2] isn't set)
+0x436	T	toggle bit r16[bit6] so next time we send the other register set
 0x18fc	T	if we get a 0x_8 0xaa over serial then reset the box
 0x2a4	T	line above is 0x91=$4091
 0x2c2	T	0x91=$4091
