@@ -409,11 +409,11 @@
 0x3ff8	P	S	1	authors_initials
 0x438	T	look if we need to run a command (0x0070-$4070-execute_command)
 0x444	T	look if we need to run a command (0x0071-$4071-execute_command-2)
-0x45c	T	Sometimes run calltable31 with menu-state (0x0073-$4073-some-timer)
+0x45c	T	Sometimes run calltable31 with menu-state (0x0073-$4073-master-timer-lsb)
 0x464	T	(0x006d-$406D-menu_state)
-0x46c	T	Sometimes run the code at 0x474 (0x0073-$4073-some-timer)
+0x46c	T	Sometimes run the code at 0x474 (0x0073-$4073-master-timer-lsb)
 0x474	T	(0x0074-$4074-random1-mode)
-0x47e	T	(0x006A-$406A-some-counter)
+0x47e	T	(0x006A-$406A-master-timer-msb)
 0x480	T	(0x0075-$4075-random1-time-to-change-mode) did we reach time to change mode?
 0x488	T	(0x008D-$408D)=0x76
 0x48c	T	(0x008E-$408E)=0x7B
@@ -421,11 +421,11 @@
 0x494	T	(0x008D-$408D)=0x14
 0x498	T	(0x008E-$408E)=0x78
 0x4ac	T	0x4184 is random number beween 140 and 184
-0x4a0	T	0x4075-random1-time-to-change-mode is (0x406A_counter)+number between 20 and 120
+0x4a0	T	0x4075-random1-time-to-change-mode is (0x406A-master-timer-msb)+number between 20 and 120
 0x76	T	(0x0067-$4067-Audio Input Level B (Half wave) (ADC7))
 0x8a	T	(0x0066-$4066-Audio Input Level A (Half wave) (ADC6))
-0xa2	T	(0x0073-$4073-some-timer)
-0xaa	T	increment counter (0x006A-$406A-some-counter)
+0xa2	T	(0x0073-$4073-master-timer-lsb)
+0xaa	T	increment counter (0x006A-$406A-master-timer-msb)
 0xb8	T	This increments the routine timer (3 bytes)
 0xbc	T	(0x0088-$4088-routine-timer-low)
 0xbe	T	(0x0089-$4089-routine-timer-mid)
@@ -496,9 +496,9 @@
 0x516	T	bit 2 of r16 is set if we're slave to another box, in which case all the hardware buttons do nothing
 0x1880	T	if we got a 0x0e we're a slave box, send back a 0x05 and set bit 2 of r16
 0x91e	T	display "Linked" (master)
-0x3d8	T	if r17 bit 7 is set we're a linked master
+0x3d8	T	if r17[bit7] is set we're a linked master
 0x3f2	T	bug? this infinite loop if we fail to get the right handshake back from slave; should try 4 times?
-0x3d4	T	above is x73-$4073
+0x3d4	T	above is x73-$4073-master-timer-lsb
 0x3dc	T	we're a linked master, so if we got a 06 back from the box, send some more registers
 0x3e4	T	$4082-retry-counter.  If we didn't get a 06 back we're meant to retry 4 times then error out
 0x3fe	T	write 6 bytes to $4004 (r4-r9) (or if r16[bit6] isn't set, $400a r10-r14)
@@ -523,7 +523,7 @@
 0x378	T	r12=[x1A5] (Channel B version of r7)
 0x37a	T	r13=min(9,[x1AE]) (Channel B version of r8)
 0x384	T	r14=min(50,[x1B7]) (Channel B version of r9)
-0x78c	T	0x73=$4073
+0x78c	T	0x73=$4073-master-timer-lsb
 0x7e6	T	0x4064-Level Pot A - CBLOCK_POT_A_OFFSET (ADC4)
 0x7ec	T	0x4065-Level Pot B - CBLOCK_POT_B_OFFSET (ADC5)
 0x7f0	T	0x409C-Mode Switch Ramp Value Counter
@@ -673,3 +673,33 @@
 0xe7e	T	enable int0 (audio B digital input)
 0x168e	T	disable interrupts
 
+0x58	T	is there anything in the com buffer to send? is so go and send it
+0x11c4	T	enable RXEN and TXEN in USART control register (no interrupts)
+
+0x11b6	T	set r17[bit5]
+0x11c2	T	above set r17[bit5], set r17[bit6]
+0x1984	T	above unset r17[bit5]. set r17[bit6]
+0x5c2	T	toggle r17[bit5]
+0x66	T	r17[bit5] probably means we have something serial to take care of
+
+0x612	T	set r17[bit0] , set r17[bit1]
+0x624	T	set r17[bit1], unset r17[bit1]
+0x766	T	toggle r17[bit0] toggle r17[bit1]
+0x776	T	set r17[bit0], set r17[bit1]
+0x63a	T	unset r17[bit1]
+
+0x77a	T	unset r17[bit4-something-to-do-with-MA]
+0x786	T	set r17[bit4-something-to-do-with-MA]
+0x5a4	T	r17[bit4-something-to-do-with-MA]
+
+0xef6	T	start an ADC conversion with interrupt, set r17[bit3-adc-running]
+0xb20	T	start an ADC conversion with interrupt, set r17[bit3-adc-running]
+0xfe6	T	start an ADC conversion with interrupt, set r17[bit3-adc-running]
+0x10f0	T	unset r17[bit3-adc-running]
+
+0x91c	T	set r17[bit7-master-unit]
+
+0xe60	T	sets r17[bit2 (timer0 triggered)]
+0x9c	L	timer0_has_triggered
+0x9e	T	above unsets r17[bit2 (timer0 triggered)]
+0x6e	T	if r17[bit2 (timer0 triggered)] goto timer0_has_triggered
