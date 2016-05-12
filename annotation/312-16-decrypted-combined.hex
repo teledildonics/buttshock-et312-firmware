@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-/* Disassembly of ../buttshock_firmwares/312-16-decrypted-combined.bin (pseudocode) */
+/* Disassembly of ../BEFOLD/firmware/312-16-decrypted-combined.bin (pseudocode) */
 
 int  r0,  r1,  r2,  r3,  r4,  r5,  r6,  r7,  r8,  r9;
 int r10, r11, r12, r13, r14, r15, r16, r17, r18, r19;
@@ -75,10 +75,12 @@ Main:
 Label_0x64:
   64:   15 fd           skipif (!bit(r17,5))
   66:   0e 94 2c 0c     Function_0x1858();
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
   6a:   40 fc           skipif (!bit(r4,0))
   6c:   97 d2           update_current_channel_multi_adjust_value();
   6e:   12 fd           skipif (!bit(r17,2))
   70:   15 c0           goto Label_0x9c;
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
   72:   56 fe           skipif (bit(r5,6))
   74:   08 c0           goto Label_0x86;
 ; (0x0067-$4067-Audio Input Level B (Half wave) (ADC7))
@@ -528,11 +530,12 @@ Label_0x29e:
 ; Referenced from offset 0xb6 <Main> by rjmp
 Label_0x2a2:
  2a2:   a9 a9           r26 = Memory[[r28:r29]+49];
-; line above is 0x91=$4091
+; above r5 is [x90] Channel A: Current Gate Value (0 when no output)
  2a4:   b5 2d           r27 = r5;
  2a6:   be 70           r27 &= 14;                          ; 0x0e
  2a8:   ab 17           cmp(r26, r27);
  2aa:   79 f0           if (c1 == c2) goto Label_0x2ca;
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  2ac:   53 fe           skipif (bit(r5,3))
  2ae:   02 c0           goto Label_0x2b4;
  2b0:   a1 e0           r26 = 1;                            ; 0x01
@@ -568,7 +571,7 @@ Label_0x2ca:
  2ce:   be 70           r27 &= 14;                          ; 0x0e
  2d0:   ab 17           cmp(r26, r27);
  2d2:   09 f4           if (c1 != c2) goto Label_0x2d6;
- 2d4:   10 c0           goto Label_0x2f6;
+ 2d4:   10 c0           goto Label_0x2d6;
 
 ; Referenced from offset 0x2d2 <Main> by brne
 Label_0x2d6:
@@ -601,7 +604,7 @@ Label_0x2f4:
  2f4:   78 94           Enable_Interrupts();
 
 ; Referenced from offset 0x2d4 <Main> by rjmp
-Label_0x2f6:
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  2f6:   41 fe           skipif (bit(r4,1))
  2f8:   0a c0           goto Label_0x30e;
 ; (0x0066-$4066-Audio Input Level A (Half wave) (ADC6))
@@ -609,6 +612,7 @@ Label_0x2f6:
  2fc:   ae 31           cmp(r26, 0x1e);                     ; 30
  2fe:   38 f0           if (Carry) goto Label_0x30e;
  300:   ad ef           r26 = 253;                          ; 0xfd
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  302:   4a 22           r4 &= r26;
 ; 0x83=$4083 Output Control Flags - COMM_CONTROL_FLAG
  304:   ab a1           r26 = Memory[[r28:r29]+35];
@@ -780,15 +784,17 @@ Label_0x3b6:
 ; Referenced from offset 0xb2 <Main> by rjmp
 Label_0x3d2:
  3d2:   ab 89           r26 = Memory[[r28:r29]+19];
+; above is x73-$4073
  3d4:   a1 ff           skipif (bit(r26,1))
  3d6:   42 c0           goto Label_0x3d2;
 ; if r17 bit 7 is set we're a linked master
  3d8:   17 ff           skipif (bit(r17,7))
  3da:   2e c0           goto Label_0x3d2;
+; we're a linked master, so if we got a 06 back from the box, send some more registers
  3dc:   a0 91 20 02     r26 = com_input_buffer[0];          ; 0x0220
  3e0:   a6 30           cmp(r26, 0x06);                     ; 6
  3e2:   41 f0           if (c1 == c2) goto Label_0x3f4;
-; $4082
+; $4082-retry-counter.  If we didn't get a 06 back we're meant to retry 4 times then error out
  3e4:   aa a1           r26 = Memory[[r28:r29]+34];
  3e6:   a4 30           cmp(r26, 0x04);                     ; 4
  3e8:   10 f0           if (Carry) goto Label_0x3ee;
@@ -798,7 +804,7 @@ Label_0x3d2:
 Label_0x3ee:
  3ee:   a3 95           r26++;
  3f0:   aa a3           Memory[[r28:r29]+34] = r26;
-; bug? this infinite loop if we get the wrong thing from a linked slave?
+; bug? this infinite loop if we fail to get the right handshake back from slave; should try 4 times?
  3f2:   22 c0           goto Label_0x3ee;
 
 ; Referenced from offset 0x3e2 <Main> by breq
@@ -806,7 +812,7 @@ Label_0x3f4:
  3f4:   da a3           Memory[[r28:r29]+34] = r29;
  3f6:   d0 93 20 02     com_input_buffer[0] = r29;          ; 0x0220
  3fa:   d0 93 14 02     com_buffer_incrementer = r29;       ; 0x0214
-; write 6 bytes to $4004 (r4-r9) (or maybe $400a if r16[bit6] isn't set, r10-r14)
+; write 6 bytes to $4004 (r4-r9) (or if r16[bit6] isn't set, $400a r10-r14)
  3fe:   ad e9           r26 = 157;                          ; 0x9d
  400:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
  404:   a0 e4           r26 = 64;                           ; 0x40
@@ -833,6 +839,7 @@ Label_0x41e:
  42c:   a0 91 14 02     r26 = com_buffer_incrementer;       ; 0x0214
  430:   0e 94 03 0d     write_r26_to_com_buffer();          ; Parameters r26
  434:   a0 e4           r26 = 64;                           ; 0x40
+; toggle bit r16[bit6] so next time we send the other register set
  436:   0a 27           r16 ^= r26;
 
 ; Referenced from offset 0x3da <Main> by rjmp
@@ -860,6 +867,7 @@ Label_0x450:
  452:   04 c0           goto Label_0x450;
  454:   ad ef           r26 = 253;                          ; 0xfd
  456:   fa 22           r15 &= r26;
+; x84-0x4084
  458:   ac a1           r26 = Memory[[r28:r29]+36];
  45a:   9e d3           CallTable_22();
 
@@ -888,16 +896,16 @@ Label_0x46a:
 ; (0x0074-$4074-random1-mode)
  474:   ac 89           r26 = Memory[[r28:r29]+20];
  476:   aa 23           (r26 == 0) || (r26 < 0);            ; test r26
- 478:   f9 f0           if (c1 == c2) goto Label_0x4b8;
+ 478:   f9 f0           if (c1 == c2) goto Main;
  47a:   a1 30           cmp(r26, 0x01);                     ; 1
 ; If 0x74-$4074 is a 1 then we want to start Random1 mode (if it's 0 we're not in Random1 mode)
  47c:   21 f0           if (c1 == c2) goto Label_0x486;
 ; (0x006A-$406A-some-counter)
  47e:   2a 84           r2 = Memory[[r28:r29]+10];
-; (0x0075-$4075-unknown) did we reach time to change mode?
+; (0x0075-$4075-random1-time-to-change-mode) did we reach time to change mode?
  480:   ad 89           r26 = Memory[[r28:r29]+21];
  482:   a2 15           cmp(r26, r2);
- 484:   c9 f4           if (c1 != c2) goto Label_0x4b8;
+ 484:   c9 f4           if (c1 != c2) goto Label_0x486;
 
 ; Referenced from offset 0x47c <Main> by breq
 Label_0x486:
@@ -919,7 +927,7 @@ Label_0x486:
  49a:   5e d3           r26_is_random_between_mem0x8D_and_mem0x8E();
  49c:   2a 84           r2 = Memory[[r28:r29]+10];
  49e:   2a 0e           r2 += r26;                          ; No carry
-; 0x4075 is (0x406A_counter)+number between 20 and 120
+; 0x4075-random1-time-to-change-mode is (0x406A_counter)+number between 20 and 120
  4a0:   2d 8a           Memory[[r28:r29]+21] = r2;
  4a2:   2c e8           r18 = 140;                          ; 0x8c
  4a4:   2d a7           Memory[[r28:r29]+45] = r18;
@@ -930,13 +938,13 @@ Label_0x486:
  4ac:   a0 93 84 01     Memory[0x0184] = r26;               ; 388
  4b0:   a8 8d           r26 = Memory[[r28:r29]+24];
  4b2:   a0 38           cmp(r26, 0x80);                     ; 128
- 4b4:   09 f4           if (c1 != c2) goto Label_0x4b8;
+ 4b4:   09 f4           if (c1 != c2) goto r26_is_random_between_mem0x8D_and_mem0x8E;
  4b6:   a6 d0           Function_0x604();
 
 ; Referenced from offset 0x478 <Main> by breq
 ; Referenced from offset 0x484 <Main> by brne
 ; Referenced from offset 0x4b4 <Main> by brne
-Label_0x4b8:
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  4b8:   45 fc           skipif (!bit(r4,5))
  4ba:   cc cd           goto Main;
 ; Read hardware 4 buttons, depending on what is pressed do calltable based on r19,r20,r21,r22
@@ -1022,6 +1030,7 @@ Label_0x520:
 ; Referenced from offset 0x524 <Main> by brcc
 Label_0x528:
  528:   e9 2d           r30 = r9;
+; above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
  52a:   f0 91 05 02     r31 = mem_unknown_0x205;            ; 0x0205
  52e:   ab 85           r26 = Memory[[r28:r29]+11];
  530:   fa 1b           r31 -= r26;                         ; No carry
@@ -1032,17 +1041,19 @@ Label_0x528:
 Label_0x536:
  536:   15 d7           delay_0x1362();                     ; Parameter r30
  538:   a4 e0           r26 = 4;                            ; 0x04
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  53a:   b5 2d           r27 = r5;
  53c:   b7 70           r27 &= 7;                           ; 0x07
  53e:   b7 30           cmp(r27, 0x07);                     ; 7
- 540:   09 f0           if (c1 == c2) goto Label_0x544;
+ 540:   09 f0           if (c1 == c2) goto Label_0x536;
  542:   aa 0f           r26 *= 2;
 
 ; Referenced from offset 0x540 <Main> by breq
-Label_0x544:
+; above is r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
  544:   b0 e0           r27 = 0;                            ; 0x00
  546:   3a d7           divide_word();                      ; Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:r31 % r26:r27
  548:   00 24           r0 = 0x00;                          ; 0
+; r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
  54a:   b8 2d           r27 = r8;
  54c:   fb 1b           r31 -= r27;                         ; No carry
  54e:   08 f0           if (Carry) goto Label_0x552;
@@ -1071,6 +1082,7 @@ Label_0x560:
 Label_0x56e:
  56e:   b0 e0           r27 = 0;                            ; 0x00
  570:   25 d7           divide_word();                      ; Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:r31 % r26:r27
+; r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
  572:   b8 2d           r27 = r8;
  574:   fb 1b           r31 -= r27;                         ; No carry
  576:   08 f0           if (Carry) goto Label_0x57a;
@@ -1143,6 +1155,7 @@ Label_0x5c0:
  5c4:   a6 e9           r26 = 150;                          ; 0x96
  5c6:   b0 91 0d 02     r27 = current_multi_adjust_value;   ; 0x020d
  5ca:   ba 0f           r27 += r26;                         ; No carry
+; r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
  5cc:   9e 14           cmp(r9, r14);
  5ce:   18 f0           if (Carry) goto Label_0x5d6;
  5d0:   9a 2e           r9 = r26;
@@ -1152,6 +1165,7 @@ Label_0x5c0:
 ; Referenced from offset 0x5ce <update_current_channel_multi_adjust_value> by brcs
 Label_0x5d6:
  5d6:   9b 2e           r9 = r27;
+; r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
  5d8:   ea 2e           r14 = r26;
 
 ; Referenced from offset 0x5d4 <update_current_channel_multi_adjust_value> by rjmp
@@ -1166,15 +1180,15 @@ Label_0x5e4:
  5e4:   ff cf           goto Label_0x5e4;
 
 ; Referenced from offset 0x60e <Function_0x604> by rcall
-; Referenced from offset 0x904 <CallTable_3> by rcall
+; Referenced from offset 0x904 <CallTable_3_Select_Current_Menu_Item> by rcall
 ; Referenced from offset 0x11d6 <initialize_lcd> by rcall
 ; Referenced from offset 0x11e8 <initialize_lcd> by rcall
-; Referenced from offset 0x141c <Function_0x1406> by rcall
-; Referenced from offset 0x1426 <Function_0x1406> by rcall
-; Referenced from offset 0x1430 <Function_0x1406> by rcall
-; Referenced from offset 0x1438 <Function_0x1406> by rcall
-; Referenced from offset 0x144a <Function_0x1406> by rcall
-; Referenced from offset 0x148e <Function_0x1406> by rcall
+; Referenced from offset 0x141c <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
+; Referenced from offset 0x1426 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
+; Referenced from offset 0x1430 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
+; Referenced from offset 0x1438 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
+; Referenced from offset 0x144a <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
+; Referenced from offset 0x148e <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
 sleep:     ; Parameter r26
  5e6:   bf 93           push    r27
  5e8:   b0 e8           r27 = 128;                          ; 0x80
@@ -1194,10 +1208,10 @@ Label_0x5f4:
 
 
 ; Referenced from offset 0x7d4 <CallTable_0_5> by rcall
-; Referenced from offset 0x874 <CallTable_16> by rcall
-; Referenced from offset 0x88a <CallTable_17> by rcall
-; Referenced from offset 0x994 <CallTable_12> by rcall
-CallTable_18:     ; Parameter r28:r29
+; Referenced from offset 0x874 <CallTable_16_Switch_to_next_mode> by rcall
+; Referenced from offset 0x88a <CallTable_17_Switch_to_prev_mode> by rcall
+; Referenced from offset 0x994 <CallTable_12_Activate_split_mode> by rcall
+CallTable_18_select_new_mode:     ; Parameter r28:r29
  5fe:   dc 8b           Memory[[r28:r29]+20] = r29;
  600:   a8 8d           r26 = Memory[[r28:r29]+24];
  602:   ab 8f           Memory[[r28:r29]+27] = r26;
@@ -1228,12 +1242,14 @@ Label_0x622:
  628:   af 37           cmp(r26, 0x7f);                     ; 127
  62a:   19 f0           if (c1 == c2) goto Label_0x632;
  62c:   bf ee           r27 = 239;                          ; 0xef
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  62e:   4b 22           r4 &= r27;
  630:   05 c0           goto Label_0x63c;
 
 ; Referenced from offset 0x62a <Function_0x604> by breq
 Label_0x632:
  632:   b0 e1           r27 = 16;                           ; 0x10
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  634:   4b 2a           r4 |= r27;
  636:   a0 91 f5 01     r26 = split_mode_number_a;          ; 0x01f5
  63a:   1d 7f           r17 &= 253;                         ; 0xfd
@@ -1251,7 +1267,7 @@ Label_0x63c:
  646:   bb 27           r27 = 0x00;                         ; 0
  648:   a6 37           cmp(r26, 0x76);                     ; 118
  64a:   39 f4           if (c1 != c2) goto Label_0x65a;
-; Mode: Waves (11 or 12)
+; Mode: Waves (blocks 11/12)
  64c:   ab e0           r26 = 11;                           ; 0x0b
  64e:   a4 d2           CallTable_22();
  650:   11 ff           skipif (bit(r17,1))
@@ -1267,7 +1283,7 @@ Label_0x658:
 Label_0x65a:
  65a:   a7 37           cmp(r26, 0x77);                     ; 119
  65c:   39 f4           if (c1 != c2) goto Label_0x66c;
-; Mode: Stroke (3 or 4)
+; Mode: Stroke (blocks 3/4)
  65e:   a3 e0           r26 = 3;                            ; 0x03
  660:   9b d2           CallTable_22();
  662:   11 ff           skipif (bit(r17,1))
@@ -1283,7 +1299,7 @@ Label_0x66a:
 Label_0x66c:
  66c:   a8 37           cmp(r26, 0x78);                     ; 120
  66e:   39 f4           if (c1 != c2) goto Label_0x67e;
-; Mode: Climb (5 or 8)
+; Mode: Climb (blocks 5/8)
  670:   a5 e0           r26 = 5;                            ; 0x05
  672:   92 d2           CallTable_22();
  674:   11 ff           skipif (bit(r17,1))
@@ -1299,7 +1315,7 @@ Label_0x67c:
 Label_0x67e:
  67e:   a9 37           cmp(r26, 0x79);                     ; 121
  680:   39 f4           if (c1 != c2) goto Label_0x690;
-; Mode: Combo (13 or 33)
+; Mode: Combo (blocks 13/33)
  682:   ad e0           r26 = 13;                           ; 0x0d
  684:   89 d2           CallTable_22();
  686:   11 ff           skipif (bit(r17,1))
@@ -1315,7 +1331,7 @@ Label_0x68e:
 Label_0x690:
  690:   aa 37           cmp(r26, 0x7a);                     ; 122
  692:   39 f4           if (c1 != c2) goto Label_0x6a2;
-; Mode: Intense (14 or 2)
+; Mode: Intense (blocks 14/2)
  694:   ae e0           r26 = 14;                           ; 0x0e
  696:   80 d2           CallTable_22();
  698:   11 ff           skipif (bit(r17,1))
@@ -1333,7 +1349,7 @@ Label_0x6a2:
  6a4:   f2 2a           r15 |= r18;
  6a6:   ab 37           cmp(r26, 0x7b);                     ; 123
  6a8:   19 f4           if (c1 != c2) goto Label_0x6b0;
-; Mode: Rhythm (15)
+; Mode: Rhythm (blocks 15)
  6aa:   af e0           r26 = 15;                           ; 0x0f
  6ac:   75 d2           CallTable_22();
  6ae:   58 c0           goto Label_0x760;
@@ -1342,7 +1358,7 @@ Label_0x6a2:
 Label_0x6b0:
  6b0:   ac 37           cmp(r26, 0x7c);                     ; 124
  6b2:   59 f4           if (c1 != c2) goto Label_0x6ca;
-; Mode: Audio1 (23)
+; Mode: Audio1 (blocks 23)
  6b4:   a0 e4           r26 = 64;                           ; 0x40
  6b6:   ab a3           Memory[[r28:r29]+35] = r26;
 
@@ -1361,14 +1377,14 @@ Label_0x6b8:
 Label_0x6ca:
  6ca:   ad 37           cmp(r26, 0x7d);                     ; 125
  6cc:   09 f4           if (c1 != c2) goto Label_0x6d0;
-; Mode: Audio2 (23)
+; Mode: Audio2 (blocks 23)
  6ce:   f4 cf           goto Label_0x6b8;
 
 ; Referenced from offset 0x6cc <Function_0x604> by brne
 Label_0x6d0:
  6d0:   ae 37           cmp(r26, 0x7e);                     ; 126
  6d2:   59 f4           if (c1 != c2) goto Label_0x6ea;
-; Mode: Audio3 (103 or 34)
+; Mode: Audio3 (blocks 34)
  6d4:   a7 e6           r26 = 103;                          ; 0x67
  6d6:   10 fd           skipif (!bit(r17,0))
  6d8:   a8 ab           Memory[[r28:r29]+48] = r26;
@@ -1395,7 +1411,7 @@ Label_0x6ea:
 Label_0x6f8:
  6f8:   a1 38           cmp(r26, 0x81);                     ; 129
  6fa:   19 f4           if (c1 != c2) goto Label_0x702;
-; Mode: Random2 (32)
+; Mode: Random2 (blocks 32)
  6fc:   a0 e2           r26 = 32;                           ; 0x20
  6fe:   4c d2           CallTable_22();
  700:   2f c0           goto Label_0x760;
@@ -1404,7 +1420,7 @@ Label_0x6f8:
 Label_0x702:
  702:   a2 38           cmp(r26, 0x82);                     ; 130
  704:   19 f4           if (c1 != c2) goto Label_0x70c;
-; Mode: Toggle (18)
+; Mode: Toggle (blocks 18)
  706:   a2 e1           r26 = 18;                           ; 0x12
  708:   47 d2           CallTable_22();
  70a:   2a c0           goto Label_0x760;
@@ -1413,7 +1429,7 @@ Label_0x702:
 Label_0x70c:
  70c:   a3 38           cmp(r26, 0x83);                     ; 131
  70e:   19 f4           if (c1 != c2) goto Label_0x716;
-; Mode: Orgasm (24)
+; Mode: Orgasm (blocks 24)
  710:   a8 e1           r26 = 24;                           ; 0x18
  712:   42 d2           CallTable_22();
  714:   25 c0           goto Label_0x760;
@@ -1422,7 +1438,7 @@ Label_0x70c:
 Label_0x716:
  716:   a4 38           cmp(r26, 0x84);                     ; 132
  718:   19 f4           if (c1 != c2) goto Label_0x720;
-; Mode: Torment (28)
+; Mode: Torment (blocks 28)
  71a:   ac e1           r26 = 28;                           ; 0x1c
  71c:   3d d2           CallTable_22();
  71e:   20 c0           goto Label_0x760;
@@ -1433,8 +1449,9 @@ Label_0x720:
  722:   f2 2a           r15 |= r18;
  724:   a7 38           cmp(r26, 0x87);                     ; 135
  726:   78 f4           if (!Carry) goto Label_0x746;
-; Mode: Phase1/2 (20 or 21 or 35)
+; Mode: Phase1/2 (blocks 20/21/35)
  728:   a5 e0           r26 = 5;                            ; 0x05
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  72a:   4a 2e           r4 = r26;
  72c:   ab a3           Memory[[r28:r29]+35] = r26;
  72e:   a4 e1           r26 = 20;                           ; 0x14
@@ -1457,7 +1474,7 @@ Label_0x73a:
 Label_0x746:
  746:   a7 38           cmp(r26, 0x87);                     ; 135
  748:   19 f4           if (c1 != c2) goto Label_0x750;
-; Mode: Phase3 (22)
+; Mode: Phase3 (blocks 22)
  74a:   a6 e1           r26 = 22;                           ; 0x16
  74c:   25 d2           CallTable_22();
  74e:   08 c0           goto Label_0x760;
@@ -1467,7 +1484,7 @@ Label_0x750:
  750:   a0 57           r26 -= 112;                         ; 0x70, no carry
  752:   ae 31           cmp(r26, 0x1e);                     ; 30
  754:   20 f4           if (!Carry) goto Label_0x75e;
-; Mode: User1-7 read from eprom 0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e (start vector user1-7)
+; Mode: User1-7 read blocks from eprom 0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e (start vector user1-7)
  756:   0e 94 ee 0c     read_from_eeprom();                 ; Parameter r26:r27, returns r0
  75a:   a0 2d           r26 = r0;
  75c:   1d d2           CallTable_22();
@@ -1498,6 +1515,7 @@ Label_0x760:
  764:   b3 e0           r27 = 3;                            ; 0x03
  766:   1b 27           r17 ^= r27;
  768:   ab 8d           r26 = Memory[[r28:r29]+27];
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  76a:   44 fc           skipif (!bit(r4,4))
  76c:   a0 91 f6 01     r26 = split_mode_number_b;          ; 0x01f6
  770:   65 cf           goto Label_0x63c;
@@ -1509,8 +1527,10 @@ Label_0x772:
  776:   1a 2b           r17 |= r26;
  778:   ec dd           CallTable_29();                     ; Parameter r28:r29, set up registers r4-r14 with current A and B values
  77a:   1f 7e           r17 &= 239;                         ; 0xef
+; r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
  77c:   8d 14           cmp(r8, r13);
  77e:   29 f4           if (c1 != c2) goto Label_0x78a;
+; r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
  780:   e9 14           cmp(r14, r9);
  782:   19 f0           if (c1 == c2) goto Label_0x78a;
  784:   08 f0           if (Carry) goto Label_0x788;
@@ -1580,7 +1600,7 @@ CallTable_0_5:
  7d0:   a5 e0           r26 = 5;                            ; 0x05
 ; display "Selects Mode"
  7d2:   84 d5           show_Text_on_Display2();            ; Parameter r26
- 7d4:   14 df           CallTable_18();                     ; Parameter r28:r29
+ 7d4:   14 df           CallTable_18_select_new_mode();     ; Parameter r28:r29
 ; Set button actions, menu=show_main_menu, ok=0x1, up=switch_next_mode, down=switch_previous_mode
  7d6:   61 e0           r22 = 1;                            ; 0x01
  7d8:   30 e1           r19 = 16;                           ; 0x10
@@ -1603,6 +1623,7 @@ CallTable_2:
 ; 0x409C-Mode Switch Ramp Value Counter
  7f0:   ac ad           r26 = Memory[[r28:r29]+60];
  7f2:   af 3f           cmp(r26, 0xff);                     ; 255
+; above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
  7f4:   61 f0           if (c1 == c2) goto Label_0x80e;
  7f6:   af e0           r26 = 15;                           ; 0x0f
  7f8:   a0 93 85 01     mem_unknown_0x185[0] = r26;         ; 0x0185
@@ -1636,7 +1657,7 @@ Label_0x80e:
 Label_0x81e:
  81e:   08 95           return;
 
-CallTable_10:
+CallTable_10_Show_main_menu:
  820:   ae e0           r26 = 14;                           ; 0x0e
 ; Call table "show main menu" caused by button press, set min/current menu item to 7, max to 14
  822:   aa 8f           Memory[[r28:r29]+26] = r26;
@@ -1656,7 +1677,7 @@ CallTable_10:
  83a:   ad 87           Memory[[r28:r29]+13] = r26;
  83c:   08 95           return;
 
-CallTable_8:
+CallTable_8_Display_next_menu_item:
  83e:   a8 8d           r26 = Memory[[r28:r29]+24];
 ; Call table "display next menu item" caused by button press, updates 0x078-$4078 between range of 0x79 and 0x7a and displays it on first line of lcd
  840:   ba 8d           r27 = Memory[[r28:r29]+26];
@@ -1664,18 +1685,18 @@ CallTable_8:
  844:   20 f4           if (!Carry) goto Label_0x84e;
  846:   a3 95           r26++;
 
-; Referenced from offset 0x850 <CallTable_8> by rjmp
+; Referenced from offset 0x850 <CallTable_8_Display_next_menu_item> by rjmp
 Label_0x848:
  848:   a8 8f           Memory[[r28:r29]+24] = r26;
  84a:   50 d5           show_Text_on_Display();             ; Parameter r26
  84c:   08 95           return;
 
 
-; Referenced from offset 0x844 <CallTable_8> by brcc
+; Referenced from offset 0x844 <CallTable_8_Display_next_menu_item> by brcc
 Label_0x84e:
  84e:   a9 8d           r26 = Memory[[r28:r29]+25];
  850:   fb cf           goto Label_0x848;
-CallTable_9:
+CallTable_9_Display_prev_menu_item:
  852:   a8 8d           r26 = Memory[[r28:r29]+24];
 ; Call table "previous next menu item" caused by button press, updates 0x078-$4078 between range of 0x79 and 0x7a and displays it on first line of lcd
  854:   b9 8d           r27 = Memory[[r28:r29]+25];
@@ -1683,18 +1704,18 @@ CallTable_9:
  858:   21 f0           if (c1 == c2) goto Label_0x862;
  85a:   aa 95           r26--;
 
-; Referenced from offset 0x864 <CallTable_9> by rjmp
+; Referenced from offset 0x864 <CallTable_9_Display_prev_menu_item> by rjmp
 Label_0x85c:
  85c:   a8 8f           Memory[[r28:r29]+24] = r26;
  85e:   46 d5           show_Text_on_Display();             ; Parameter r26
  860:   08 95           return;
 
 
-; Referenced from offset 0x858 <CallTable_9> by breq
+; Referenced from offset 0x858 <CallTable_9_Display_prev_menu_item> by breq
 Label_0x862:
  862:   aa 8d           r26 = Memory[[r28:r29]+26];
  864:   fb cf           goto Label_0x85c;
-CallTable_16:
+CallTable_16_Switch_to_next_mode:
  866:   a8 8d           r26 = Memory[[r28:r29]+24];
 ; Switch to Next Mode, run New Mode
  868:   ba 8d           r27 = Memory[[r28:r29]+26];
@@ -1702,19 +1723,19 @@ CallTable_16:
  86c:   28 f4           if (!Carry) goto Label_0x878;
  86e:   a3 95           r26++;
 
-; Referenced from offset 0x87a <CallTable_16> by rjmp
+; Referenced from offset 0x87a <CallTable_16_Switch_to_next_mode> by rjmp
 Label_0x870:
  870:   a8 8f           Memory[[r28:r29]+24] = r26;
  872:   3c d5           show_Text_on_Display();             ; Parameter r26
- 874:   c4 de           CallTable_18();                     ; Parameter r28:r29
+ 874:   c4 de           CallTable_18_select_new_mode();     ; Parameter r28:r29
  876:   08 95           return;
 
 
-; Referenced from offset 0x86c <CallTable_16> by brcc
+; Referenced from offset 0x86c <CallTable_16_Switch_to_next_mode> by brcc
 Label_0x878:
  878:   a9 8d           r26 = Memory[[r28:r29]+25];
  87a:   fa cf           goto Label_0x870;
-CallTable_17:
+CallTable_17_Switch_to_prev_mode:
  87c:   a8 8d           r26 = Memory[[r28:r29]+24];
 ; Switch to Previous Mode, run New Mode
  87e:   b9 8d           r27 = Memory[[r28:r29]+25];
@@ -1722,29 +1743,29 @@ CallTable_17:
  882:   29 f0           if (c1 == c2) goto Label_0x88e;
  884:   aa 95           r26--;
 
-; Referenced from offset 0x890 <CallTable_17> by rjmp
+; Referenced from offset 0x890 <CallTable_17_Switch_to_prev_mode> by rjmp
 Label_0x886:
  886:   a8 8f           Memory[[r28:r29]+24] = r26;
  888:   31 d5           show_Text_on_Display();             ; Parameter r26
- 88a:   b9 de           CallTable_18();                     ; Parameter r28:r29
+ 88a:   b9 de           CallTable_18_select_new_mode();     ; Parameter r28:r29
  88c:   08 95           return;
 
 
-; Referenced from offset 0x882 <CallTable_17> by breq
+; Referenced from offset 0x882 <CallTable_17_Switch_to_prev_mode> by breq
 Label_0x88e:
  88e:   aa 8d           r26 = Memory[[r28:r29]+26];
  890:   fa cf           goto Label_0x886;
-CallTable_3:
+CallTable_3_Select_Current_Menu_Item:
  892:   a8 8d           r26 = Memory[[r28:r29]+24];
  894:   a7 30           cmp(r26, 0x07);                     ; 7
  896:   21 f4           if (c1 != c2) goto Label_0x8a0;
 ; Menu option 7 selected do this (start ramp up)
  898:   b2 d0           CallTable_33();
  89a:   a6 ef           r26 = 246;                          ; 0xf6
- 89c:   bf d0           CallTable_4();
+ 89c:   bf d0           CallTable_4_Exit_Menu();
  89e:   63 c0           goto Label_0x966;
 
-; Referenced from offset 0x896 <CallTable_3> by brne
+; Referenced from offset 0x896 <CallTable_3_Select_Current_Menu_Item> by brne
 Label_0x8a0:
  8a0:   a8 30           cmp(r26, 0x08);                     ; 8
  8a2:   69 f4           if (c1 != c2) goto Label_0x8be;
@@ -1765,7 +1786,7 @@ Label_0x8a0:
  8bc:   08 95           return;
 
 
-; Referenced from offset 0x8a2 <CallTable_3> by brne
+; Referenced from offset 0x8a2 <CallTable_3_Select_Current_Menu_Item> by brne
 Label_0x8be:
  8be:   a9 30           cmp(r26, 0x09);                     ; 9
  8c0:   49 f4           if (c1 != c2) goto Label_0x8d4;
@@ -1776,9 +1797,9 @@ Label_0x8be:
  8ca:   bb 27           r27 = 0x00;                         ; 0
  8cc:   ab e0           r26 = 11;                           ; 0x0b
  8ce:   0e 94 f9 0c     write_to_eeprom();                  ; Parameter r26:r27 (address), r0 (value)
- 8d2:   a4 c0           goto CallTable_4;
+ 8d2:   a4 c0           goto CallTable_4_Exit_Menu;
 
-; Referenced from offset 0x8c0 <CallTable_3> by brne
+; Referenced from offset 0x8c0 <CallTable_3_Select_Current_Menu_Item> by brne
 Label_0x8d4:
  8d4:   aa 30           cmp(r26, 0x0a);                     ; 10
  8d6:   71 f4           if (c1 != c2) goto Label_0x8f4;
@@ -1801,7 +1822,7 @@ Label_0x8d4:
  8f2:   08 95           return;
 
 
-; Referenced from offset 0x8d6 <CallTable_3> by brne
+; Referenced from offset 0x8d6 <CallTable_3_Select_Current_Menu_Item> by brne
 Label_0x8f4:
  8f4:   ab 30           cmp(r26, 0x0b);                     ; 11
  8f6:   a9 f4           if (c1 != c2) goto Label_0x922;
@@ -1817,12 +1838,12 @@ Label_0x8f4:
  90e:   e5 30           cmp(r30, 0x05);                     ; 5
  910:   11 f0           if (c1 == c2) goto Label_0x916;
 
-; Referenced from offset 0x908 <CallTable_3> by rjmp
+; Referenced from offset 0x908 <CallTable_3_Select_Current_Menu_Item> by rjmp
 Label_0x912:
  912:   a4 e0           r26 = 4;                            ; 0x04
  914:   b0 d6           error_handler();                    ; CallTable_23_37_38_39
 
-; Referenced from offset 0x910 <CallTable_3> by breq
+; Referenced from offset 0x910 <CallTable_3_Select_Current_Menu_Item> by breq
 Label_0x916:
  916:   a6 e0           r26 = 6;                            ; 0x06
  918:   a0 93 20 02     com_input_buffer[0] = r26;          ; 0x0220
@@ -1831,7 +1852,7 @@ Label_0x916:
  91e:   a8 ef           r26 = 248;                          ; 0xf8
  920:   04 c0           goto Label_0x92a;
 
-; Referenced from offset 0x8f6 <CallTable_3> by brne
+; Referenced from offset 0x8f6 <CallTable_3_Select_Current_Menu_Item> by brne
 Label_0x922:
  922:   ac 30           cmp(r26, 0x0c);                     ; 12
  924:   61 f4           if (c1 != c2) goto Label_0x93e;
@@ -1840,7 +1861,7 @@ Label_0x922:
 ; display "Saved" "Press any Key"
  928:   a7 ef           r26 = 247;                          ; 0xf7
 
-; Referenced from offset 0x920 <CallTable_3> by rjmp
+; Referenced from offset 0x920 <CallTable_3_Select_Current_Menu_Item> by rjmp
 Label_0x92a:
  92a:   e0 d4           show_Text_on_Display();             ; Parameter r26
  92c:   a4 e6           r26 = 100;                          ; 0x64
@@ -1854,7 +1875,7 @@ Label_0x92a:
  93a:   50 e0           r21 = 0;                            ; 0x00
  93c:   14 c0           goto Label_0x966;
 
-; Referenced from offset 0x924 <CallTable_3> by brne
+; Referenced from offset 0x924 <CallTable_3_Select_Current_Menu_Item> by brne
 Label_0x93e:
  93e:   ad 30           cmp(r26, 0x0d);                     ; 13
  940:   21 f4           if (c1 != c2) goto Label_0x94a;
@@ -1863,7 +1884,7 @@ Label_0x93e:
  944:   2f d6           copy_flash_0x01f3_to_eeprom_0x8_length_12();
  946:   0c 94 3b 0d     goto reset_device;
 
-; Referenced from offset 0x940 <CallTable_3> by brne
+; Referenced from offset 0x940 <CallTable_3_Select_Current_Menu_Item> by brne
 Label_0x94a:
  94a:   ae 30           cmp(r26, 0x0e);                     ; 14
  94c:   61 f4           if (c1 != c2) goto Label_0x966;
@@ -1884,13 +1905,13 @@ Label_0x94a:
  962:   49 e0           r20 = 9;                            ; 0x09
  964:   54 e0           r21 = 4;                            ; 0x04
 
-; Referenced from offset 0x89e <CallTable_3> by rjmp
-; Referenced from offset 0x93c <CallTable_3> by rjmp
-; Referenced from offset 0x94c <CallTable_3> by brne
+; Referenced from offset 0x89e <CallTable_3_Select_Current_Menu_Item> by rjmp
+; Referenced from offset 0x93c <CallTable_3_Select_Current_Menu_Item> by rjmp
+; Referenced from offset 0x94c <CallTable_3_Select_Current_Menu_Item> by brne
 Label_0x966:
  966:   08 95           return;
 
-CallTable_11:
+CallTable_11_Show_split_mode_settings:
  968:   a8 8d           r26 = Memory[[r28:r29]+24];
 ; split mode settings menu, set menu min to 0x76, max to 0x7e, current to split_mode_number_b
  96a:   a0 93 f5 01     split_mode_number_a = r26;          ; 0x01f5
@@ -1909,22 +1930,22 @@ CallTable_11:
  984:   5a e0           r21 = 10;                           ; 0x0a
  986:   08 95           return;
 
-CallTable_12:
+CallTable_12_Activate_split_mode:
  988:   a8 8d           r26 = Memory[[r28:r29]+24];
  98a:   a0 93 f6 01     split_mode_number_b = r26;          ; 0x01f6
  98e:   af e7           r26 = 127;                          ; 0x7f
  990:   a8 8f           Memory[[r28:r29]+24] = r26;
  992:   ab 8f           Memory[[r28:r29]+27] = r26;
- 994:   34 de           CallTable_18();                     ; Parameter r28:r29
- 996:   42 d0           CallTable_4();
+ 994:   34 de           CallTable_18_select_new_mode();     ; Parameter r28:r29
+ 996:   42 d0           CallTable_4_Exit_Menu();
  998:   08 95           return;
 
-CallTable_6:
+CallTable_6_Set_Power_Level:
  99a:   a8 8d           r26 = Memory[[r28:r29]+24];
  99c:   aa 56           r26 -= 106;                         ; 0x6a, no carry
  99e:   a0 93 f4 01     COMM_POWER_LEVEL = r26;             ; 0x01f4
- 9a2:   3c c0           goto CallTable_4;
-CallTable_7:
+ 9a2:   3c c0           goto CallTable_4_Exit_Menu;
+CallTable_7_Edit_Advanced_Parameter:
  9a4:   a4 e6           r26 = 100;                          ; 0x64
  9a6:   a2 d4           show_Text_on_Display();             ; Parameter r26
 ; Edit the advanced option chosen in 0x81-$4081-current-menu-option
@@ -1956,14 +1977,14 @@ CallTable_7:
  9de:   08 95           return;
 
 
-; Referenced from offset 0x9d8 <CallTable_7> by breq
+; Referenced from offset 0x9d8 <CallTable_7_Edit_Advanced_Parameter> by breq
 Label_0x9e0:
  9e0:   3e e0           r19 = 14;                           ; 0x0e
  9e2:   4d e0           r20 = 13;                           ; 0x0d
  9e4:   08 95           return;
 
 
-; Referenced from offset 0xa8a <CallTable_13> by rcall
+; Referenced from offset 0xa8a <CallTable_13_advanced_menu_prev_item> by rcall
 CallTable_32:
  9e6:   28 8d           r18 = Memory[[r28:r29]+24];
  9e8:   22 5d           r18 -= 210;                         ; 0xd2, no carry
@@ -1981,7 +2002,7 @@ Label_0x9fc:
  9fc:   08 95           return;
 
 
-; Referenced from offset 0x898 <CallTable_3> by rcall
+; Referenced from offset 0x898 <CallTable_3_Select_Current_Menu_Item> by rcall
 ; Referenced from offset 0x9fa <CallTable_32> by rcall
 CallTable_33:
  9fe:   d0 93 a4 00     mem_unknown_0xa4 = r29;             ; 0x00a4
@@ -1995,11 +2016,11 @@ CallTable_33:
  a1a:   08 95           return;
 
 
-; Referenced from offset 0x89c <CallTable_3> by rcall
-; Referenced from offset 0x8d2 <CallTable_3> by rjmp
-; Referenced from offset 0x996 <CallTable_12> by rcall
-; Referenced from offset 0x9a2 <CallTable_6> by rjmp
-CallTable_4:
+; Referenced from offset 0x89c <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0x8d2 <CallTable_3_Select_Current_Menu_Item> by rjmp
+; Referenced from offset 0x996 <CallTable_12_Activate_split_mode> by rcall
+; Referenced from offset 0x9a2 <CallTable_6_Set_Power_Level> by rjmp
+CallTable_4_Exit_Menu:
  a1c:   ab 8d           r26 = Memory[[r28:r29]+27];
  a1e:   ab 8f           Memory[[r28:r29]+27] = r26;
  a20:   a8 8f           Memory[[r28:r29]+24] = r26;
@@ -2021,8 +2042,8 @@ CallTable_4:
  a3e:   08 95           return;
 
 
-; Referenced from offset 0x9b8 <CallTable_7> by rcall
-; Referenced from offset 0xa88 <CallTable_13> by rcall
+; Referenced from offset 0x9b8 <CallTable_7_Edit_Advanced_Parameter> by rcall
+; Referenced from offset 0xa88 <CallTable_13_advanced_menu_prev_item> by rcall
 Function_0xa40:
  a40:   e0 91 00 02     r30 = mem_unknown_0x200;            ; 0x0200
  a44:   f8 8d           r31 = Memory[[r28:r29]+24];
@@ -2052,20 +2073,20 @@ Label_0xa60:
  a62:   2a d4           display_number_on_display();        ; Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
  a64:   08 95           return;
 
-CallTable_13:
+CallTable_13_advanced_menu_prev_item:
  a66:   e0 91 00 02     r30 = mem_unknown_0x200;            ; 0x0200
  a6a:   fa e0           r31 = 10;                           ; 0x0a
  a6c:   e4 36           cmp(r30, 0x64);                     ; 100
  a6e:   08 f4           if (!Carry) goto Label_0xa72;
  a70:   f5 e0           r31 = 5;                            ; 0x05
 
-; Referenced from offset 0xa6e <CallTable_13> by brcc
+; Referenced from offset 0xa6e <CallTable_13_advanced_menu_prev_item> by brcc
 Label_0xa72:
  a72:   ea 30           cmp(r30, 0x0a);                     ; 10
  a74:   08 f4           if (!Carry) goto Label_0xa78;
  a76:   f1 e0           r31 = 1;                            ; 0x01
 
-; Referenced from offset 0xa74 <CallTable_13> by brcc
+; Referenced from offset 0xa74 <CallTable_13_advanced_menu_prev_item> by brcc
 Label_0xa78:
  a78:   ef 0f           r30 += r31;                         ; No carry
  a7a:   48 f0           if (Carry) goto Label_0xa8e;
@@ -2073,9 +2094,9 @@ Label_0xa78:
  a80:   eb 17           cmp(r30, r27);
  a82:   28 f4           if (!Carry) goto Label_0xa8e;
 
-; Referenced from offset 0xa92 <CallTable_13> by rjmp
-; Referenced from offset 0xab0 <CallTable_14> by brcc
-; Referenced from offset 0xab6 <CallTable_14> by rjmp
+; Referenced from offset 0xa92 <CallTable_13_advanced_menu_prev_item> by rjmp
+; Referenced from offset 0xab0 <CallTable_14_advanced_menu_next_item> by brcc
+; Referenced from offset 0xab6 <CallTable_14_advanced_menu_next_item> by rjmp
 Label_0xa84:
  a84:   e0 93 00 02     mem_unknown_0x200 = r30;            ; 0x0200
  a88:   db df           Function_0xa40();
@@ -2083,26 +2104,26 @@ Label_0xa84:
  a8c:   08 95           return;
 
 
-; Referenced from offset 0xa7a <CallTable_13> by brcs
-; Referenced from offset 0xa82 <CallTable_13> by brcc
-; Referenced from offset 0xaa8 <CallTable_14> by brcs
+; Referenced from offset 0xa7a <CallTable_13_advanced_menu_prev_item> by brcs
+; Referenced from offset 0xa82 <CallTable_13_advanced_menu_prev_item> by brcc
+; Referenced from offset 0xaa8 <CallTable_14_advanced_menu_next_item> by brcs
 Label_0xa8e:
  a8e:   e0 91 02 02     r30 = mem_unknown_0x202;            ; 0x0202
  a92:   f8 cf           goto Label_0xa84;
-CallTable_14:
+CallTable_14_advanced_menu_next_item:
  a94:   e0 91 00 02     r30 = mem_unknown_0x200;            ; 0x0200
  a98:   fa e0           r31 = 10;                           ; 0x0a
  a9a:   ee 36           cmp(r30, 0x6e);                     ; 110
  a9c:   08 f4           if (!Carry) goto Label_0xaa0;
  a9e:   f5 e0           r31 = 5;                            ; 0x05
 
-; Referenced from offset 0xa9c <CallTable_14> by brcc
+; Referenced from offset 0xa9c <CallTable_14_advanced_menu_next_item> by brcc
 Label_0xaa0:
  aa0:   ef 30           cmp(r30, 0x0f);                     ; 15
  aa2:   08 f4           if (!Carry) goto Label_0xaa6;
  aa4:   f1 e0           r31 = 1;                            ; 0x01
 
-; Referenced from offset 0xaa2 <CallTable_14> by brcc
+; Referenced from offset 0xaa2 <CallTable_14_advanced_menu_next_item> by brcc
 Label_0xaa6:
  aa6:   ef 1b           r30 -= r31;                         ; No carry
  aa8:   90 f3           if (Carry) goto Label_0xa8e;
@@ -2343,6 +2364,7 @@ Label_0xbbe:
  bbe:   fc e1           r31 = 28;                           ; 0x1c
  bc0:   ee e3           r30 = 62;                           ; 0x3e
  bc2:   ea 0f           r30 += r26;                         ; No carry
+; Grab a byte (current program block?) based on current mode (r18:r0) double it, add it to 0x2000 (or 0x2200)
  bc4:   c8 95           r0 = Flash[r30:r31];
  bc6:   e0 e0           r30 = 0;                            ; 0x00
  bc8:   0e 16           cmp(r0, r30);
@@ -2876,6 +2898,7 @@ Timer0_Overflow:
 ; Referenced from offset 0x18a8 <Function_0x1858> by rcall
 IRQ0_Handler:
  e66:   1f b6           r1 = IO[SREG];
+; enable int1 (audio A digital input)
  e68:   7b b7           r23 = IO[GICR];
  e6a:   70 78           r23 &= 128;                         ; 0x80
  e6c:   7b bf           IO[GICR] = r23;
@@ -2891,6 +2914,7 @@ IRQ0_Handler:
 ; Referenced from offset 0x18ba <Function_0x1858> by rcall
 IRQ1_Handler:
  e7c:   1f b6           r1 = IO[SREG];
+; enable int0 (audio B digital input)
  e7e:   7b b7           r23 = IO[GICR];
  e80:   70 74           r23 &= 64;                          ; 0x40
  e82:   7b bf           IO[GICR] = r23;
@@ -2900,18 +2924,20 @@ IRQ1_Handler:
  e8a:   8d b5           r24 = IO[TCNT1H];
  e8c:   8b bd           IO[OCR1AH] = r24;
  e8e:   7a bd           IO[OCR1AL] = r23;
- e90:   51 c0           goto Label_0xf34;
+ e90:   51 c0           goto IRQ1_Handler;
 
 ; Referenced from offset 0x18 <IVT_TIMER1_COMPA> by jmp
 Timer1_CMP_A:
  e92:   1f b6           r1 = IO[SREG];
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  e94:   54 fc           skipif (!bit(r5,4))
  e96:   06 c0           goto Label_0xea4;
 ; q5
  e98:   c2 9b           skipif (IO_BIT[PORTB,2])            ; 0x04 = 4
- e9a:   0a c0           goto Label_0xeb0;
+ e9a:   0a c0           goto Label_0xea4;
 ; q5
  e9c:   c2 98           IO_BIT[PORTB,2] = false;            ; 0x04 = 4
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  e9e:   43 fc           skipif (!bit(r4,3))
 ; q8
  ea0:   c1 98           IO_BIT[PORTB,1] = false;            ; 0x02 = 2
@@ -2921,19 +2947,19 @@ Timer1_CMP_A:
 Label_0xea4:
  ea4:   c3 9b           skipif (IO_BIT[PORTB,3])            ; 0x08 = 8
 ; above is q6
- ea6:   04 c0           goto Label_0xeb0;
+ ea6:   04 c0           goto Label_0xea4;
 ; q6
  ea8:   c3 98           IO_BIT[PORTB,3] = false;            ; 0x08 = 8
 
 ; Referenced from offset 0xea2 <Timer1_CMP_A> by rjmp
 Label_0xeaa:
  eaa:   00 ff           skipif (bit(r16,0))
- eac:   0c c0           goto Label_0xec6;
+ eac:   0c c0           goto Label_0xeaa;
  eae:   5a c0           goto Label_0xf64;
 
 ; Referenced from offset 0xe9a <Timer1_CMP_A> by rjmp
 ; Referenced from offset 0xea6 <Timer1_CMP_A> by rjmp
-Label_0xeb0:
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  eb0:   54 fc           skipif (!bit(r5,4))
  eb2:   06 c0           goto Label_0xec0;
 ; q6
@@ -2941,10 +2967,11 @@ Label_0xeb0:
  eb6:   17 c0           goto Label_0xee6;
 ; q6
  eb8:   c3 98           IO_BIT[PORTB,3] = false;            ; 0x08 = 8
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  eba:   43 fc           skipif (!bit(r4,3))
 ; q7
  ebc:   c0 98           IO_BIT[PORTB,0] = false;            ; 0x01 = 1
- ebe:   03 c0           goto Label_0xec6;
+ ebe:   03 c0           goto Label_0xee6;
 
 ; Referenced from offset 0xeb2 <Timer1_CMP_A> by rjmp
 Label_0xec0:
@@ -2956,7 +2983,7 @@ Label_0xec0:
 
 ; Referenced from offset 0xeac <Timer1_CMP_A> by rjmp
 ; Referenced from offset 0xebe <Timer1_CMP_A> by rjmp
-Label_0xec6:
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  ec6:   53 fe           skipif (bit(r5,3))
  ec8:   02 c0           goto Label_0xece;
  eca:   73 e0           r23 = 3;                            ; 0x03
@@ -2982,6 +3009,7 @@ Label_0xee6:
  eea:   07 7f           r16 &= 247;                         ; 0xf7
 ; pin D6 is led A (on)
  eec:   96 98           IO_BIT[PORTD,6] = false;            ; 0x40 = 64
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  eee:   43 fc           skipif (!bit(r4,3))
 ; pin D5 is led B (on)
  ef0:   95 98           IO_BIT[PORTD,5] = false;            ; 0x20 = 32
@@ -3002,9 +3030,10 @@ Label_0xf00:
 ; Referenced from offset 0xee8 <Timer1_CMP_A> by rjmp
 Label_0xf0a:
  f0a:   96 99           skipif (!IO_BIT[PORTD,6])           ; 0x40 = 64
- f0c:   08 c0           goto Label_0xf1e;
+ f0c:   08 c0           goto Label_0xf0a;
 ; pin D6 is led A (off)
  f0e:   96 9a           IO_BIT[PORTD,6] = true;             ; 0x40 = 64
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  f10:   43 fc           skipif (!bit(r4,3))
 ; pin D5 is led B (off)
  f12:   95 9a           IO_BIT[PORTD,5] = true;             ; 0x20 = 32
@@ -3013,13 +3042,16 @@ Label_0xf0a:
  f1c:   2c c0           goto Label_0xf76;
 
 ; Referenced from offset 0xf0c <Timer1_CMP_A> by rjmp
-Label_0xf1e:
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  f1e:   55 fe           skipif (bit(r5,5))
- f20:   09 c0           goto Label_0xf34;
+ f20:   09 c0           goto Timer1_CMP_A;
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  f22:   57 fc           skipif (!bit(r5,7))
  f24:   05 c0           goto Label_0xf30;
+; Probably only audio3 mode
  f26:   70 e8           r23 = 128;                          ; 0x80
  f28:   7a bf           IO[GIFR] = r23;
+; enable int1 (audio A digital input)
  f2a:   7b b7           r23 = IO[GICR];
  f2c:   70 68           r23 |= 128;                         ; 0x80
  f2e:   7b bf           IO[GICR] = r23;
@@ -3032,15 +3064,16 @@ Label_0xf30:
 
 ; Referenced from offset 0xe90 <IRQ1_Handler> by rjmp
 ; Referenced from offset 0xf20 <Timer1_CMP_A> by rjmp
-Label_0xf34:
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  f34:   50 fe           skipif (bit(r5,0))
  f36:   1d c0           goto Label_0xf72;
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  f38:   42 fc           skipif (!bit(r4,2))
  f3a:   04 c0           goto Label_0xf44;
  f3c:   07 fd           skipif (!bit(r16,7))
  f3e:   19 c0           goto Label_0xf72;
  f40:   01 ff           skipif (bit(r16,1))
- f42:   08 c0           goto Label_0xf54;
+ f42:   08 c0           goto Label_0xf72;
 
 ; Referenced from offset 0xf3a <IRQ1_Handler> by rjmp
 Label_0xf44:
@@ -3048,18 +3081,21 @@ Label_0xf44:
  f46:   54 fc           skipif (!bit(r5,4))
 ; q6
  f48:   c3 9a           IO_BIT[PORTB,3] = true;             ; 0x08 = 8
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  f4a:   54 fe           skipif (bit(r5,4))
 ; q5
  f4c:   c2 9a           IO_BIT[PORTB,2] = true;             ; 0x04 = 4
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  f4e:   43 fc           skipif (!bit(r4,3))
 ; q8
  f50:   c1 9a           IO_BIT[PORTB,1] = true;             ; 0x02 = 2
  f52:   0f c0           goto Label_0xf72;
 
 ; Referenced from offset 0xf42 <IRQ1_Handler> by rjmp
-Label_0xf54:
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  f54:   50 fe           skipif (bit(r5,0))
  f56:   0d c0           goto Label_0xf72;
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  f58:   42 fc           skipif (!bit(r4,2))
  f5a:   04 c0           goto Label_0xf64;
  f5c:   07 fd           skipif (!bit(r16,7))
@@ -3071,12 +3107,15 @@ Label_0xf54:
 ; Referenced from offset 0xf5a <IRQ1_Handler> by rjmp
 Label_0xf64:
  f64:   08 60           r16 |= 8;                           ; 0x08
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  f66:   54 fc           skipif (!bit(r5,4))
 ; q5
  f68:   c2 9a           IO_BIT[PORTB,2] = true;             ; 0x04 = 4
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
  f6a:   54 fe           skipif (bit(r5,4))
 ; q6
  f6c:   c3 9a           IO_BIT[PORTB,3] = true;             ; 0x08 = 8
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  f6e:   43 fc           skipif (!bit(r4,3))
 ; q7
  f70:   c0 9a           IO_BIT[PORTB,0] = true;             ; 0x01 = 1
@@ -3110,6 +3149,7 @@ Label_0xf76:
 ; Referenced from offset 0x1c <IVT_TIMER1_COMPB> by jmp
 Timer1_CMP_B:
  f8a:   1f b6           r1 = IO[SREG];
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
  f8c:   43 fc           skipif (!bit(r4,3))
  f8e:   25 c0           goto Label_0xfda;
  f90:   a4 fc           skipif (!bit(r10,4))
@@ -3214,8 +3254,10 @@ Label_0x100a:
 100c:   09 c0           goto Label_0x1020;
 100e:   a7 fc           skipif (!bit(r10,7))
 1010:   05 c0           goto Label_0x101c;
+; Probably only audio3 mode
 1012:   70 e4           r23 = 64;                           ; 0x40
 1014:   7a bf           IO[GIFR] = r23;
+; enable int0 (audio B digital input)
 1016:   7b b7           r23 = IO[GICR];
 1018:   70 64           r23 |= 64;                          ; 0x40
 101a:   7b bf           IO[GICR] = r23;
@@ -3231,6 +3273,7 @@ Label_0x101c:
 Label_0x1020:
 1020:   a0 fe           skipif (bit(r10,0))
 1022:   19 c0           goto Label_0x1056;
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
 1024:   42 fc           skipif (!bit(r4,2))
 1026:   04 c0           goto Label_0x1030;
 1028:   03 fd           skipif (!bit(r16,3))
@@ -3247,12 +3290,16 @@ Label_0x1030:
 1036:   a4 fe           skipif (bit(r10,4))
 ; q7
 1038:   c0 9a           IO_BIT[PORTB,0] = true;             ; 0x01 = 1
+
+; Referenced from offset 0x1fd4 <UNKNOWN(0x1fd4)> by rjmp
+Label_0x103a:
 103a:   0d c0           goto Label_0x1056;
 
 ; Referenced from offset 0x102e <IRQ0_Handler> by rjmp
 Label_0x103c:
 103c:   a0 fe           skipif (bit(r10,0))
 103e:   0b c0           goto Label_0x1056;
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
 1040:   42 fc           skipif (!bit(r4,2))
 1042:   04 c0           goto Label_0x104c;
 1044:   03 fd           skipif (!bit(r16,3))
@@ -3279,6 +3326,7 @@ Label_0x104c:
 ; Referenced from offset 0x104a <IRQ0_Handler> by rjmp
 Label_0x1056:
 1056:   7e 2d           r23 = r14;
+; above is r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
 1058:   8d 2f           r24 = r29;
 
 ; Referenced from offset 0xfd8 <Timer1_CMP_B> by rjmp
@@ -3352,6 +3400,7 @@ Label_0x10b2:
 ; Referenced from offset 0x109a <ADC_Conversion_Complete> by brcc
 Label_0x10b8:
 10b8:   88 83           Memory[r28:r29] = r24;
+; r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
 10ba:   46 fe           skipif (bit(r4,6))
 10bc:   06 c0           goto Label_0x10ca;
 10be:   c7 36           cmp(r28, 0x67);                     ; 103
@@ -3425,6 +3474,7 @@ Label_0x111c:
 111e:   00 00           nop
 1120:   94 98           IO_BIT[PORTD,4] = false;            ; 0x10 = 16
 1122:   70 91 05 02     r23 = mem_unknown_0x205;            ; 0x0205
+; r7 is [xA5] Channel A: Current Intensity Modulation Value
 1126:   87 2d           r24 = r7;
 1128:   0f 92           push    r0
 112a:   1f 92           push    r1
@@ -3440,6 +3490,7 @@ Label_0x111c:
 1140:   90 6a           r25 |= 160;                         ; 0xa0
 1142:   90 93 00 05     unkown_spdr_value_0 = r25;          ; 0x0500
 1146:   70 91 06 02     r23 = mem_unknown_0x206;            ; 0x0206
+; r12 is [x1A5] Channel B: Current Intensity Modulation Value
 114a:   8c 2d           r24 = r12;
 114c:   78 9f           r1:r0 = r23 * r24;                  ; Unsigned
 114e:   10 94           com     r1
@@ -3741,9 +3792,9 @@ Label_0x12d6:
 ; Referenced from offset 0x7d2 <CallTable_0_5> by rcall
 ; Referenced from offset 0x7fc <CallTable_2> by rcall
 ; Referenced from offset 0x818 <CallTable_2> by rcall
-; Referenced from offset 0x82e <CallTable_10> by rcall
-; Referenced from offset 0x932 <CallTable_3> by rcall
-; Referenced from offset 0xa26 <CallTable_4> by rcall
+; Referenced from offset 0x82e <CallTable_10_Show_main_menu> by rcall
+; Referenced from offset 0x932 <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0xa26 <CallTable_4_Exit_Menu> by rcall
 ; Referenced from offset 0x1688 <Main> by rcall
 ; Referenced from offset 0x1814 <Function_0x16b8> by rcall
 ; Referenced from offset 0x183a <Function_0x16b8> by rcall
@@ -3762,23 +3813,23 @@ show_Text_on_Display2:     ; Parameter r26
 ; Referenced from offset 0x596 <Main> by rcall
 ; Referenced from offset 0x7ce <CallTable_0_5> by rcall
 ; Referenced from offset 0x7e2 <CallTable_2> by rcall
-; Referenced from offset 0x82a <CallTable_10> by rcall
-; Referenced from offset 0x84a <CallTable_8> by rcall
-; Referenced from offset 0x85e <CallTable_9> by rcall
-; Referenced from offset 0x872 <CallTable_16> by rcall
-; Referenced from offset 0x888 <CallTable_17> by rcall
-; Referenced from offset 0x8a6 <CallTable_3> by rcall
-; Referenced from offset 0x8b2 <CallTable_3> by rcall
-; Referenced from offset 0x8da <CallTable_3> by rcall
-; Referenced from offset 0x8e8 <CallTable_3> by rcall
-; Referenced from offset 0x92a <CallTable_3> by rcall
-; Referenced from offset 0x92e <CallTable_3> by rcall
-; Referenced from offset 0x954 <CallTable_3> by rcall
-; Referenced from offset 0x958 <CallTable_3> by rcall
-; Referenced from offset 0x970 <CallTable_11> by rcall
-; Referenced from offset 0x97c <CallTable_11> by rcall
-; Referenced from offset 0x9a6 <CallTable_7> by rcall
-; Referenced from offset 0xa22 <CallTable_4> by rcall
+; Referenced from offset 0x82a <CallTable_10_Show_main_menu> by rcall
+; Referenced from offset 0x84a <CallTable_8_Display_next_menu_item> by rcall
+; Referenced from offset 0x85e <CallTable_9_Display_prev_menu_item> by rcall
+; Referenced from offset 0x872 <CallTable_16_Switch_to_next_mode> by rcall
+; Referenced from offset 0x888 <CallTable_17_Switch_to_prev_mode> by rcall
+; Referenced from offset 0x8a6 <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0x8b2 <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0x8da <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0x8e8 <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0x92a <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0x92e <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0x954 <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0x958 <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0x970 <CallTable_11_Show_split_mode_settings> by rcall
+; Referenced from offset 0x97c <CallTable_11_Show_split_mode_settings> by rcall
+; Referenced from offset 0x9a6 <CallTable_7_Edit_Advanced_Parameter> by rcall
+; Referenced from offset 0xa22 <CallTable_4_Exit_Menu> by rcall
 ; Referenced from offset 0xb0a <display_lcd_parameters_as_string> by rcall
 ; Referenced from offset 0x167a <error_handler> by rcall
 ; Referenced from offset 0x167e <error_handler> by rcall
@@ -3982,6 +4033,9 @@ divide_word:     ; Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:
 ; Referenced from offset 0x13c0 <divide_word> by brne
 Label_0x13c6:
 13c6:   2f 93           push    r18
+
+; Referenced from offset 0x1c42 <UNKNOWN(0x1c42)> by rjmp
+Label_0x13c8:
 13c8:   2f 92           push    r2
 13ca:   cf 93           push    r28
 13cc:   22 27           r18 = 0x00;                         ; 0
@@ -4038,6 +4092,7 @@ rotate_right:     ; Parameter r30:r31 r26
 ; Referenced from offset 0x1722 <Function_0x16b8> by rcall
 Function_0x1406:
 1406:   af ef           r26 = 0xff;                         ; 255
+; r6 is [x9C] Mode Switch Ramp Value Counter
 1408:   6a 2e           r6 = r26;
 140a:   ba 2e           r11 = r26;
 140c:   00 27           r16 = 0x00;                         ; 0
@@ -4046,7 +4101,7 @@ Function_0x1406:
 1412:   ac 83           Memory[[r28:r29]+4] = r26;
 1414:   ad 83           Memory[[r28:r29]+5] = r26;
 
-; Referenced from offset 0x1482 <Function_0x1406> by rjmp
+; Referenced from offset 0x1482 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rjmp
 Label_0x1416:
 1416:   d0 d0           Function_0x15b8();                  ; Parameter r28:r29, r6
 1418:   3e d0           send_data_to_spdr();
@@ -4063,8 +4118,8 @@ Label_0x1416:
 142e:   a0 e8           r26 = 128;                          ; 0x80
 1430:   da d8           sleep();                            ; Parameter r26
 
-; Referenced from offset 0x1470 <Function_0x1406> by rjmp
-; Referenced from offset 0x1474 <Function_0x1406> by rjmp
+; Referenced from offset 0x1470 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rjmp
+; Referenced from offset 0x1474 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rjmp
 Label_0x1432:
 1432:   c2 d0           Function_0x15b8();                  ; Parameter r28:r29, r6
 1434:   30 d0           send_data_to_spdr();
@@ -4077,13 +4132,13 @@ Label_0x1432:
 1440:   a8 bb           IO[PORTB] = r26;
 1442:   02 c0           goto Label_0x1448;
 
-; Referenced from offset 0x143c <Function_0x1406> by brne
+; Referenced from offset 0x143c <Label_0x1476         bug? the 1.5 bootloader jumps here> by brne
 Label_0x1444:
 1444:   a3 e0           r26 = 3;                            ; 0x03
 ; q5=0 q6=0 q8=1 q7=1
 1446:   a8 bb           IO[PORTB] = r26;
 
-; Referenced from offset 0x1442 <Function_0x1406> by rjmp
+; Referenced from offset 0x1442 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rjmp
 Label_0x1448:
 1448:   a2 e0           r26 = 2;                            ; 0x02
 144a:   cd d8           sleep();                            ; Parameter r26
@@ -4091,21 +4146,21 @@ Label_0x1448:
 144e:   a6 b9           IO[ADCSR] = r26;
 1450:   a0 e4           r26 = 64;                           ; 0x40
 
-; Referenced from offset 0x1454 <Function_0x1406> by brne
+; Referenced from offset 0x1454 <Label_0x1476         bug? the 1.5 bootloader jumps here> by brne
 Label_0x1452:
 1452:   aa 95           r26--;
 1454:   f1 f7           if (c1 != c2) goto Label_0x1452;
 ; q5,6,7,8=0
 1456:   d8 bb           IO[PORTB] = r29;
 
-; Referenced from offset 0x145a <Function_0x1406> by rjmp
+; Referenced from offset 0x145a <Label_0x1476         bug? the 1.5 bootloader jumps here> by rjmp
 Label_0x1458:
 1458:   36 99           skipif (!IO_BIT[ADCSR,6])           ; 0x40 = 64
 145a:   fe cf           goto Label_0x1458;
 145c:   a4 b1           r26 = IO[ADCL];
 145e:   f5 b1           r31 = IO[ADCH];
 1460:   a0 31           cmp(r26, 0x10);                     ; 16
-1462:   48 f4           if (!Carry) goto Label_0x1476;
+1462:   48 f4           if (!Carry) goto Label_0x1476         bug? the 1.5 bootloader jumps here;
 1464:   b3 95           r27++;
 1466:   b0 34           cmp(r27, 0x40);                     ; 64
 1468:   a0 f4           if (!Carry) goto Label_0x1492;
@@ -4114,13 +4169,13 @@ Label_0x1458:
 146e:   bb 87           Memory[[r28:r29]+11] = r27;
 1470:   e0 cf           goto Label_0x1432;
 
-; Referenced from offset 0x146c <Function_0x1406> by brne
+; Referenced from offset 0x146c <Label_0x1476         bug? the 1.5 bootloader jumps here> by brne
 Label_0x1472:
 1472:   bc 87           Memory[[r28:r29]+12] = r27;
 1474:   de cf           goto Label_0x1432;
 
-; Referenced from offset 0x1462 <Function_0x1406> by brcc
-Label_0x1476:
+; Referenced from offset 0x1462 <Label_0x1476         bug? the 1.5 bootloader jumps here> by brcc
+Label_0x1476         bug? the 1.5 bootloader jumps here:
 1476:   b0 30           cmp(r27, 0);
 1478:   61 f0           if (c1 == c2) goto Label_0x1492;
 147a:   00 30           cmp(r16, 0);
@@ -4129,7 +4184,7 @@ Label_0x1476:
 1480:   bb 27           r27 = 0x00;                         ; 0
 1482:   c9 cf           goto Label_0x1416;
 
-; Referenced from offset 0x147c <Function_0x1406> by brne
+; Referenced from offset 0x147c <Label_0x1476         bug? the 1.5 bootloader jumps here> by brne
 Label_0x1484:
 1484:   dc 83           Memory[[r28:r29]+4] = r29;
 1486:   dd 83           Memory[[r28:r29]+5] = r29;
@@ -4140,16 +4195,16 @@ Label_0x1484:
 1490:   08 95           return;
 
 
-; Referenced from offset 0x1468 <Function_0x1406> by brcc
-; Referenced from offset 0x1478 <Function_0x1406> by breq
+; Referenced from offset 0x1468 <Label_0x1476         bug? the 1.5 bootloader jumps here> by brcc
+; Referenced from offset 0x1478 <Label_0x1476         bug? the 1.5 bootloader jumps here> by breq
 Label_0x1492:
 1492:   a4 e1           r26 = 20;                           ; 0x14
 1494:   f0 c0           goto error_handler;
 
 ; Referenced from offset 0x60a <Function_0x604> by rcall
-; Referenced from offset 0x1418 <Function_0x1406> by rcall
-; Referenced from offset 0x1434 <Function_0x1406> by rcall
-; Referenced from offset 0x148a <Function_0x1406> by rcall
+; Referenced from offset 0x1418 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
+; Referenced from offset 0x1434 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
+; Referenced from offset 0x148a <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
 ; Referenced from offset 0x179a <Function_0x16b8> by rcall
 send_data_to_spdr:
 1496:   94 98           IO_BIT[PORTD,4] = false;            ; 0x10 = 16
@@ -4319,7 +4374,7 @@ Label_0x1584:
 158e:   08 95           return;
 
 
-; Referenced from offset 0x942 <CallTable_3> by rcall
+; Referenced from offset 0x942 <CallTable_3_Select_Current_Menu_Item> by rcall
 ; Referenced from offset 0x1518 <RESET> by rcall
 ; Referenced from offset 0x157a <copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3> by rcall
 ; Referenced from offset 0x17da <Function_0x16b8> by rcall
@@ -4341,8 +4396,8 @@ Label_0x1598:
 15a2:   08 95           return;
 
 
-; Referenced from offset 0x926 <CallTable_3> by rcall
-; Referenced from offset 0x944 <CallTable_3> by rcall
+; Referenced from offset 0x926 <CallTable_3_Select_Current_Menu_Item> by rcall
+; Referenced from offset 0x944 <CallTable_3_Select_Current_Menu_Item> by rcall
 ; Referenced from offset 0x17dc <Function_0x16b8> by rcall
 ; Referenced from offset 0x17e6 <Function_0x16b8> by rcall
 copy_flash_0x01f3_to_eeprom_0x8_length_12:
@@ -4363,14 +4418,15 @@ Label_0x15ac:
 
 ; Referenced from offset 0x316 <Main> by call
 ; Referenced from offset 0x608 <Function_0x604> by rcall
-; Referenced from offset 0x1416 <Function_0x1406> by rcall
-; Referenced from offset 0x1432 <Function_0x1406> by rcall
-; Referenced from offset 0x1488 <Function_0x1406> by rcall
+; Referenced from offset 0x1416 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
+; Referenced from offset 0x1432 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
+; Referenced from offset 0x1488 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rcall
 ; Referenced from offset 0x1798 <Function_0x16b8> by rcall
 Function_0x15b8:     ; Parameter r28:r29, r6
 15b8:   af 93           push    r26
 15ba:   bf 93           push    r27
 15bc:   ec 81           r30 = Memory[[r28:r29]+4];
+; r6 is [x9C] Mode Switch Ramp Value Counter
 15be:   26 2d           r18 = r6;
 15c0:   2b 84           r2 = Memory[[r28:r29]+11];
 15c2:   00 24           r0 = 0x00;                          ; 0
@@ -4495,12 +4551,12 @@ Label_0x1674:
 
 ; Referenced from offset 0x3ea <Main> by jmp
 ; Referenced from offset 0x796 <run_call_table> by rjmp
-; Referenced from offset 0x914 <CallTable_3> by rcall
+; Referenced from offset 0x914 <CallTable_3_Select_Current_Menu_Item> by rcall
 ; Referenced from offset 0xb70 <r26_is_random_between_mem0x8D_and_mem0x8E> by rcall
 ; Referenced from offset 0xbba <CallTable_22> by rjmp
 ; Referenced from offset 0x1396 <divide> by rjmp
 ; Referenced from offset 0x13c4 <divide_word> by rjmp
-; Referenced from offset 0x1494 <Function_0x1406> by rjmp
+; Referenced from offset 0x1494 <Label_0x1476         bug? the 1.5 bootloader jumps here> by rjmp
 ; Referenced from offset 0x15fa <Function_0x15b8> by rjmp
 ; Referenced from offset 0x16e4 <Function_0x16b8> by rjmp
 ; Referenced from offset 0x1a1e <write_r26_to_com_buffer> by rjmp
@@ -4522,6 +4578,7 @@ Label_0x1686:
 1688:   29 de           show_Text_on_Display2();            ; Parameter r26
 168a:   f8 94           Disable_Interrupts();
 168c:   d9 bf           IO[TIMSK] = r29;
+; disable interrupts
 168e:   db bf           IO[GICR] = r29;
 1690:   a0 ee           r26 = 224;                          ; 0xe0
 ; turns off D
@@ -4895,6 +4952,7 @@ Label_0x1896:
 18a0:   a8 81           r26 = Memory[r28:r29];
 18a2:   a0 6a           r26 |= 160;                         ; 0xa0
 18a4:   a8 83           Memory[r28:r29] = r26;
+; r5 is [x90] Channel A: Current Gate Value (0 when no output)
 18a6:   5a 2e           r5 = r26;
 18a8:   de da           IRQ0_Handler();
 
@@ -5162,7 +5220,7 @@ Label_0x19de:
 19f0:   08 95           return;
 
 
-; Referenced from offset 0x8ce <CallTable_3> by call
+; Referenced from offset 0x8ce <CallTable_3_Select_Current_Menu_Item> by call
 ; Referenced from offset 0x15ae <copy_flash_0x01f3_to_eeprom_0x8_length_12> by rcall
 ; Referenced from offset 0x17aa <Function_0x16b8> by rcall
 ; Referenced from offset 0x17b2 <Function_0x16b8> by rcall
@@ -5192,7 +5250,7 @@ Label_0x19f4:
 ; Referenced from offset 0x416 <Main> by call
 ; Referenced from offset 0x424 <Main> by call
 ; Referenced from offset 0x430 <Main> by call
-; Referenced from offset 0x8fa <CallTable_3> by call
+; Referenced from offset 0x8fa <CallTable_3_Select_Current_Menu_Item> by call
 ; Referenced from offset 0x18d8 <Function_0x1858> by rcall
 ; Referenced from offset 0x18f0 <Function_0x1858> by rcall
 ; Referenced from offset 0x18f4 <Function_0x1858> by rcall
@@ -5224,7 +5282,7 @@ Label_0x1a20:
 
 
 ; Referenced from offset 0x60 <Main> by call
-; Referenced from offset 0x8fe <CallTable_3> by call
+; Referenced from offset 0x8fe <CallTable_3_Select_Current_Menu_Item> by call
 send_com_buffer_to_USART:
 1a2e:   5d 9b           skipif (IO_BIT[UCSRA,5])            ; 0x20 = 32
 1a30:   08 95           return;
@@ -5277,7 +5335,7 @@ lcd_putchar:     ; Parameter r29
 1a74:   08 95           return;
 
 
-; Referenced from offset 0x946 <CallTable_3> by jmp
+; Referenced from offset 0x946 <CallTable_3_Select_Current_Menu_Item> by jmp
 ; Referenced from offset 0x1904 <Function_0x1858> by rjmp
 reset_device:
 1a76:   f8 94           Disable_Interrupts();
@@ -5288,8 +5346,11 @@ reset_device:
 Function_0x1a7c:     ; Parameters r9,r8,r7
 1a7c:   e8 94           clt
 1a7e:   aa 27           r26 = 0x00;                         ; 0
+; r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
 1a80:   b8 2d           r27 = r8;
+; r7 is [xA5] Channel A: Current Intensity Modulation Value
 1a82:   e7 2d           r30 = r7;
+; above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
 1a84:   f9 2d           r31 = r9;
 
 ; Referenced from offset 0x1af0 <Function_0x1a7c> by rjmp
@@ -5351,6 +5412,7 @@ Label_0x1ab8:
 1ace:   e0 93 09 02     mem_unknown_0x209 = r30;            ; 0x0209
 1ad2:   f0 93 0a 02     mem_unknown_0x20a = r31;            ; 0x020a
 1ad6:   22 27           r18 = 0x00;                         ; 0
+; r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
 1ad8:   28 2c           r2 = r8;
 1ada:   2e 1b           r18 -= r30;                         ; No carry
 1adc:   2f 0a           r2 += r31;                          ; With carry
@@ -5359,7 +5421,9 @@ Label_0x1ab8:
 1ae6:   68 94           set
 1ae8:   aa 27           r26 = 0x00;                         ; 0
 1aea:   bd 2d           r27 = r13;
+; r12 is [x1A5] Channel B: Current Intensity Modulation Value
 1aec:   ec 2d           r30 = r12;
+; r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
 1aee:   fe 2d           r31 = r14;
 1af0:   ca cf           goto Label_0x1a86;
 
@@ -5927,240 +5991,541 @@ String_0x1f90_Space8_3_0:    ; Address 0x1f90 (8080)
 .word 0x6401
 .word 0xfa0f
 
-; Inline PGM data: 3845 words starting at 0x1ff6 (Garbage)
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
-.word 0xffff
+; Inline PGM data: 10 bytes starting at 0x1ff6 (unknown)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 10 bytes starting at 0x2000 (programblock_climbc_blockb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 10 bytes starting at 0x200a (programblock_climbc_blockc)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 14 bytes starting at 0x2014 (programblock_strokeb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 4 bytes starting at 0x2022 (programblock_phase2)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 6 bytes starting at 0x2026 (programblock_wavesb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 12 bytes starting at 0x202c (programblock_comboa)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 6 bytes starting at 0x2038 (programblock_combob)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 4 bytes starting at 0x203e (programblock_intensea)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 32 bytes starting at 0x2042 (programblock_rhythm)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 14 bytes starting at 0x2062 (programblock_rhythm_blockb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 22 bytes starting at 0x2070 (programblock_toggle)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 16 bytes starting at 0x2086 (programblock_toggle_blockb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 12 bytes starting at 0x2096 (programblock_phase1a)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 4 bytes starting at 0x20a2 (programblock_phase2a)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 16 bytes starting at 0x20a6 (programblock_phase3)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 6 bytes starting at 0x20b6 (programblock_audio12)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 20 bytes starting at 0x20bc (programblock_orgasm)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 24 bytes starting at 0x20d0 (programblock_orgasm_blockb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 12 bytes starting at 0x20e8 (programblock_orgasm_blockd)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 8 bytes starting at 0x20f4 (unknown)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 8 bytes starting at 0x20fc (programblock_intenseb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 22 bytes starting at 0x2104 (programblock_climbc_blockc)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 40 bytes starting at 0x211a (programblock_climbc_torment)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 10 bytes starting at 0x2142 (programblock_torment_blockb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 10 bytes starting at 0x214c (programblock_torment_blockc)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 10 bytes starting at 0x2156 (programblock_torment_blockd)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 36 bytes starting at 0x2160 (programblock_torment_random2)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 10 bytes starting at 0x2184 (programblock_strokeb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 8 bytes starting at 0x218e (programblock_audio3)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 16 bytes starting at 0x2196 (programblock_climba)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 8 bytes starting at 0x21a6 (programblock_climba_blockb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 8 bytes starting at 0x21ae (programblock_climba_blockc)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 18 bytes starting at 0x21b6 (programblock_climbb)
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+.byte 0xff
+
+; Inline PGM data: 3717 words starting at 0x21c8 (random_unknown)
 .word 0xffff
 .word 0xffff
 .word 0xffff
@@ -9773,153 +10138,112 @@ String_0x1f90_Space8_3_0:    ; Address 0x1f90 (8080)
 .word 0xffff
 .word 0xffff
 .word 0xffff
+.word 0xefef
+.word 0xe3ff
+.word 0x95c8
+.word 0xbe01
+.word 0xe50f
+.word 0xbf0d
+.word 0xe004
+.word 0xbf0e
+.word 0x24aa
+.word 0xbcaf
+.word 0xe005
+.word 0xbd0e
+.word 0xe003
+.word 0xbb04
+.word 0xec01
+.word 0xbb05
+.word 0xe600
+.word 0xbb01
+.word 0xbb02
+.word 0xe057
+.word 0xee6d
+.word 0xe77c
+.word 0xe98a
+.word 0xbca0
+.word 0xe109
+.word 0xb909
+.word 0xb8ab
+.word 0xe108
+.word 0xb90a
+.word 0xe806
+.word 0xbd00
+.word 0xe293
+.word 0xe604
+.word 0x2ec0
+.word 0xe105
+.word 0x2ed0
+.word 0x24bb
+.word 0xb303
+.word 0x7c00
+.word 0x3000
+.word 0xf0d1
+.word 0x27ee
+.word 0x27ff
+.word 0x27aa
+.word 0x27bb
+.word 0x27cc
+.word 0x9005
+.word 0x0da0
+.word 0x1dba
+.word 0x25c0
+.word 0x33fd
+.word 0xf7d1
+.word 0x3fe0
+.word 0xf7c1
+.word 0x9005
+.word 0x160c
+.word 0x9005
+.word 0x060a
+.word 0x95c8
+.word 0x060b
+.word 0xf431
+.word 0x940c
+.word 0x0a53
+.word 0xe101
+.word 0xbf07
+.word 0x95e8
+.word 0xcfbd
+.word 0xe403
+.word 0xb90c
+.word 0xd08b
+.word 0xeb24
+.word 0xe443
+.word 0xe031
+.word 0xc000
+.word 0x995f
+.word 0xc00c
+.word 0xd08d
+.word 0xf7e1
+.word 0xb3a2
+.word 0xe6b0
+.word 0x27ab
+.word 0xbba2
+.word 0x952a
+.word 0xf409
+.word 0xcfd4
+.word 0xb94c
+.word 0xd07a
+.word 0xcff2
+.word 0xb10c
+.word 0x3001
+.word 0xf041
+.word 0x3004
+.word 0xf769
+.word 0xe006
+.word 0xb90c
+.word 0xd071
+.word 0xd079
+.word 0xf7f1
+.word 0xcfdc
+.word 0x3443
+.word 0xf411
+.word 0xe145
+.word 0xe02a
+.word 0xe0a0
+.word 0xe0b3
 
-
-; Referenced from offset 0x3e84 <bootloader> by rjmp
-bootloader:
-3e00:   ef ef           r30 = 0xff;                         ; 255
-3e02:   ff e3           r31 = 63;                           ; 0x3f
-3e04:   c8 95           r0 = Flash[r30:r31];
-3e06:   01 be           IO[OCDR] = r0;
-3e08:   0f e5           r16 = 95;                           ; 0x5f
-3e0a:   0d bf           IO[SPL] = r16;
-3e0c:   04 e0           r16 = 4;                            ; 0x04
-3e0e:   0e bf           IO[SPH] = r16;
-3e10:   aa 24           r10 = 0x00;                         ; 0
-3e12:   af bc           IO[TCCR1A] = r10;
-3e14:   05 e0           r16 = 5;                            ; 0x05
-3e16:   0e bd           IO[TCCR1B] = r16;
-3e18:   03 e0           r16 = 3;                            ; 0x03
-3e1a:   04 bb           IO[DDRC] = r16;
-3e1c:   01 ec           r16 = 193;                          ; 0xc1
-3e1e:   05 bb           IO[PORTC] = r16;
-3e20:   00 e6           r16 = 96;                           ; 0x60
-3e22:   01 bb           IO[DDRD] = r16;
-3e24:   02 bb           IO[PORTD] = r16;
-3e26:   57 e0           r21 = 7;                            ; 0x07
-3e28:   6d ee           r22 = 237;                          ; 0xed
-3e2a:   7c e7           r23 = 124;                          ; 0x7c
-3e2c:   8a e9           r24 = 154;                          ; 0x9a
-3e2e:   a0 bc           IO[UBRRH] = r10;
-3e30:   09 e1           r16 = 25;                           ; 0x19
-3e32:   09 b9           IO[UBRRL] = r16;
-3e34:   ab b8           IO[UCSRA] = r10;
-3e36:   08 e1           r16 = 24;                           ; 0x18
-3e38:   0a b9           IO[UCSRB] = r16;
-3e3a:   06 e8           r16 = 134;                          ; 0x86
-3e3c:   00 bd           IO[UBRRH] = r16;
-3e3e:   93 e2           r25 = 35;                           ; 0x23
-3e40:   04 e6           r16 = 100;                          ; 0x64
-3e42:   c0 2e           r12 = r16;
-3e44:   05 e1           r16 = 21;                           ; 0x15
-3e46:   d0 2e           r13 = r16;
-3e48:   bb 24           r11 = 0x00;                         ; 0
-3e4a:   03 b3           r16 = IO[PINC];
-3e4c:   00 7c           r16 &= 192;                         ; 0xc0
-3e4e:   00 30           cmp(r16, 0);
-3e50:   d1 f0           if (c1 == c2) goto Label_0x3e86;
-
-; Referenced from offset 0x3ea8 <bootloader> by rjmp
-Label_0x3e52:
-3e52:   ee 27           r30 = 0x00;                         ; 0
-3e54:   ff 27           r31 = 0x00;                         ; 0
-3e56:   aa 27           r26 = 0x00;                         ; 0
-3e58:   bb 27           r27 = 0x00;                         ; 0
-3e5a:   cc 27           r28 = 0x00;                         ; 0
-
-; Referenced from offset 0x3e66 <bootloader> by brne
-; Referenced from offset 0x3e6a <bootloader> by brne
-Label_0x3e5c:
-3e5c:   05 90           lpm     r0, Z+
-3e5e:   a0 0d           r26 += r0;                          ; No carry
-3e60:   ba 1d           r27 += r10;                         ; With carry
-3e62:   c0 25           r28 ^= r0;
-3e64:   fd 33           cmp(r31, 0x3d);                     ; 61
-3e66:   d1 f7           if (c1 != c2) goto Label_0x3e5c;
-3e68:   e0 3f           cmp(r30, 0xf0);                     ; 240
-3e6a:   c1 f7           if (c1 != c2) goto Label_0x3e5c;
-3e6c:   05 90           lpm     r0, Z+
-3e6e:   0c 16           cmp(r0, r28);
-3e70:   05 90           lpm     r0, Z+
-3e72:   0a 06           cmp(r0, r26);                       ; with carry
-3e74:   c8 95           r0 = Flash[r30:r31];
-3e76:   0b 06           cmp(r0, r27);                       ; with carry
-3e78:   31 f4           if (c1 != c2) goto Label_0x3e86;
-3e7a:   0c 94 53 0a     goto RESET;
-
-; Referenced from offset 0x3ec4 <bootloader> by rjmp
-; Referenced from offset 0x3f16 <bootloader> by rjmp
-Label_0x3e7e:
-3e7e:   01 e1           r16 = 17;                           ; 0x11
-3e80:   07 bf           IO[SPMCR] = r16;
-3e82:   e8 95           spm
-3e84:   bd cf           goto bootloader;
-
-; Referenced from offset 0x3e50 <bootloader> by breq
-; Referenced from offset 0x3e78 <bootloader> by brne
-Label_0x3e86:
-3e86:   03 e4           r16 = 67;                           ; 0x43
-3e88:   0c b9           IO[UDR] = r16;
-3e8a:   8b d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
-3e8c:   24 eb           r18 = 180;                          ; 0xb4
-3e8e:   43 e4           r20 = 67;                           ; 0x43
-3e90:   31 e0           r19 = 1;                            ; 0x01
-3e92:   00 c0           goto Label_0x3e94;
-
-; Referenced from offset 0x3e92 <bootloader> by rjmp
-; Referenced from offset 0x3e9a <bootloader> by brne
-; Referenced from offset 0x3eae <bootloader> by rjmp
-; Referenced from offset 0x3eb8 <bootloader> by brne
-; Referenced from offset 0x3ee4 <bootloader> by rjmp
-; Referenced from offset 0x3f10 <bootloader> by rjmp
-; Referenced from offset 0x3fa0 <bootloader> by rjmp
-Label_0x3e94:
-3e94:   5f 99           skipif (!IO_BIT[UCSRA,7])           ; 0x80 = 128
-3e96:   0c c0           goto Label_0x3eb0;
-3e98:   8d d0           get_TOV1_flag();
-3e9a:   e1 f7           if (c1 != c2) goto Label_0x3e94;
-3e9c:   a2 b3           r26 = IO[PORTD];
-3e9e:   b0 e6           r27 = 96;                           ; 0x60
-3ea0:   ab 27           r26 ^= r27;
-3ea2:   a2 bb           IO[PORTD] = r26;
-3ea4:   2a 95           r18--;
-3ea6:   09 f4           if (c1 != c2) goto Label_0x3eaa;
-3ea8:   d4 cf           goto Label_0x3e52;
-
-; Referenced from offset 0x3ea6 <bootloader> by brne
-Label_0x3eaa:
-3eaa:   4c b9           IO[UDR] = r20;
-3eac:   7a d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
-3eae:   f2 cf           goto Label_0x3e94;
-
-; Referenced from offset 0x3e96 <bootloader> by rjmp
-Label_0x3eb0:
-3eb0:   0c b1           r16 = IO[UDR];
-3eb2:   01 30           cmp(r16, 0x01);                     ; 1
-3eb4:   41 f0           if (c1 == c2) goto Label_0x3ec6;
-3eb6:   04 30           cmp(r16, 0x04);                     ; 4
-3eb8:   69 f7           if (c1 != c2) goto Label_0x3e94;
-3eba:   06 e0           r16 = 6;                            ; 0x06
-3ebc:   0c b9           IO[UDR] = r16;
-3ebe:   71 d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
-
-; Referenced from offset 0x3ec2 <bootloader> by brne
-Label_0x3ec0:
-3ec0:   79 d0           get_TOV1_flag();
-3ec2:   f1 f7           if (c1 != c2) goto Label_0x3ec0;
-3ec4:   dc cf           goto Label_0x3e7e;
-
-; Referenced from offset 0x3eb4 <bootloader> by breq
-Label_0x3ec6:
-3ec6:   43 34           cmp(r20, 0x43);                     ; 67
-3ec8:   11 f4           if (c1 != c2) goto Label_0x3ece;
-3eca:   45 e1           r20 = 21;                           ; 0x15
-3ecc:   2a e0           r18 = 10;                           ; 0x0a
-
-; Referenced from offset 0x3ec8 <bootloader> by brne
-Label_0x3ece:
-3ece:   a0 e0           r26 = 0;                            ; 0x00
-3ed0:   b3 e0           r27 = 3;                            ; 0x03
 3ed2:   67 d0           set_TCNT1_0xe17b_and_rest_TOV1_flag();
 3ed4:   00 c0           goto Label_0x3ed6;
 
