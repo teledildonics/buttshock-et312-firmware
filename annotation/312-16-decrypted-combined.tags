@@ -676,18 +676,21 @@
 0x58	T	is there anything in the com buffer to send? is so go and send it
 0x11c4	T	enable RXEN and TXEN in USART control register (no interrupts)
 
-0x11b6	T	set r17[bit5]
-0x11c2	T	above set r17[bit5], set r17[bit6]
-0x1984	T	above unset r17[bit5]. set r17[bit6]
-0x5c2	T	toggle r17[bit5]
-0x66	T	r17[bit5] probably means we have something serial to take care of
+0x11b6	T	set r17[bit5-received-serial-command] 
+0x11c2	T	above set r17[bit5-received-serial-command], set r17[bit6]
+0x1858	L	handle_received_serial_command
+0x1984	T	above unset r17[bit5-received-serial-command]. set r17[bit6]
+0x66	T	r17[bit5-received-serial-command]?
 
-0x612	T	set r17[bit0] , set r17[bit1]
-0x624	T	set r17[bit1], unset r17[bit1]
-0x766	T	toggle r17[bit0] toggle r17[bit1]
-0x776	T	set r17[bit0], set r17[bit1]
-0x63a	T	unset r17[bit1]
+0x612	T	set r17[bit0] , set r17[bit1-is-splitmode]
+0x624	T	unset r17[bit1-is-splitmode],  set r17[bit0]
+0x628	T	r26 is 0x78 $4078 (current displayed menu item)
+0x62c	T	menu item mode is not Split
+0x766	T	toggle r17[bit0] toggle r17[bit1-is-splitmode]
+0x776	T	set r17[bit0], set r17[bit1-is-splitmode]
+0x63a	T	unset r17[bit1-is-splitmode]
 
+0x5c2	T	toggle r17[bit4-something-to-do-with-MA]
 0x77a	T	unset r17[bit4-something-to-do-with-MA]
 0x786	T	set r17[bit4-something-to-do-with-MA]
 0x5a4	T	r17[bit4-something-to-do-with-MA]
