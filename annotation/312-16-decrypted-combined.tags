@@ -370,41 +370,41 @@
 0x1fa4	P	W	28	fla_unknown_0x1fa4
 0x1fdc	P	W	8	fla_unknown_0x1fdc
 0x1fec	P	W	5	fla_unknown_0x1fec	ref from 0x3be
-
-0x2000  P       B       10      programblock_climbc_blockb
-0x200a  P       B       10      programblock_climbc_blockc
-0x2014  P       B       14      programblock_strokeb
-0x2022  P       B       4       programblock_phase2
-0x2026  P       B       6       programblock_wavesb
-0x202C  P       B       12      programblock_comboa
-0x2038  P       B       6       programblock_combob
-0x203e  P       B       4       programblock_intensea
-0x2042  P       B       32      programblock_rhythm
-0x2062  P       B       14      programblock_rhythm_blockb
-0x2070  P       B       22      programblock_toggle
-0x2086  P       B       14      programblock_toggle_blockb
-0x2096  P       B       12      programblock_phase1a
-0x20A2  P       B       4       programblock_phase2a
-0x20A6  P       B       16      programblock_phase3
-0x20B6  P       B       6       programblock_audio12
-0x20Bc  P       B       20      programblock_orgasm
-0x20d0  P       B       24      programblock_orgasm_blockb
-0x20e8  P       B       12      programblock_orgasm_blockd
-0x20f4  P       B       8       unknown
-0x20fc  P       B       8       programblock_intenseb
-0x2104  P       B       22      programblock_climbc_blockc
-0x211A  P       B       40      programblock_climbc_torment
-0x2142  P       B       10      programblock_torment_blockb
-0x214c  P       B       10      programblock_torment_blockc
-0x2156  P       B       10      programblock_torment_blockd
-0x2160  P       B       36      programblock_torment_random2
-0x2184  P       B       10      programblock_strokeb
-0x218E  P       B       8       programblock_audio3
-0x2196  P       B       16      programblock_climba
-0x21A6  P       B       8       programblock_climba_blockb
-0x21AE  P       B       8       programblock_climba_blockc
-0x21B6  P       B       18      programblock_climbb
-0x21C8  P       W       3717    random_unknown
+0x1ff6	P	B	10	unknown
+0x2000	P	B	10	programblock_climbc_blockb
+0x200a	P	B	10	programblock_climbc_blockc
+0x2014	P	B	14	programblock_strokeb
+0x2022	P	B	4	programblock_phase2
+0x2026	P	B	6	programblock_wavesb
+0x202C	P	B	12	programblock_comboa
+0x2038	P	B	6	programblock_combob
+0x203e	P	B	4	programblock_intensea
+0x2042	P	B	32	programblock_rhythm
+0x2062	P	B	14	programblock_rhythm_blockb
+0x2070	P	B	22	programblock_toggle
+0x2086	P	B	16	programblock_toggle_blockb
+0x2096	P	B	12	programblock_phase1a
+0x20A2	P	B	4	programblock_phase2a
+0x20A6	P	B	16	programblock_phase3
+0x20B6	P	B	6	programblock_audio12
+0x20Bc	P	B	20	programblock_orgasm
+0x20d0	P	B	24	programblock_orgasm_blockb
+0x20e8	P	B	12	programblock_orgasm_blockd
+0x20f4	P	B	8	unknown
+0x20fc	P	B	8	programblock_intenseb
+0x2104	P	B	22	programblock_climbc_blockc
+0x211A	P	B	40	programblock_climbc_torment
+0x2142	P	B	10	programblock_torment_blockb
+0x214c	P	B	10	programblock_torment_blockc
+0x2156	P	B	10	programblock_torment_blockd
+0x2160	P	B	36	programblock_torment_random2
+0x2184	P	B	10	programblock_strokeb
+0x218E	P	B	8	programblock_audio3
+0x2196	P	B	16	programblock_climba
+0x21A6	P	B	8	programblock_climba_blockb
+0x21AE	P	B	8	programblock_climba_blockc
+0x21B6	P	B	18	programblock_climbb
+0x21C8	P	W	3717	random_unknown
 
 0x3ff8	P	S	1	authors_initials
 0x438	T	look if we need to run a command (0x0070-$4070-execute_command)
@@ -598,6 +598,6 @@
 0x74a	T	Mode: Phase3 (blocks 22)
 0x756	T	Mode: User1-7 read blocks from eprom 0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e (start vector user1-7)
 0x47c	T	If 0x74-$4074 is a 1 then we want to start Random1 mode (if it's 0 we're not in Random1 mode)
-0x458   T       x84-0x4084
-0xbc4   T       Grab a byte (current program block?) based on current mode (r18:r0) double it, add it to 0x2000 (or 0x2200)
-0x1476  L       Label_0x1476         bug? the 1.5 bootloader jumps here
+0x458	T	x84-0x4084
+0xbc4	T	Grab a byte (current program block?) based on current mode (r18:r0) double it, add it to 0x2000 (or 0x2200)
+0x1476	L	Label_0x1476         bug? the 1.5 bootloader jumps here
