@@ -604,3 +604,63 @@
 0x458	T	x84-0x4084
 0xbc4	T	Grab a byte (current program block?) based on current mode (r18:r0) double it, add it to 0x2000 (or 0x2200)
 0x1476	L	Label_0x1476         bug? the 1.5 bootloader jumps here
+
+0x1408	T	r6 is [x9C] Mode Switch Ramp Value Counter
+0x15be	T	r6 is [x9C] Mode Switch Ramp Value Counter
+
+0x1126	T	r7 is [xA5] Channel A: Current Intensity Modulation Value
+0x1a82	T	r7 is [xA5] Channel A: Current Intensity Modulation Value
+0x54a	T	r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
+0x572	T	r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
+0x77c	T	r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
+0x1a80	T	r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
+0x1ad8	T	r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
+0x52a	T	above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
+0x5cc	T	r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
+0x780	T	r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
+0x7f4	T	above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
+0x1a84	T	above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
+0x114a	T	r12 is [x1A5] Channel B: Current Intensity Modulation Value
+0x1aec	T	r12 is [x1A5] Channel B: Current Intensity Modulation Value
+0x544	T	above is r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
+0x5cc	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
+0x5d8	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
+0x780	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
+0x1058	T	above is r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
+0x1aee	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
+0x6a	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x2f6	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x302	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x4b8	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x62e	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x634	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x72a	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x76a	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0xe9e	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0xeba	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0xeee	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0xf10	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0xf38	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0xf4e	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0xf58	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0xf6e	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0xf8c	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x1024	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x1040	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x10ba	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x72	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0x2a4	T	above r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0x2ac	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0x53a	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xe94	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xeb0	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xec6	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xf1e	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xf22	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xf34	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xf47	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xf4a	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xf54	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xf66	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0xf6a	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0x18a6	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
