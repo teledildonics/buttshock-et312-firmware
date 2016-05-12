@@ -664,3 +664,12 @@
 0xf66	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
 0xf6a	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
 0x18a6	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+
+0xf2a	T	enable int1 (audio A digital input)
+0xf26	T	Probably only audio3 mode
+0x1012	T	Probably only audio3 mode
+0xe68	T	enable int1 (audio A digital input)
+0x1016	T	enable int0 (audio B digital input)
+0xe7e	T	enable int0 (audio B digital input)
+0x168e	T	disable interrupts
+
