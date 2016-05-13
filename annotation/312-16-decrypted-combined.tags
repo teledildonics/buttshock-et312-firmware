@@ -32,7 +32,7 @@
 0x1178	L		USART_RX_Complete
 
 0x031c	L		set_routine_timer					Parameter r26:r27, returns r0, sets T flag
-0x0352	L		CallTable_29						Parameter r28:r29, set up registers r4-r14 with current A and B values
+0x0352	L		CallTable_29_set_up_r4-14_with_a_and_b_values						Parameter r28:r29
 0x0390	L		load_two_bytes_relative_to_Z		Parameter: r30:r31 (Z), returns r18, r0
 0x03a8	L		sum_two_bytes_from_fla_unknown_0x1fec_plus_offset_at_z_minus_156_and_add_r18		Parameter r18, return value r18
 0x059c	L		update_current_channel_multi_adjust_value
@@ -173,7 +173,8 @@
 0x00c0	M	B	1	space_for_user_routine_scratchpad_a
 0x0180	M	B	1	write_lcd_parameter
 0x0181	M	B	1	write_lcd_position
-0x0185	M	B	8	mem_unknown_0x185				
+0x0185	M	B	1	need_to_show_select_mode_message
+0x0186	M	B	7	mem_unknown_0x186
 0x0188	M	B	8	mem_unknown_0x188				Copied from 0x1fa4
 0x0190	M	B	1	channel_b_current_gate_value			Copied from 0x1fa4+8, 0 when no output
 0x0191	M	B	1	mem_unknown_0x191				Copied from 0x1fa4+9
@@ -496,9 +497,9 @@
 0x1894	T	display "Linked"
 0x17f8	T	draw the self-test bargraph with a delay between characters
 0x16ea	T	our box has a battery
-0xb4	T	bit 2 of r16 is set if we're slave to another box
-0x516	T	bit 2 of r16 is set if we're slave to another box, in which case all the hardware buttons do nothing
-0x1880	T	if we got a 0x0e we're a slave box, send back a 0x05 and set bit 2 of r16
+0xb4	T	bit2 of r16 is set if we're slave to another box
+0x516	T	bit2 of r16 is set if we're slave to another box, in which case all the hardware buttons do nothing
+0x1880	T	if we got a 0x0e we're a slave box, send back a 0x05 and set bit2 of r16
 0x91e	T	display "Linked" (master)
 0x3d8	T	if r17[bit7] is set we're a linked master
 0x3f2	T	bug? this infinite loop if we fail to get the right handshake back from slave; should try 4 times?
@@ -526,10 +527,10 @@
 0x378	T	r12=[x1A5] (Channel B version of r7)
 0x37a	T	r13=min(9,[x1AE]) (Channel B version of r8)
 0x384	T	r14=min(50,[x1B7]) (Channel B version of r9)
-0x78c	T	0x73=$4073-master-timer-lsb
-0x7e6	T	0x4064-Level Pot A - CBLOCK_POT_A_OFFSET (ADC4)
-0x7ec	T	0x4065-Level Pot B - CBLOCK_POT_B_OFFSET (ADC5)
-0x7f0	T	0x409C-Mode Switch Ramp Value Counter
+0x78c	T	$406d-menu-state set to 2
+0x7e6	T	$4064-Level Pot A - CBLOCK_POT_A_OFFSET (ADC4)
+0x7ec	T	$4065-Level Pot B - CBLOCK_POT_B_OFFSET (ADC5)
+0x7f0	T	$409C-Mode Switch Ramp Value Counter
 0x800	T	display r6 (mode switch ramp value counter)
 0xeec	T	pin D6 is led A (on)
 0xef0	T	pin D5 is led B (on)
@@ -622,7 +623,6 @@
 0x52a	T	above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
 0x5cc	T	r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
 0x780	T	r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
-0x7f4	T	above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
 0x1a84	T	above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
 0x114a	T	r12 is [x1A5] Channel B: Current Intensity Modulation Value
 0x1aec	T	r12 is [x1A5] Channel B: Current Intensity Modulation Value
@@ -662,7 +662,6 @@
 
 0x72	T	are we in an audio mode A? r5 is [x90] r5(bit6-is-an-audio-mode)
 0x86	T	are we in an audio mode B? r10 is [x190] r10(bit6-is-an-audio-mode)
-0x2a4	T	above r5 is [x90] Channel A: Current Gate Value (0 when no output)
 0x2ac	T	r5 is [x90] Channel A: Current Gate Value (bit3)
 0x53a	T	r5 is [x90] Channel A: Current Gate Value (look at bits 0 1 2)
 0xe94	T	r5 is [x90] Channel A: Current Gate Value (bit4)
@@ -742,7 +741,6 @@
 0x17b6	T	clear eeprom with 0 bytes 4-32
 0x17c4	T	write a 0x55 to eeprom[1], write 0x1 to eeprom[6] write 0x1 to eeprom[7]
 
-0x5ee	T	0x6b-0x406b-unknown-something-to-do-with-changing-width-mod
 0x146e	T	0x6b-0x406b-unknown-something-to-do-with-changing-width-mod
 0x15c0	T	0x6b-0x406b-unknown-something-to-do-with-changing-width-mod
 
@@ -750,7 +748,6 @@
 0x1472	T	0x6c-0x406c-unknown
 0x15ea	T	0x6c-0x406c-unknown
 
-0x1d0	T	0x68-0x4068-unknown-something-related-to-buttons
 0x4d8	T	0x68-0x4068-unknown-something-related-to-buttons
 0x4e6	T	Grab [0x68-0x4068-unknown-something-related-to-buttons] and clear it
 
