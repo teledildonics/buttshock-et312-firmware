@@ -89,10 +89,8 @@
 0x1496	L		send_data_to_spdr
 0x15a4	L		copy_flash_0x01f3_to_eeprom_0x8_length_12
 0x154c	L		copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29	CallTable_24
-0x15b8	L		Function_0x15b8								Parameter r28:r29, r6
 0x157a	L		copy_flash_0x1fdc_to_memory_0x1f0_and_copy_eeprom_0x08_to_0x1f3		CallTable_28
-0x15fc	L		Function_0x15fc
-0x1650	L		Function_0x1650
+
 0x1676	L		error_handler						CallTable_23_37_38_39
 
 0x0054	L		Main
@@ -100,7 +98,7 @@
 0x12dc	L		show_Text_on_Display2					Parameter r26
 0x12ec	L		show_Text_on_Display					Parameter r26
 0x1a2e	L		send_com_buffer_to_USART				
-0x1362	L		delay_0x1362						Parameter r30
+0x1362	L		unknown_probably_multiply_0x1362			Parameter r30:r31,returns r31
 0x1590	L		copy_flash_0x1fdc_to_memory_0x01f0
 0x183e	L		delay_0x183e						Parameter r26
 0x19dc	L		read_from_eeprom					Parameter r26:r27, returns r0
@@ -437,6 +435,13 @@
 0xfa	T	(0x0094-$4094-unknown)
 0xfc	T	(0x0097-$4097-unknown)
 0x104	T	(0x0097-$4097-unknown)
+0x10e	T	x9a or x19a - a or b current gate select
+0x116	T	x90 or x190 - a or b current gate value
+0x11c	T	x99 or x199 - a or b current gate off time
+0x130	T	x98 or x198 - a or b current gate on time
+0x144	T	x9b or x19b
+0x150	T	Toggle bit 0 of x90 or x190 - a or b current gate value
+
 0x4bc	T	Read hardware 4 buttons, depending on what is pressed do calltable based on r19,r20,r21,r22
 0xa36	T	Set button actions, menu=show_main_menu, ok=0x1, up=switch_next_mode, down=switch_previous_mode
 0x7d6	T	Set button actions, menu=show_main_menu, ok=0x1, up=switch_next_mode, down=switch_previous_mode
@@ -655,7 +660,8 @@
 0x1040	T	r4 is [0x83] Output Control Flags - bit2
 0x10ba	T	r4 is [0x83] bit6-copy-audio-channel-a-to-b.  If we're in audio1 mode, ignore ADC7 and copy ADC6 to ADC7
 
-0x72	T	r5 is [x90] Channel A: Current Gate Value (bit6-is-an-audio-mode)
+0x72	T	are we in an audio mode A? r5 is [x90] r5(bit6-is-an-audio-mode)
+0x86	T	are we in an audio mode B? r10 is [x190] r10(bit6-is-an-audio-mode)
 0x2a4	T	above r5 is [x90] Channel A: Current Gate Value (0 when no output)
 0x2ac	T	r5 is [x90] Channel A: Current Gate Value (bit3)
 0x53a	T	r5 is [x90] Channel A: Current Gate Value (look at bits 0 1 2)
@@ -687,7 +693,7 @@
 0x11c2	T	above set r17[bit5-received-serial-command], set r17[bit6]
 0x1858	L	handle_received_serial_command
 0x1984	T	above unset r17[bit5-received-serial-command]. set r17[bit6]
-0x66	T	r17[bit5-received-serial-command]?
+0x64	T	if r17[bit5-received-serial-command] is set, call handle_received_serial_command()
 0x117e	T	Already got a command but it's not been handled yet? ignore input (r17[bit5-received-serial-command])
 0x906	T	if we didn't get a command (r17[bit5-received-serial-command] is set), or the command is not "\5" Error 04
 
@@ -748,3 +754,11 @@
 0x4d8	T	0x68-0x4068-unknown-something-related-to-buttons
 0x4e6	T	Grab [0x68-0x4068-unknown-something-related-to-buttons] and clear it
 
+0x15bc	T	0x4064-Level Pot A - CBLOCK_POT_A_OFFSET (ADC4)
+0x15d0	T	divide A pot level by power level and add $406b, multiply by ramp value, then same for B pot and $406c, results into 0x205 and 0x206
+0x15b8	L	setup_0x205_x206_based_on_pot_and_ramp_and_levels
+
+0x15fe	T	r30 is $4061 Multi Adjust Offset, unless [$4074-random1] says we're in random1 mode,in that case read r30 from ranom byte stored in 0x0184
+0x1642	T	r27=$4086-ma-high-end, r26=$4087-ma-low-end
+0x1650	L	probably_scale_r2_between_r26_and_r27_result_in_r30
+0x15fc	L	setup_ma_value_in_0x20d_from_knob_and_stuff
