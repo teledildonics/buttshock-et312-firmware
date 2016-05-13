@@ -139,15 +139,15 @@
 0x007b	M	B	1	current_mode
 0x0080	M	B	3	mem_unknown_0x80				Copied from 0x1f9c
 0x0083	M	B	1	COMM_CONTROL_FLAG				Output Control Flags, Copied from 0x1f9c+3
-0x0084	M	B	1	mem_unknown_0x83				Copied from 0x1f9c+4
-0x0085	M	B	1	mem_unknown_0x85				Copied from 0x1f9c+5
+0x0084	M	B	1	mem_unknown_0x84				Copied from 0x1f9c+4
+0x0085	M	B	1	mem_unknown_0x85-$4085				Copied from 0x1f9c+5
 0x0086	M	B	1	multi_adjust_range_high_end			Copied from 0x1f9c+6
 0x0087	M	B	1	multi_adjust_range_low_end			Copied from 0x1f9c+7
 0x0088	M	B	1	routine_timer_low
 0x0089	M	B	1	routine_timer_mid
 0x008a	M	B	1	routine_timer_high
 0x008b	M	B	1	routine_timer2
-0x008c	M	B	12	mem_unknown_0x8b
+0x008c	M	B	12	mem_unknown_0x8c
 0x0098	M	B	1	channel_a_current_gate_on_time
 0x0099	M	B	1	channel_a_current_gate_off_time
 0x009a	M	B	1	channel_a_current_select
@@ -156,7 +156,7 @@
 0x009d	M	B	1	mem_unknown_0x9d	
 0x009e	M	B	5	mem_unknown_0x9e
 0x00a3	M	B	1	mode_switch_ramp_select
-0x00a4	M	B	1	mem_unknown_0xa4
+0x00a4	M	B	1	mem_unknown_0xa4-$40a4
 0x00a5	M	B	1	channel_a_current_intensity_modulation_value
 0x00a6	M	B	1	channel_a_current_intensity_modulation_min
 0x00a7	M	B	1	channel_a_current_intensity_modulation_max
@@ -177,7 +177,7 @@
 0x0181	M	B	1	write_lcd_position
 0x0185	M	B	8	mem_unknown_0x185				
 0x0188	M	B	8	mem_unknown_0x188				Copied from 0x1fa4
-0x0190	M	B	1	channel_a_current_gate_value			Copied from 0x1fa4+8, 0 when no output
+0x0190	M	B	1	channel_b_current_gate_value			Copied from 0x1fa4+8, 0 when no output
 0x0191	M	B	1	mem_unknown_0x191				Copied from 0x1fa4+9
 0x0192	M	B	6	mem_unknown_0x192				Copied from 0x1fa4+10
 0x0198	M	B	1	channel_b_current_gate_on_time			Copied from 0x1fa4+16
@@ -414,11 +414,11 @@
 0x474	T	(0x0074-$4074-random1-mode)
 0x47e	T	(0x006A-$406A-master-timer-msb)
 0x480	T	(0x0075-$4075-random1-time-to-change-mode) did we reach time to change mode?
-0x488	T	(0x008D-$408D)=0x76
-0x48c	T	(0x008E-$408E)=0x7B
+0x488	T	(0x008D-$408D-random-min)=0x76
+0x48c	T	(0x008E-$408E-random-max)=0x7B
 0x490	T	(0x0074-$4074-random1-mode) is random number between "0x76" and "0x7b"
-0x494	T	(0x008D-$408D)=0x14
-0x498	T	(0x008E-$408E)=0x78
+0x494	T	(0x008D-$408D-random-min)=0x14
+0x498	T	(0x008E-$408E-random-max)=0x78
 0x4ac	T	0x4184 is random number beween 140 and 184
 0x4a0	T	0x4075-random1-time-to-change-mode is (0x406A-master-timer-msb)+number between 20 and 120
 0x76	T	(0x0067-$4067-Audio Input Level B (Half wave) (ADC7))
@@ -504,14 +504,12 @@
 0x424	T	write our registers (r4-9 or r10-r14) to the serial port (or 0's if r15[bit2] isn't set)
 0x436	T	toggle bit r16[bit6] so next time we send the other register set
 0x18fc	T	if we get a 0x_8 0xaa over serial then reset the box
-0x2a4	T	line above is 0x91=$4091
-0x2c2	T	0x91=$4091
-0x2cc	T	line above is 0x92=$4092
-0x2ee	T	0x92=$4092
+0x2a4	T	line above is 0x91=$4091-unknown-last-bits-123-of-r5
+0x2c2	T	0x91=$4091-unknown-last-bits-123-of-r5
+0x2cc	T	line above is 0x92=$4092-unknown-last-bits-123-of-r10
+0x2ee	T	0x92=$4092-unknown-last-bits-123-of-r10
 0x2fa	T	(0x0066-$4066-Audio Input Level A (Half wave) (ADC6))
-0x304	T	0x83=$4083 Output Control Flags - COMM_CONTROL_FLAG
-0x30a	T	0x6F=$406F
-0x354	T	above line r4=[0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x30a	T	0x8F=$408F-unknown
 0x358	T	r5=[x90] Channel A: Current Gate Value (0 when no output)
 0x35a	T	r6=[x9C] Mode Switch Ramp Value Counter
 0x35c	T	r7=[xA5] Channel A: Current Intensity Modulation Value
@@ -580,9 +578,10 @@
 0xb42	T	bug? I think they wanted to use PIND so they get more audio data into the entropy mix?
 0xb3c	T	0x72-$4072 last random number
 0xb2e	T	gather all the input ADC lowest bits to make something a bit random
-0xb64	T	0x8D-0x408D
-0xb66	T	0x8E-0x408E
-0x644	T	0x85-0x4085
+0xb64	T	0x8D-0x408D-random-min
+0xb66	T	0x8E-0x408E-random-max
+0x644	T	0x85-0x4085-unknown (set to r17 bits 1 and bits 0)
+0x774	T	0x85-0x4085-unknown (set to r17 bits 1 and bits 0)
 0x64c	T	Mode: Waves (blocks 11/12)
 0x65e	T	Mode: Stroke (blocks 3/4)
 0x670	T	Mode: Climb (blocks 5/8)
@@ -601,7 +600,7 @@
 0x74a	T	Mode: Phase3 (blocks 22)
 0x756	T	Mode: User1-7 read blocks from eprom 0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e (start vector user1-7)
 0x47c	T	If 0x74-$4074 is a 1 then we want to start Random1 mode (if it's 0 we're not in Random1 mode)
-0x458	T	x84-0x4084
+0x458	T	x84-0x4084-unknown
 0xbc4	T	Grab a byte (current program block?) based on current mode (r18:r0) double it, add it to 0x2000 (or 0x2200)
 0x1476	L	Label_0x1476         bug? the 1.5 bootloader jumps here
 
@@ -628,41 +627,49 @@
 0x780	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
 0x1058	T	above is r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
 0x1aee	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
-0x6a	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x2f6	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x302	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x4b8	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x62e	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x634	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x72a	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x76a	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0xe9e	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0xeba	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0xeee	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0xf10	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0xf38	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0xf4e	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0xf58	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0xf6e	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0xf8c	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x1024	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x1040	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x10ba	T	r4 is [0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x72	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+
+0x354	T	above line r4=[0x83] Output Control Flags - COMM_CONTROL_FLAG
+0x6b4	T	set 0x83=$4083 to 0 1 0 0 0 0 0 0 [audio1 mode]
+0x6e6	T	set 0x83=$4083 to 0 0 0 0 0 1 0 0 [audio3 mode]
+0x72c	T	set 0x83=$4083 to 0 0 0 0 0 1 0 1 [phase mode]
+0xe5a	T	set 0x83=$4083 to 0 0 0 0 0 1 0 0 
+0x304	T	0x83=$4083 Output Control Flags - unset bit1-maybe-audio
+0x6a	T	r4 is [0x83] Output Control Flags - bit4-unknown
+0x2f6	T	r4 is [0x83] Output Control Flags - bit1-unknown-maybe-audio
+0x302	T	r4 is [0x83] Output Control Flags - unset bit1
+0x4b8	T	r4 is [0x83] Output Control Flags - bit5-unknown-maybe-skip-buttons
+0x62e	T	r4 is [0x83] Output Control Flags - unset bit4
+0x634	T	r4 is [0x83] Output Control Flags - set bit4
+0x72a	T	r4 is [0x83] Output Control Flags - set 0 0 0 0 0 1 0 1
+0x76a	T	r4 is [0x83] Output Control Flags - bit4
+0xe9e	T	r4 is [0x83] Output Control Flags - bit3
+0xeba	T	r4 is [0x83] Output Control Flags - bit3
+0xeee	T	r4 is [0x83] Output Control Flags - bit3
+0xf10	T	r4 is [0x83] Output Control Flags - bit3
+0xf38	T	r4 is [0x83] Output Control Flags - bit2
+0xf4e	T	r4 is [0x83] Output Control Flags - bit3
+0xf58	T	r4 is [0x83] Output Control Flags - bit2
+0xf6e	T	r4 is [0x83] Output Control Flags - bit3
+0xf8c	T	r4 is [0x83] Output Control Flags - bit3
+0x1024	T	r4 is [0x83] Output Control Flags - bit2
+0x1040	T	r4 is [0x83] Output Control Flags - bit2
+0x10ba	T	r4 is [0x83] bit6-copy-audio-channel-a-to-b.  If we're in audio1 mode, ignore ADC7 and copy ADC6 to ADC7
+
+0x72	T	r5 is [x90] Channel A: Current Gate Value (bit6-is-an-audio-mode)
 0x2a4	T	above r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0x2ac	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0x53a	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xe94	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xeb0	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xec6	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xf1e	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xf22	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xf34	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xf47	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xf4a	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xf54	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xf66	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
-0xf6a	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+0x2ac	T	r5 is [x90] Channel A: Current Gate Value (bit3)
+0x53a	T	r5 is [x90] Channel A: Current Gate Value (look at bits 0 1 2)
+0xe94	T	r5 is [x90] Channel A: Current Gate Value (bit4)
+0xeb0	T	r5 is [x90] Channel A: Current Gate Value (bit4)
+0xec6	T	r5 is [x90] Channel A: Current Gate Value (bit3)
+0xf1e	T	r5 is [x90] Channel A: Current Gate Value (bit5) - is set when audio3 mode
+0xf22	T	r5 is [x90] Channel A: Current Gate Value (bit7)
+0xf34	T	r5 is [x90] Channel A: Current Gate Value (bit0)
+0xf47	T	r5 is [x90] Channel A: Current Gate Value (bit4)
+0xf4a	T	r5 is [x90] Channel A: Current Gate Value (bit4)
+0xf54	T	r5 is [x90] Channel A: Current Gate Value (bit0)
+0xf66	T	r5 is [x90] Channel A: Current Gate Value (bit4)
+0xf6a	T	r5 is [x90] Channel A: Current Gate Value (bit4)
 0x18a6	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
 
 0xf2a	T	enable int1 (audio A digital input)
@@ -691,8 +698,9 @@
 0x766	T	toggle r17[bit0] toggle r17[bit1-is-splitmode]
 0x776	T	set r17[bit0], set r17[bit1-is-splitmode]
 0x63a	T	unset r17[bit1-is-splitmode]
-0x6ba	T	if r17[bit0] is set, 0x4090 (A: current gate value) is set to 0x47
-0x6d6	T	if r17[bit0] is set, 0x4090 (A: current gate value) is set to 0x67
+0x6ba	T	if r17[bit0] is set, 0x4190 (B: current gate value) is set to 0 1 0 0 1 1 1 1 audio1
+0x6be	T	if r17[bit1] is set, 0x4090 (A: current gate value) is set to 0 1 0 0 1 1 1 1 audio1
+0x6d6	T	if r17[bit0] is set, 0x4090 (A: current gate value) is set to 0 1 1 0 1 1 1 1 audio3
 
 0x5c2	T	toggle r17[bit4-something-to-do-with-MA]
 0x77a	T	unset r17[bit4-something-to-do-with-MA]
@@ -727,3 +735,16 @@
 0x17a2	L	make_a_serial_number	write random bytes to eeprom[2] and eeprom[3] (serial number)
 0x17b6	T	clear eeprom with 0 bytes 4-32
 0x17c4	T	write a 0x55 to eeprom[1], write 0x1 to eeprom[6] write 0x1 to eeprom[7]
+
+0x5ee	T	0x6b-0x406b-unknown-something-to-do-with-changing-width-mod
+0x146e	T	0x6b-0x406b-unknown-something-to-do-with-changing-width-mod
+0x15c0	T	0x6b-0x406b-unknown-something-to-do-with-changing-width-mod
+
+0x558	T	0x6c-0x406c-unknown
+0x1472	T	0x6c-0x406c-unknown
+0x15ea	T	0x6c-0x406c-unknown
+
+0x1d0	T	0x68-0x4068-unknown-something-related-to-buttons
+0x4d8	T	0x68-0x4068-unknown-something-related-to-buttons
+0x4e6	T	Grab [0x68-0x4068-unknown-something-related-to-buttons] and clear it
+
