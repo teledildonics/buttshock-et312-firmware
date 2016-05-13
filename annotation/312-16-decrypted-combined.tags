@@ -94,7 +94,6 @@
 0x15fc	L		Function_0x15fc
 0x1650	L		Function_0x1650
 0x1676	L		error_handler						CallTable_23_37_38_39
-0x1858	L		Function_0x1858
 
 0x0054	L		Main
 0x05e6	L		sleep							Parameter r26
@@ -107,7 +106,7 @@
 0x19dc	L		read_from_eeprom					Parameter r26:r27, returns r0
 0x19f2	L		write_to_eeprom						Parameter r26:r27 (address), r0 (value)
 0x16b8	L		Function_0x16b8					Parameter r28:r29
-0x1a60	L		lcd_putchar						Parameter r29
+0x1a60	L		look_for_keypress						
 0x1a76	L		reset_device
 0x1a7c	L		Function_0x1a7c					Parameters r9,r8,r7
 0x1af2	L		store_z_pointer_at_0x020e_and_move_r13_to_r2_and_set_r18_to_negative_r30
@@ -424,8 +423,8 @@
 0x4a0	T	0x4075-random1-time-to-change-mode is (0x406A-master-timer-msb)+number between 20 and 120
 0x76	T	(0x0067-$4067-Audio Input Level B (Half wave) (ADC7))
 0x8a	T	(0x0066-$4066-Audio Input Level A (Half wave) (ADC6))
-0xa2	T	(0x0073-$4073-master-timer-lsb)
-0xaa	T	increment counter (0x006A-$406A-master-timer-msb)
+0xa2	T	increment counter (0x0073-$4073-master-timer-lsb)
+0xaa	T	if we rolled over then increment counter (0x006A-$406A-master-timer-msb)
 0xb8	T	This increments the routine timer (3 bytes)
 0xbc	T	(0x0088-$4088-routine-timer-low)
 0xbe	T	(0x0089-$4089-routine-timer-mid)
@@ -520,6 +519,7 @@
 0x368	T	r9=min(50,[xB7] Channel A: Current Width Modulation Value)
 0x374	T	r10=[x190] (Channel B version of r5)
 0x376	T	r11=[x19C] (Channel B version of r6)
+0x140a	T	r11=[x19C] (Channel B version of r6)
 0x378	T	r12=[x1A5] (Channel B version of r7)
 0x37a	T	r13=min(9,[x1AE]) (Channel B version of r8)
 0x384	T	r14=min(50,[x1B7]) (Channel B version of r9)
@@ -681,6 +681,8 @@
 0x1858	L	handle_received_serial_command
 0x1984	T	above unset r17[bit5-received-serial-command]. set r17[bit6]
 0x66	T	r17[bit5-received-serial-command]?
+0x117e	T	Already got a command but it's not been handled yet? ignore input (r17[bit5-received-serial-command])
+0x906	T	if we didn't get a command (r17[bit5-received-serial-command] is set), or the command is not "\5" Error 04
 
 0x612	T	set r17[bit0] , set r17[bit1-is-splitmode]
 0x624	T	unset r17[bit1-is-splitmode],  set r17[bit0]
@@ -689,6 +691,8 @@
 0x766	T	toggle r17[bit0] toggle r17[bit1-is-splitmode]
 0x776	T	set r17[bit0], set r17[bit1-is-splitmode]
 0x63a	T	unset r17[bit1-is-splitmode]
+0x6ba	T	if r17[bit0] is set, 0x4090 (A: current gate value) is set to 0x47
+0x6d6	T	if r17[bit0] is set, 0x4090 (A: current gate value) is set to 0x67
 
 0x5c2	T	toggle r17[bit4-something-to-do-with-MA]
 0x77a	T	unset r17[bit4-something-to-do-with-MA]
@@ -699,6 +703,7 @@
 0xb20	T	start an ADC conversion with interrupt, set r17[bit3-adc-running]
 0xfe6	T	start an ADC conversion with interrupt, set r17[bit3-adc-running]
 0x10f0	T	unset r17[bit3-adc-running]
+0x582	T	r17[bit3-adc-running]
 
 0x91c	T	set r17[bit7-master-unit]
 
@@ -706,3 +711,19 @@
 0x9c	L	timer0_has_triggered
 0x9e	T	above unsets r17[bit2 (timer0 triggered)]
 0x6e	T	if r17[bit2 (timer0 triggered)] goto timer0_has_triggered
+
+0x1726	T	look for key push 1100 (factory reset up+down)
+0x173e	T	our eeprom[byte1] isn't 0x55 or we selected factory reset on boot, look to see if rx and tx are joined, if so do some debug menu
+0x174e	T	loop display debug values until we get a keypress 1010
+0x17de	T	key press 1010
+0x1766	T	display 0x4063 (Battery Voltage ADC3)
+0x1772	T	display 0x4067 (Audio B half wave ADC7)
+0x1778	T	display 0x4066 (Audio A half wave ADC6)
+0x177e	T	display 0x406b-unknown
+0x1784	T	display 0x406c-unknown
+0x178c	T	display 0x4061 (Multi Adjust Offset ADC1)
+0x1796	T	display OCDR
+
+0x17a2	L	make_a_serial_number	write random bytes to eeprom[2] and eeprom[3] (serial number)
+0x17b6	T	clear eeprom with 0 bytes 4-32
+0x17c4	T	write a 0x55 to eeprom[1], write 0x1 to eeprom[6] write 0x1 to eeprom[7]
