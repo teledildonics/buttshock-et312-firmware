@@ -54,7 +54,7 @@
 0x099a	L		CallTable_6_Set_Power_Level
 0x09a4	L		CallTable_7_Edit_Advanced_Parameter
 0x09e6	L		CallTable_32
-0x09fe	L		CallTable_33
+0x09fe	L		CallTable_33_start_ramp
 0x0a1c	L		CallTable_4_Exit_Menu
 0x0a40	L		Function_0xa40
 0x0a66	L		CallTable_13_advanced_menu_prev_item
@@ -85,7 +85,6 @@
 0x138c	L		divide							Parameter r31 r30: r30 /= r31, r31 = r30 % r31
 0x13bc	L		divide_word						Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:r31 % r26:r27
 0x13fa	L		rotate_right						Parameter r30:r31 r26
-0x1406	L		Function_0x1406
 0x1496	L		send_data_to_spdr
 0x15a4	L		copy_flash_0x01f3_to_eeprom_0x8_length_12
 0x154c	L		copy_flash_0x1f9c_0x1fa4_to_memory_0x80_0x0188_and_call_CallTable_29	CallTable_24
@@ -103,7 +102,6 @@
 0x183e	L		delay_0x183e						Parameter r26
 0x19dc	L		read_from_eeprom					Parameter r26:r27, returns r0
 0x19f2	L		write_to_eeprom						Parameter r26:r27 (address), r0 (value)
-0x16b8	L		Function_0x16b8					Parameter r28:r29
 0x1a60	L		look_for_keypress						
 0x1a76	L		reset_device
 0x1a7c	L		Function_0x1a7c					Parameters r9,r8,r7
@@ -411,6 +409,7 @@
 0x464	T	(0x006d-$406D-menu_state)
 0x46c	T	Sometimes run the code at 0x474 (0x0073-$4073-master-timer-lsb)
 0x474	T	(0x0074-$4074-random1-mode)
+0x618	T	(0x0074-$4074-random1-mode)
 0x47e	T	(0x006A-$406A-master-timer-msb)
 0x480	T	(0x0075-$4075-random1-time-to-change-mode) did we reach time to change mode?
 0x488	T	(0x008D-$408D-random-min)=0x76
@@ -732,8 +731,8 @@
 0x1766	T	display 0x4063 (Battery Voltage ADC3)
 0x1772	T	display 0x4067 (Audio B half wave ADC7)
 0x1778	T	display 0x4066 (Audio A half wave ADC6)
-0x177e	T	display 0x406b-unknown
-0x1784	T	display 0x406c-unknown
+0x177e	T	display 0x406b-some-power-offset
+0x1784	T	display 0x406c-some-power-offset
 0x178c	T	display 0x4061 (Multi Adjust Offset ADC1)
 0x1796	T	display OCDR
 
@@ -741,12 +740,12 @@
 0x17b6	T	clear eeprom with 0 bytes 4-32
 0x17c4	T	write a 0x55 to eeprom[1], write 0x1 to eeprom[6] write 0x1 to eeprom[7]
 
-0x146e	T	0x6b-0x406b-unknown-something-to-do-with-changing-width-mod
-0x15c0	T	0x6b-0x406b-unknown-something-to-do-with-changing-width-mod
+0x146e	T	0x6b-0x406b-some-power-offset
+0x15c0	T	0x6b-0x406b-some-power-offset
 
-0x558	T	0x6c-0x406c-unknown
-0x1472	T	0x6c-0x406c-unknown
-0x15ea	T	0x6c-0x406c-unknown
+0x558	T	0x6c-0x406c-some-power-offset
+0x1472	T	0x6c-0x406c-some-power-offset
+0x15ea	T	0x6c-0x406c-some-power-offset
 
 0x4d8	T	0x68-0x4068-unknown-something-related-to-buttons
 0x4e6	T	Grab [0x68-0x4068-unknown-something-related-to-buttons] and clear it
@@ -759,3 +758,31 @@
 0x1642	T	r27=$4086-ma-high-end, r26=$4087-ma-low-end
 0x1650	L	probably_scale_r2_between_r26_and_r27_result_in_r30
 0x15fc	L	setup_ma_value_in_0x20d_from_knob_and_stuff
+
+0xbce	T	r26 was <128, look at r0=1c3e+(r26).  if 0 then 2000 else 2200,  double r0 and add to 2000 or 2200 also r30:31 is 01c3e+r0
+0xbe2	T	copy r30:r31 to 0x218, if byte &e0!-0 ... lots of stuff
+0xa14	T	$409c-mode-switch-ramp-value-counter
+0xa16	T	$419c-mode-switch-ramp-value-counter-copy
+0x16ba	T	$4062-adc2-psu-voltage is 0x56 and $4063-adc3-battery-voltage is 0x85 (defaults)
+0x16cc	T	run ADC 3 times, look to see what we have in $4063-adc3-battery-voltage, if it's less than 0x8e jump to battery_low display and halt
+0x590	L	display_battery_low
+0x1686	L	display_shut_off_power_and_halt
+0x16de	T	look at $4062-adc2-psu-voltage, if it's greater than 0x92 then error 21, halt (psu voltage too high!)
+0x16b8	L	Function_0x16b8_runs_at_startup_checks_battery_checks_reset_displays_msgs					Parameter r28:r29
+0x1700	T	above sets power status bits [bit0] if we have a battery, [bit1] is PSU is connected, next figure out battery percentage
+0x1406	L	Function_0x1406_runs_at_startup
+0x1730	T	look for magic word in eeprom, if eeprom[1]!=0x55 then do factory reset stuff
+0x1536	T	$406d-menu-state = 1
+0x153e	T	$4070-execute_command and $4071-execute_command = 0xff (no commands)
+0x14ca	T	Read the OCDR byte from 0x3ff and write it to the register (timing, 8MHz)
+0x1ce	T	Set stack to 0x45f
+0x14da	T	Set DDRB to 1 0 1 1 1 1 1 1  DDRC to 1 1 1 1 1 1 1 1  DDRD to 1 1 1 1 0 0 1 0
+0x14e6	T	set portd[bit4,bit5,bit6]
+0x14ee	T	disable the Analog Comparator
+0x14f4	T	disable the watchdog timer
+0x14fc	T	set SPCR : Enable SPI interrupts, Enable SPI, MSB first, SPI Master mode
+0x1502	T	setup timer0 as clk/64, setup timer 1b as clk/8, setup timer2 as external clock on t0 pin (rising edge)
+0x151e	T	setup MCUCR (int0 and int1 trigger on rising edge)
+0x1524	T	setup serial port frequency (0x19) [8MHz at 19200], control reg: enable RX interrupt, rx and tx enable
+0x1530	T	setup timer interrupt mask: ocie1a, ocie1b, toie0 (overflow on timer 0), watchdog to 32k cycles
+0x1548	T	finished with the setup, goto main loop
