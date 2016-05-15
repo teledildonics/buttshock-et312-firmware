@@ -403,44 +403,45 @@
 0x21C8	P	W	3717	random_unknown
 
 0x3ff8	P	S	1	authors_initials
-0x43a	T	look if we need to run a command (0x0070-$4070-execute_command)
-0x444	T	look if we need to run a command (0x0071-$4071-execute_command-2)
-0x45c	T	Sometimes run calltable31 with menu-state (0x0073-$4073-master-timer-lsb)
-0x464	T	(0x006d-$406D-menu_state)
-0x46c	T	Sometimes run the code at 0x474 (0x0073-$4073-master-timer-lsb)
-0x474	T	(0x0074-$4074-random1-mode)
-0x618	T	(0x0074-$4074-random1-mode)
-0x47e	T	(0x006A-$406A-master-timer-msb)
-0x480	T	(0x0075-$4075-random1-time-to-change-mode) did we reach time to change mode?
-0x488	T	(0x008D-$408D-random-min)=0x76
-0x48c	T	(0x008E-$408E-random-max)=0x7B
-0x490	T	(0x0074-$4074-random1-mode) is random number between "0x76" and "0x7b"
-0x494	T	(0x008D-$408D-random-min)=0x14
-0x498	T	(0x008E-$408E-random-max)=0x78
+
+0x43a	T	look if we need to run a command (0x70-$4070-execute_command)
+0x446	T	look if we need to run a command (0x71-$4071-execute_command-2)
+0x45e	T	Sometimes run calltable31 with menu-state (0x73-$4073-master-timer-lsb)
+0x464	T	(0x6d-$406D-menu_state)
+0x46c	T	Sometimes run the code at 0x474 (0x73-$4073-master-timer-lsb)
+0x476	T	(0x74-$4074-random1-mode)
+0x618	T	(0x74-$4074-random1-mode)
+0x47e	T	(0x6A-$406A-master-timer-msb)
+0x480	T	(0x75-$4075-random1-time-to-change-mode) did we reach time to change mode?
+0x488	T	(0x8D-$408D-random-min)=0x76
+0x48c	T	(0x8E-$408E-random-max)=0x7B
+0x490	T	(0x74-$4074-random1-mode) is random number between "0x76" and "0x7b"
+0x494	T	(0x8D-$408D-random-min)=0x14
+0x498	T	(0x8E-$408E-random-max)=0x78
 0x4ac	T	0x4184 is random number beween 140 and 184
 0x4a0	T	0x4075-random1-time-to-change-mode is (0x406A-master-timer-msb)+number between 20 and 120
-0x76	T	(0x0067-$4067-Audio Input Level A (Half wave) (ADC7))
-0x8a	T	(0x0066-$4066-Audio Input Level B (Half wave) (ADC6))
-0xa2	T	increment counter (0x0073-$4073-master-timer-lsb)
-0xaa	T	if we rolled over then increment counter (0x006A-$406A-master-timer-msb)
+0x76	T	(0x67-$4067-Audio Input Level A (Half wave) (ADC7))
+0x8a	T	(0x66-$4066-Audio Input Level B (Half wave) (ADC6))
+0xa2	T	increment counter (0x73-$4073-master-timer-lsb)
+0xaa	T	if we rolled over then increment counter (0x6A-$406A-master-timer-msb)
 0xb8	T	This increments the routine timer (3 bytes)
-0xbc	T	(0x0088-$4088-routine-timer-low)
-0xbe	T	(0x0089-$4089-routine-timer-mid)
-0xc0	T	(0x008A-$408A-routine-timer-high)
-0xd4	T	run a timer in 0x8b eight times slower than the routine timer in 0x88/9/a
-0xdc	T	(0x008B-$408b-routine-timer-slower)
-0xe2	T	(0x0096-$4096-unknown)
-0xee	T	(0x0094-$4094-unknown)
-0xf2	T	(0x0095-$4095-unknown)
-0xfa	T	(0x0094-$4094-unknown)
-0xfc	T	(0x0097-$4097-unknown)
-0x104	T	(0x0097-$4097-unknown)
-0x10e	T	x9a or x19a - a or b current gate select
-0x116	T	x90 or x190 - a or b current gate value
-0x11c	T	x99 or x199 - a or b current gate off time
-0x130	T	x98 or x198 - a or b current gate on time
-0x144	T	x9b or x19b
-0x150	T	Toggle bit 0 of x90 or x190 - a or b current gate value
+0xbc	T	(0x88-$4088-routine-timer-low)
+0xbe	T	(0x89-$4089-routine-timer-mid)
+0xc0	T	(0x8A-$408A-routine-timer-high)
+0xd6	T	run a timer in 0x8b eight times slower than the routine timer in 0x88/9/a
+0xdc	T	(0x8B-$408b-routine-timer-slower)
+0xe4	T	(0x96-$4096-unknown)
+0xee	T	(0x94-$4094-unknown)
+0xf2	T	(0x95-$4095-unknown)
+0xfa	T	(0x94-$4094-unknown)
+0xfc	T	(0x97-$4097-unknown)
+0x104	T	(0x97-$4097-unknown)
+0x110	T	0x9a or 0x19a - a or b current gate select
+0x116	T	0x90 or 0x190 - a or b current gate value
+0x11c	T	0x99 or 0x199 - a or b current gate off time
+0x132	T	0x98 or 0x198 - a or b current gate on time
+0x144	T	0x9b or 0x19b
+0x150	T	Toggle bit 0 of 0x90 or 0x190 - a or b current gate value
 
 0x4bc	T	Read hardware 4 buttons, depending on what is pressed do calltable based on r19,r20,r21,r22
 0xa36	T	Set button actions, menu=show_main_menu, ok=0x1, up=switch_next_mode, down=switch_previous_mode
@@ -496,8 +497,9 @@
 0x1894	T	display "Linked"
 0x17f8	T	draw the self-test bargraph with a delay between characters
 0x16ea	T	our box has a battery
-0xb4	T	bit2 of r16 is set if we're slave to another box
-0x516	T	bit2 of r16 is set if we're slave to another box, in which case all the hardware buttons do nothing
+0xb2	T	do this every other time timer0 overflows
+0xb4	T	r16[bit2-we-are-slave] is set if we're slave to another box, don't increment the routine timer etc
+0x516	T	r16[bit2-we-are-slave] is set if we're slave to another box, in which case all the hardware buttons do nothing
 0x1880	T	if we got a 0x0e we're a slave box, send back a 0x05 and set bit2 of r16
 0x91e	T	display "Linked" (master)
 0x3d8	T	if r17[bit7] is set we're a linked master
@@ -514,17 +516,19 @@
 0x2ee	T	0x92=$4092-unknown-last-bits-123-of-r10
 0x2fa	T	(0x0066-$4066-Audio Input Level A (Half wave) (ADC6))
 0x30a	T	0x8F=$408F-unknown
-0x358	T	r5=[x90] Channel A: Current Gate Value (0 when no output)
-0x35a	T	r6=[x9C] Mode Switch Ramp Value Counter
-0x35c	T	r7=[xA5] Channel A: Current Intensity Modulation Value
-0x35e	T	r8=min(9,[xAE] Channel A: Current Frequency Modulation Value)
-0x368	T	r9=min(50,[xB7] Channel A: Current Width Modulation Value)
-0x374	T	r10=[x190] (Channel B version of r5)
-0x376	T	r11=[x19C] (Channel B version of r6)
-0x140a	T	r11=[x19C] (Channel B version of r6)
-0x378	T	r12=[x1A5] (Channel B version of r7)
-0x37a	T	r13=min(9,[x1AE]) (Channel B version of r8)
-0x384	T	r14=min(50,[x1B7]) (Channel B version of r9)
+0x358	T	r5 is a copy of [x90] Channel A: Current Gate Value
+0x35a	T	r6 is a copy of [x9C] Channel A: Mode Switch Ramp Value Counter
+0x35c	T	r7 is a copy of [xA5] Channel A: Current Intensity Modulation Value
+0x82	T	r7 is a copy of [xA5] Channel A: Current Intensity Modulation Value
+0x35e	T	r8 is min(9,[xAE] Channel A: Current Frequency Modulation Value)
+0x368	T	r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
+0x374	T	r10 is a copy of [x190] Channel B: Current Gate Value
+0x376	T	r11 is a copy of [x19C] Channel B: Mode Switch Ramp Value Counter
+0x140a	T	r11 is a copy of [x19C] Channel B: Mode Switch Ramp Value Counter
+0x378	T	r12 is a copy of [x1A5] Channel B: Current Intensity Modulation Value
+0x96	T	r12 is a copy of [x1A5] Channel B: Current Intensity Modulation Value
+0x37a	T	r13 is min(9,[x1AE]) Channel B: Current Frequency Modulation Value
+0x384	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
 0x78c	T	$406d-menu-state set to 2
 0x7e6	T	$4064-Level Pot A - CBLOCK_POT_A_OFFSET (ADC4)
 0x7ec	T	$4065-Level Pot B - CBLOCK_POT_B_OFFSET (ADC5)
@@ -621,10 +625,9 @@
 0x52a	T	above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
 0x5cc	T	r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
 0x780	T	r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
-0x1a84	T	above r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
+0x1a84	T	r9 is min(50,[xB7] Channel A: Current Width Modulation Value)
 0x114a	T	r12 is [x1A5] Channel B: Current Intensity Modulation Value
 0x1aec	T	r12 is [x1A5] Channel B: Current Intensity Modulation Value
-0x544	T	above is r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
 0x5cc	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
 0x5d8	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
 0x780	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
@@ -637,29 +640,30 @@
 0x72c	T	set 0x83=$4083 to 0 0 0 0 0 1 0 1 [phase mode]
 0xe5a	T	set 0x83=$4083 to 0 0 0 0 0 1 0 0 
 0x304	T	0x83=$4083 Output Control Flags - unset bit1-maybe-audio
-0x6a	T	r4 is [0x83] Output Control Flags - bit4-unknown
-0x2f6	T	r4 is [0x83] Output Control Flags - bit1-unknown-maybe-audio
-0x302	T	r4 is [0x83] Output Control Flags - unset bit1
-0x4b8	T	r4 is [0x83] Output Control Flags - bit5-unknown-maybe-skip-buttons
-0x62e	T	r4 is [0x83] Output Control Flags - unset bit4
-0x634	T	r4 is [0x83] Output Control Flags - set bit4
-0x72a	T	r4 is [0x83] Output Control Flags - set 0 0 0 0 0 1 0 1
-0x76a	T	r4 is [0x83] Output Control Flags - bit4
-0xe9e	T	r4 is [0x83] Output Control Flags - bit3
-0xeba	T	r4 is [0x83] Output Control Flags - bit3
-0xeee	T	r4 is [0x83] Output Control Flags - bit3
-0xf10	T	r4 is [0x83] Output Control Flags - bit3
-0xf38	T	r4 is [0x83] Output Control Flags - bit2
-0xf4e	T	r4 is [0x83] Output Control Flags - bit3
-0xf58	T	r4 is [0x83] Output Control Flags - bit2
-0xf6e	T	r4 is [0x83] Output Control Flags - bit3
-0xf8c	T	r4 is [0x83] Output Control Flags - bit3
-0x1024	T	r4 is [0x83] Output Control Flags - bit2
-0x1040	T	r4 is [0x83] Output Control Flags - bit2
-0x10ba	T	r4 is [0x83] bit6-copy-audio-channel-a-to-b.  If we're in audio1 mode, ignore ADC7 and copy ADC6 to ADC7
+0x6a	T	r4 is copy of [0x83] Output Control Flags - bit0-unknown-update_MA_value
+0x2f8	T	r4 is copy of [0x83] Output Control Flags - bit1-unknown-maybe-audio
+0x302	T	r4 is copy of [0x83] Output Control Flags - unset bit1
+0x4ba	T	r4 is copy of [0x83] Output Control Flags - bit5-unknown-maybe-skip-buttons
+0x62e	T	r4 is copy of [0x83] Output Control Flags - unset bit4-unknown-maybe-split
+0x634	T	r4 is copy of [0x83] Output Control Flags - set bit4-unknown-maybe-split
+0x72a	T	r4 is copy of [0x83] Output Control Flags - set 0 0 0 0 0 1 0 1
+0x76a	T	r4 is copy of [0x83] Output Control Flags - bit4-unknown-maybe-split
+0xe9e	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
+0xeba	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
+0xeee	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
+0xf10	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
+0xf38	T	r4 is copy of [0x83] Output Control Flags - bit2-unknown
+0xf4e	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
+0xf58	T	r4 is copy of [0x83] Output Control Flags - bit2-unknown
+0xf6e	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
+0xf8c	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
+0x1024	T	r4 is copy of [0x83] Output Control Flags - bit2-unknown
+0x1040	T	r4 is copy of [0x83] Output Control Flags - bit2-unknown
+0x10ba	T	r4 is copy of [0x83] bit6-copy-audio-channel-a-to-b.  If we're in audio1 mode, ignore ADC7 and copy ADC6 to ADC7
+0x768	T	r26 is 0x7b-$407b-current-mode
 
-0x72	T	are we in an audio mode A? r5 is [x90] r5(bit6-is-an-audio-mode)
-0x86	T	are we in an audio mode B? r10 is [x190] r10(bit6-is-an-audio-mode)
+0x72	T	is output A in an audio mode (r5[bit6-is-an-audio-mode])? yes then update the intensity_modulation_value
+0x88	T	is output B in an audio mode (r10[bit6-is-an-audio-mode])? yes then update the intensity_modulation_value
 0x2ac	T	r5 is [x90] Channel A: Current Gate Value (bit3)
 0x53a	T	r5 is [x90] Channel A: Current Gate Value (look at bits 0 1 2)
 0xe94	T	r5 is [x90] Channel A: Current Gate Value (bit4)
@@ -683,6 +687,7 @@
 0xe7e	T	enable int0 (audio B digital input)
 0x168e	T	disable interrupts
 
+0x56	T	Main: reset watchdog, send any serial commands queued, handle any serial received, update MA if needed, handle A&B audio inputs, handle timer0 trigerring, goto Main
 0x58	T	is there anything in the com buffer to send? is so go and send it
 0x11c4	T	enable RXEN and TXEN in USART control register (no interrupts)
 
@@ -704,6 +709,7 @@
 0x6ba	T	if r17[bit0] is set, 0x4190 (B: current gate value) is set to 0 1 0 0 1 1 1 1 audio1
 0x6be	T	if r17[bit1] is set, 0x4090 (A: current gate value) is set to 0 1 0 0 1 1 1 1 audio1
 0x6d6	T	if r17[bit0] is set, 0x4090 (A: current gate value) is set to 0 1 1 0 1 1 1 1 audio3
+0x762	T	r17[bit1-is-splitmode]
 
 0x5c2	T	toggle r17[bit4-something-to-do-with-MA]
 0x77a	T	unset r17[bit4-something-to-do-with-MA]
@@ -718,10 +724,11 @@
 
 0x91c	T	set r17[bit7-master-unit]
 
-0xe60	T	sets r17[bit2 (timer0 triggered)]
+0xe60	T	sets r17[bit2-timer0-triggered]
 0x9c	L	timer0_has_triggered
-0x9e	T	above unsets r17[bit2 (timer0 triggered)]
-0x6e	T	if r17[bit2 (timer0 triggered)] goto timer0_has_triggered
+0x9e	T	above unsets r17[bit2-timer0-triggered]
+0x6e	T	if r17[bit2-timer0-triggered] goto timer0_has_triggered
+0xa0	T	Set UCSRB to RX-complete-interrupt-enable | RX-enable | TX-enable 
 
 0x1726	T	look for key push 1100 (factory reset up+down)
 0x173e	T	our eeprom[byte1] isn't 0x55 or we selected factory reset on boot, look to see if rx and tx are joined, if so do some debug menu
