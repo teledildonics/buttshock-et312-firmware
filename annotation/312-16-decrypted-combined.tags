@@ -403,7 +403,7 @@
 0x21C8	P	W	3717	random_unknown
 
 0x3ff8	P	S	1	authors_initials
-0x438	T	look if we need to run a command (0x0070-$4070-execute_command)
+0x43a	T	look if we need to run a command (0x0070-$4070-execute_command)
 0x444	T	look if we need to run a command (0x0071-$4071-execute_command-2)
 0x45c	T	Sometimes run calltable31 with menu-state (0x0073-$4073-master-timer-lsb)
 0x464	T	(0x006d-$406D-menu_state)
@@ -501,7 +501,6 @@
 0x1880	T	if we got a 0x0e we're a slave box, send back a 0x05 and set bit2 of r16
 0x91e	T	display "Linked" (master)
 0x3d8	T	if r17[bit7] is set we're a linked master
-0x3f2	T	bug? this infinite loop if we fail to get the right handshake back from slave; should try 4 times?
 0x3d4	T	above is x73-$4073-master-timer-lsb
 0x3dc	T	we're a linked master, so if we got a 06 back from the box, send some more registers
 0x3e4	T	$4082-retry-counter.  If we didn't get a 06 back we're meant to retry 4 times then error out
@@ -727,7 +726,7 @@
 0x1726	T	look for key push 1100 (factory reset up+down)
 0x173e	T	our eeprom[byte1] isn't 0x55 or we selected factory reset on boot, look to see if rx and tx are joined, if so do some debug menu
 0x174e	T	loop display debug values until we get a keypress 1010
-0x17de	T	key press 1010
+0x17e0	T	key press 1010
 0x1766	T	display 0x4063 (Battery Voltage ADC3)
 0x1772	T	display 0x4067 (Audio B half wave ADC7)
 0x1778	T	display 0x4066 (Audio A half wave ADC6)
