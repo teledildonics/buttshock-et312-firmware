@@ -419,8 +419,8 @@
 0x498	T	(0x008E-$408E-random-max)=0x78
 0x4ac	T	0x4184 is random number beween 140 and 184
 0x4a0	T	0x4075-random1-time-to-change-mode is (0x406A-master-timer-msb)+number between 20 and 120
-0x76	T	(0x0067-$4067-Audio Input Level B (Half wave) (ADC7))
-0x8a	T	(0x0066-$4066-Audio Input Level A (Half wave) (ADC6))
+0x76	T	(0x0067-$4067-Audio Input Level A (Half wave) (ADC7))
+0x8a	T	(0x0066-$4066-Audio Input Level B (Half wave) (ADC6))
 0xa2	T	increment counter (0x0073-$4073-master-timer-lsb)
 0xaa	T	if we rolled over then increment counter (0x006A-$406A-master-timer-msb)
 0xb8	T	This increments the routine timer (3 bytes)
@@ -690,7 +690,7 @@
 0x11c2	T	above set r17[bit5-received-serial-command], set r17[bit6]
 0x1858	L	handle_received_serial_command
 0x1984	T	above unset r17[bit5-received-serial-command]. set r17[bit6]
-0x64	T	if r17[bit5-received-serial-command] is set, call handle_received_serial_command()
+0x66	T	if r17[bit5-received-serial-command] is set, call handle_received_serial_command()
 0x117e	T	Already got a command but it's not been handled yet? ignore input (r17[bit5-received-serial-command])
 0x906	T	if we didn't get a command (r17[bit5-received-serial-command] is set), or the command is not "\5" Error 04
 
@@ -728,8 +728,8 @@
 0x174e	T	loop display debug values until we get a keypress 1010
 0x17e0	T	key press 1010
 0x1766	T	display 0x4063 (Battery Voltage ADC3)
-0x1772	T	display 0x4067 (Audio B half wave ADC7)
-0x1778	T	display 0x4066 (Audio A half wave ADC6)
+0x1772	T	display 0x4067 (Audio A half wave ADC7)
+0x1778	T	display 0x4066 (Audio B half wave ADC6)
 0x177e	T	display 0x406b-some-power-offset
 0x1784	T	display 0x406c-some-power-offset
 0x178c	T	display 0x4061 (Multi Adjust Offset ADC1)
