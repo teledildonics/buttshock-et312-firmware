@@ -486,8 +486,8 @@
 
 0x43a	T	look if we need to run a command (0x70-$4070-execute_command)
 0x446	T	look if we need to run a command (0x71-$4071-execute_command-2)
-0x45e	T	1/8th (0x73-$4073-master-timer-lsb) time display status screen (A/B knobs etc) then goto Main
-0x46c	T	1/8th (0x73-$4073-master-timer-lsb) time run the code at 0x474  (random1 mode stuff)
+0x45e	T	61Hz (0x73-$4073-master-timer-lsb) time display status screen (A/B knobs etc) then goto Main
+0x46c	T	61Hz (0x73-$4073-master-timer-lsb) time run the code at 0x474  (random1 mode stuff)
 0x476	T	(0x74-$4074-random1-mode)
 0x618	T	(0x74-$4074-random1-mode)
 0x47e	T	(0x6A-$406A-master-timer-msb)
@@ -614,7 +614,7 @@
 0x1880	T	if we got a 0x0e we're a slave box, send back a 0x05 and set r16[bit2-we-are-slave]
 0x91e	T	display "Linked" (master)
 0x3d8	T	if r17[bit7] is set we're a linked master
-0x3d4	T	above is x73-$4073-master-timer-lsb
+0x3d4	T	above is x73-$4073-master-timer-lsb, so run this at 244Hz
 0x3dc	T	we're a linked master, so if we got a 06 back from the box, send some more registers
 0x3e4	T	$4082-retry-counter.  If we didn't get a 06 back we're meant to retry 4 times then error out
 0x3fe	T	write 6 bytes to $4004 (r4-r9) (or if r16[bit6-which-register-set] isn't set, $400a r10-r14)
