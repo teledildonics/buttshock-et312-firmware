@@ -41,7 +41,7 @@
 0x0790	L		run_call_table						Parameter r30 (0-39) CallTable_31
 0x07bc	L		CallTable_1						noop
 0x07be	L		CallTable_0_5
-0x07e0	L		CallTable_2
+0x07e0	L		CallTable_2_Show_status
 0x0820	L		CallTable_10_Show_main_menu
 0x083e	L		CallTable_8_Display_next_menu_item
 0x0852	L		CallTable_9_Display_prev_menu_item
@@ -82,6 +82,7 @@
 0x1284	L		display_number_on_display_scaled			Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-99)
 0x12b8	L		display_number_on_display				Parameter r31 (position), r30 (number from 0-255, will be displayed as 0-255)
 0x1380	L		multiply						Parameter r30:r31, r26: r30:r31 *= r26
+0x1362	L		multiplyr30r31						Parameter r30:r31,returns r30:31 = r30 * r31
 0x138c	L		divide							Parameter r31 r30: r30 /= r31, r31 = r30 % r31
 0x13bc	L		divide_word						Parameter r26:r27 r30:r31: r30:r31 /= r26:r27, r26:r27 = r30:r31 % r26:r27
 0x13fa	L		rotate_right						Parameter r30:r31 r26
@@ -97,7 +98,6 @@
 0x12dc	L		show_Text_on_Display2					Parameter r26
 0x12ec	L		show_Text_on_Display					Parameter r26
 0x1a2e	L		send_com_buffer_to_USART				
-0x1362	L		unknown_probably_multiply_0x1362			Parameter r30:r31,returns r31
 0x1590	L		copy_flash_0x1fdc_to_memory_0x01f0
 0x183e	L		delay_0x183e						Parameter r26
 0x19dc	L		read_from_eeprom					Parameter r26:r27, returns r0
@@ -362,9 +362,89 @@
 0x1f88	P	8	1	Space8_2
 0x1f90	P	8	1	Space8_3
 0x1f98	P	W	2	FFFF
-0x1f9c	P	W	32	fla_unknown_0x1f9c
-0x1fa4	P	W	28	fla_unknown_0x1fa4
-0x1fdc	P	W	8	fla_unknown_0x1fdc
+
+0x1f9c	P	B	1	Initial value of x80-$4080
+0x1f9d	P	B	1	Initial value of x80-$4081
+0x1f9e	P	B	1	Initial value of x80-$4082
+0x1f9f	P	B	1	Initial value of x80-$4083
+0x1fa0	P	B	1	Initial value of x80-$4084
+0x1fa1	P	B	1	Initial value of x80-$4085
+0x1fa2	P	B	1	Initial value of x80-$4086
+0x1fa3	P	B	1	Initial value of x80-$4087
+0x1fa4	P	B	1	Initial value of x80-$4088 routine timer low, x81-$4188 
+0x1fa5	P	B	1	Initial value of x80-$4089 routine timer mid, x81-$4189
+0x1fa6	P	B	1	Initial value of x80-$408a routine timer high, x81-$418a
+0x1fa7	P	B	1	Initial value of x80-$408b routine timer slower, x81-$418b
+0x1fa8	P	B	1	Initial value of x80-$408c, x81-$418c
+0x1fa9	P	B	1	Initial value of x80-$408d-random-min, x81-$418d
+0x1faa	P	B	1	Initial value of x80-$408e-random-max, x81-$418e
+0x1fab	P	B	1	Initial value of x80-$408f-unknown, x81-$418f
+0x1fac	P	B	1	Initial value of x80-$4090, x81-$4190 current gate select
+0x1fad	P	B	1	Initial value of x80-$4091, x81-$4191
+0x1fae	P	B	1	Initial value of x80-$4092, x81-$4192
+0x1faf	P	B	1	Initial value of x80-$4093, x81-$4193
+0x1fb0	P	B	1	Initial value of x80-$4094, x81-$4194
+0x1fb1	P	B	1	Initial value of x80-$4095, x81-$4195
+0x1fb2	P	B	1	Initial value of x80-$4096, x81-$4196
+0x1fb3	P	B	1	Initial value of x80-$4097, x81-$4197
+0x1fb4	P	B	1	Initial value of x80-$4098, x81-$4198
+0x1fb5	P	B	1	Initial value of x80-$4099, x81-$4199
+0x1fb6	P	B	1	Initial value of x80-$409a, x81-$419a
+0x1fb7	P	B	1	Initial value of x80-$409b, x81-$419b
+0x1fb8	P	B	1	Initial value of x80-$409c, x81-$419c mode switch ramp value counter
+0x1fb9	P	B	1	Initial value of x80-$409d, x81-$419d
+0x1fba	P	B	1	Initial value of x80-$409e, x81-$419e
+0x1fbb	P	B	1	Initial value of x80-$409f, x81-$419f
+0x1fbc	P	B	1	Initial value of x80-$40a0, x81-$41a0
+0x1fbd	P	B	1	Initial value of x80-$40a1, x81-$41a1
+0x1fbe	P	B	1	Initial value of x80-$40a2, x81-$41a2
+0x1fbf	P	B	1	Initial value of x80-$40a3, x81-$41a3
+0x1fc0	P	B	1	Initial value of x80-$40a4, x81-$41a4
+0x1fc1	P	B	1	Initial value of x80-$40a5, x81-$41a5
+0x1fc2	P	B	1	Initial value of x80-$40a6, x81-$41a6
+0x1fc3	P	B	1	Initial value of x80-$40a7, x81-$41a7
+0x1fc4	P	B	1	Initial value of x80-$40a8, x81-$41a8
+0x1fc5	P	B	1	Initial value of x80-$40a9, x81-$41a9
+0x1fc6	P	B	1	Initial value of x80-$40aa, x81-$41aa
+0x1fc7	P	B	1	Initial value of x80-$40ab, x81-$41ab
+0x1fc8	P	B	1	Initial value of x80-$40ac, x81-$41ac
+0x1fc9	P	B	1	Initial value of x80-$40ad, x81-$41ad
+0x1fca	P	B	1	Initial value of x80-$40ae, x81-$41ae
+0x1fcb	P	B	1	Initial value of x80-$40af, x81-$41af
+0x1fcc	P	B	1	Initial value of x80-$40b0, x81-$41b0
+0x1fcd	P	B	1	Initial value of x80-$40b1, x81-$41b1
+0x1fce	P	B	1	Initial value of x80-$40b2, x81-$41b2
+0x1fcf	P	B	1	Initial value of x80-$40b3, x81-$41b3
+0x1fd0	P	B	1	Initial value of x80-$40b4, x81-$41b4
+0x1fd1	P	B	1	Initial value of x80-$40b5, x81-$41b5
+0x1fd2	P	B	1	Initial value of x80-$40b6, x81-$41b6
+0x1fd3	P	B	1	Initial value of x80-$40b7, x81-$41b7
+0x1fd4	P	B	1	Initial value of x80-$40b8, x81-$41b8
+0x1fd5	P	B	1	Initial value of x80-$40b9, x81-$41b9
+0x1fd6	P	B	1	Initial value of x80-$40ba, x81-$41ba
+0x1fd7	P	B	1	Initial value of x80-$40bb, x81-$41bb
+0x1fd8	P	B	1	Initial value of x80-$40bc, x81-$41bc
+0x1fd9	P	B	1	Initial value of x80-$40bd, x81-$41bd
+0x1fda	P	B	1	Initial value of x80-$40be, x81-$41be
+0x1fdb	P	B	1	Initial value of x80-$40bf, x81-$41bf
+
+0x1fdc	P	B	1	Copied to 0x1f0-$41f0-unknown
+0x1fdd	P	B	1	Copied to 0x1f1-$41f1-unknown
+0x1fde	P	B	1	Copied to 0x1f2-$41f2-unknown
+0x1fdf	P	B	1	Copied to 0x1f3-$41f3-current-top-mode
+0x1fe0	P	B	1	Copied to 0x1f4-$41f4-power-level
+0x1fe1	P	B	1	Copied to 0x1f5-$41f5-split-mode-a
+0x1fe2	P	B	1	Copied to 0x1f6-$41f6-split-mode-b
+0x1fe3	P	B	1	Copied to 0x1f7-$41f7-favourite-mode
+0x1fe4	P	B	1	Copied to 0x1f8-$41f8-advanced-ramplevel
+0x1fe5	P	B	1	Copied to 0x1f9-$41f9-advanced-ramptime
+0x1fe6	P	B	1	Copied to 0x1fa-$41fa-advanced-depth
+0x1fe7	P	B	1	Copied to 0x1fb-$41fb-advanced-tempo
+0x1fe8	P	B	1	Copied to 0x1fc-$41fc-advanced-freq
+0x1fe9	P	B	1	Copied to 0x1fd-$41fd-advanced-effect
+0x1fea	P	B	1	Copied to 0x1fe-$41fe-advanced-width
+0x1feb	P	B	1	Copied to 0x1ff-$41ff-advanced-pace
+
 0x1fec	P	W	5	fla_unknown_0x1fec	ref from 0x3be
 0x1ff6	P	B	10	unknown
 0x2000	P	B	10	programblock_climbc_blockb
@@ -406,9 +486,8 @@
 
 0x43a	T	look if we need to run a command (0x70-$4070-execute_command)
 0x446	T	look if we need to run a command (0x71-$4071-execute_command-2)
-0x45e	T	Sometimes run calltable31 with menu-state (0x73-$4073-master-timer-lsb)
-0x464	T	(0x6d-$406D-menu_state)
-0x46c	T	Sometimes run the code at 0x474 (0x73-$4073-master-timer-lsb)
+0x45e	T	1/8th (0x73-$4073-master-timer-lsb) time display status screen (A/B knobs etc) then goto Main
+0x46c	T	1/8th (0x73-$4073-master-timer-lsb) time run the code at 0x474  (random1 mode stuff)
 0x476	T	(0x74-$4074-random1-mode)
 0x618	T	(0x74-$4074-random1-mode)
 0x47e	T	(0x6A-$406A-master-timer-msb)
@@ -438,13 +517,17 @@
 0x104	T	(0x97-$4097-unknown)
 
 0x110	T	0x9a or 0x19a - a or b current gate select [bit0 is A, bit1 is B]
-0x116	T	0x90 or 0x190 - a or b current gate value
+0x116	T	0x90 or 0x190 - a or b current gate value, if it's 1 then look at the off time
+0x120	T	0x91 or 0x19a - gate select [bit2-gateoff-use-tempo-parameter] is set? r18 = advanced parameter tempo
+0x126	T	0x91 or 0x19a - gate select [bit3-gateoff-use-ma-value] is set? r18 = current_ma_value 
 0x11c	T	0x99 or 0x199 - a or b current gate off time
-0x132	T	0x98 or 0x198 - a or b current gate on time
-0x144	T	0x9b or 0x19b
-0x150	T	Toggle bit 0 of 0x90 or 0x190 - a or b current gate value
+0x132	T	current gate was 0(off), so look at 0x98 or 0x198 - a or b current gate on time
+0x134	T	0x91 or 0x19a - gate select [bit5-gateon-use-parameter-effect] is set? r18 = advanced parameter effect
+0x13a	T	0x91 or 0x19a - gate select [bit6-gateon-use-ma-value] is set? r18 = current_ma_value
+0x144	T	0x9b or 0x19b - gate select
+0x150	T	Toggle bit 0 of 0x90 or 0x190 - a or b current gate value (if it was on turn it off, off turn it on)
 
-0x4bc	T	Read hardware 4 buttons, depending on what is pressed do calltable based on r19,r20,r21,r22
+0x4bc	T	Read hardware 4 buttons, depending on what is pressed do calltable based on r19 (down 0x40) ,r20 (up 0x10),r21 (menu 0x80) ,r22 (ok 0x20)
 0xa36	T	Set button actions, menu=show_main_menu, ok=0x1, up=switch_next_mode, down=switch_previous_mode
 0x7d6	T	Set button actions, menu=show_main_menu, ok=0x1, up=switch_next_mode, down=switch_previous_mode
 0x830	T	Set button actions, up=next_menu_item, down=previous_menu_item, ok=select_menu_item, menu=exit_menu
@@ -507,8 +590,8 @@
 0x3d4	T	above is x73-$4073-master-timer-lsb
 0x3dc	T	we're a linked master, so if we got a 06 back from the box, send some more registers
 0x3e4	T	$4082-retry-counter.  If we didn't get a 06 back we're meant to retry 4 times then error out
-0x3fe	T	write 6 bytes to $4004 (r4-r9) (or if r16[bit6] isn't set, $400a r10-r14)
-0x436	T	toggle bit r16[bit6] so next time we send the other register set
+0x3fe	T	write 6 bytes to $4004 (r4-r9) (or if r16[bit6-which-register-set] isn't set, $400a r10-r14)
+0x436	T	toggle bit r16[bit6-which-register-set] so next time we send the other register set
 0x18fc	T	if we get a 0x_8 0xaa over serial then reset the box
 0x2a4	T	line above is 0x91=$4091-unknown-last-bits-123-of-r5
 0x2c2	T	0x91=$4091-unknown-last-bits-123-of-r5
@@ -529,7 +612,9 @@
 0x96	T	r12 is a copy of [x1A5] Channel B: Current Intensity Modulation Value
 0x37a	T	r13 is min(9,[x1AE]) Channel B: Current Frequency Modulation Value
 0x384	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
-0x78c	T	$406d-menu-state set to 2
+0x78c	T	0x6d-$406d-menu-state set to 2 (no menu, program is running)
+0x464	T	0x6d-$406d-menu_state in r30, calltable 2 -- display status screen or 1 -- do nothing)
+0x1536	T	0x6d-$406d-menu-state set to 1 (in a startup screen or menu)
 0x7e6	T	$4064-Level Pot A - CBLOCK_POT_A_OFFSET (ADC4)
 0x7ec	T	$4065-Level Pot B - CBLOCK_POT_B_OFFSET (ADC5)
 0x7f0	T	$409C-Mode Switch Ramp Value Counter
@@ -611,6 +696,7 @@
 0x458	T	x84-0x4084-unknown
 0xbc4	T	Grab a byte (current program block?) based on current mode (r18:r0) double it, add it to 0x2000 (or 0x2200)
 0x1476	L	Label_0x1476         bug? the 1.5 bootloader jumps here
+0x4b8	L	Label_0x4b8	     look to see if any buttons are pushed
 
 0x1408	T	r6 is [x9C] Mode Switch Ramp Value Counter
 0x15be	T	r6 is [x9C] Mode Switch Ramp Value Counter
@@ -672,10 +758,10 @@
 0xec6	T	r5 is [x90] Channel A: Current Gate Value (bit3)
 0xf1e	T	r5 is [x90] Channel A: Current Gate Value (bit5) - is set when audio3 mode
 0xf22	T	r5 is [x90] Channel A: Current Gate Value (bit7)
-0xf34	T	r5 is [x90] Channel A: Current Gate Value (bit0)
+0xf34	T	r5 is [x90] Channel A: Current Gate Value (bit0-output-is-gated)
 0xf47	T	r5 is [x90] Channel A: Current Gate Value (bit4)
 0xf4a	T	r5 is [x90] Channel A: Current Gate Value (bit4)
-0xf54	T	r5 is [x90] Channel A: Current Gate Value (bit0)
+0xf54	T	r5 is [x90] Channel A: Current Gate Value (bit0-output-is-gated)
 0xf66	T	r5 is [x90] Channel A: Current Gate Value (bit4)
 0xf6a	T	r5 is [x90] Channel A: Current Gate Value (bit4)
 0x18a6	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
@@ -790,7 +876,6 @@
 0x1700	T	above sets power status bits [bit0] if we have a battery, [bit1] is PSU is connected, next figure out battery percentage
 0x1406	L	Function_0x1406_runs_at_startup
 0x1730	T	look for magic word in eeprom, if eeprom[1]!=0x55 then do factory reset stuff
-0x1536	T	$406d-menu-state = 1
 0x153e	T	$4070-execute_command and $4071-execute_command = 0xff (no commands)
 0x14ca	T	Read the OCDR byte from 0x3ff and write it to the register (timing, 8MHz)
 0x1ce	T	Set stack to 0x45f
