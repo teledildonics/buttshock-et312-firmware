@@ -436,7 +436,8 @@
 0xfa	T	(0x94-$4094-unknown)
 0xfc	T	(0x97-$4097-unknown)
 0x104	T	(0x97-$4097-unknown)
-0x110	T	0x9a or 0x19a - a or b current gate select
+
+0x110	T	0x9a or 0x19a - a or b current gate select [bit0 is A, bit1 is B]
 0x116	T	0x90 or 0x190 - a or b current gate value
 0x11c	T	0x99 or 0x199 - a or b current gate off time
 0x132	T	0x98 or 0x198 - a or b current gate on time
@@ -507,7 +508,6 @@
 0x3dc	T	we're a linked master, so if we got a 06 back from the box, send some more registers
 0x3e4	T	$4082-retry-counter.  If we didn't get a 06 back we're meant to retry 4 times then error out
 0x3fe	T	write 6 bytes to $4004 (r4-r9) (or if r16[bit6] isn't set, $400a r10-r14)
-0x424	T	write our registers (r4-9 or r10-r14) to the serial port (or 0's if r15[bit2] isn't set)
 0x436	T	toggle bit r16[bit6] so next time we send the other register set
 0x18fc	T	if we get a 0x_8 0xaa over serial then reset the box
 0x2a4	T	line above is 0x91=$4091-unknown-last-bits-123-of-r5
@@ -634,32 +634,33 @@
 0x1058	T	above is r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
 0x1aee	T	r14 is min(50,[x1B7]) Channel B: Current Width Modulation Value)
 
-0x354	T	above line r4=[0x83] Output Control Flags - COMM_CONTROL_FLAG
-0x6b4	T	set 0x83=$4083 to 0 1 0 0 0 0 0 0 [audio1 mode]
-0x6e6	T	set 0x83=$4083 to 0 0 0 0 0 1 0 0 [audio3 mode]
-0x72c	T	set 0x83=$4083 to 0 0 0 0 0 1 0 1 [phase mode]
-0xe5a	T	set 0x83=$4083 to 0 0 0 0 0 1 0 0 
-0x304	T	0x83=$4083 Output Control Flags - unset bit1-maybe-audio
-0x6a	T	r4 is copy of [0x83] Output Control Flags - bit0-unknown-update_MA_value
-0x2f8	T	r4 is copy of [0x83] Output Control Flags - bit1-unknown-maybe-audio
-0x302	T	r4 is copy of [0x83] Output Control Flags - unset bit1
-0x4ba	T	r4 is copy of [0x83] Output Control Flags - bit5-unknown-maybe-skip-buttons
+0x354	T	above line copy r4 from [0x83] Output Control Flags
+0x6b4	T	set 0x83=$4083 Output Control Flags all off except bit6-mono-mode (audio1 mode)
+0x6e6	T	set 0x83=$4083 Output Control Flags all off except bit2-phase-control-3 (audio3 mode)
+0x72c	T	set 0x83=$4083 Output Control Flags all off except bit0-phase-control-0 and bit2-phase-control-2 (phase mode)
+0xe5a	T	set 0x83=$4083 Output Control Flags all off except bit2-phase-control-2
+0x304	T	0x83=$4083 Output Control Flags - unset bit1-mute
+0x6a	T	r4 is copy of [0x83] Output Control Flags - bit0-phase-control-0
+0x2f8	T	r4 is copy of [0x83] Output Control Flags - bit1-mute
+0x302	T	r4 is copy of [0x83] Output Control Flags - unset bit1-mute
+0x4ba	T	r4 is copy of [0x83] Output Control Flags - bit5-disable-frontpanel-switches
 0x62e	T	r4 is copy of [0x83] Output Control Flags - unset bit4-unknown-maybe-split
 0x634	T	r4 is copy of [0x83] Output Control Flags - set bit4-unknown-maybe-split
-0x72a	T	r4 is copy of [0x83] Output Control Flags - set 0 0 0 0 0 1 0 1
 0x76a	T	r4 is copy of [0x83] Output Control Flags - bit4-unknown-maybe-split
-0xe9e	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
-0xeba	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
-0xeee	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
-0xf10	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
-0xf38	T	r4 is copy of [0x83] Output Control Flags - bit2-unknown
-0xf4e	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
-0xf58	T	r4 is copy of [0x83] Output Control Flags - bit2-unknown
-0xf6e	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
-0xf8c	T	r4 is copy of [0x83] Output Control Flags - bit3-unknown-to-do-with-fets
-0x1024	T	r4 is copy of [0x83] Output Control Flags - bit2-unknown
-0x1040	T	r4 is copy of [0x83] Output Control Flags - bit2-unknown
-0x10ba	T	r4 is copy of [0x83] bit6-copy-audio-channel-a-to-b.  If we're in audio1 mode, ignore ADC7 and copy ADC6 to ADC7
+0x72a	T	r4 is copy of [0x83] Output Control Flags - set all off except bit2-phase-control2, bit0-phase-control0
+0xe9e	T	r4 is copy of [0x83] Output Control Flags - bit3-phase-control-3
+0xeba	T	r4 is copy of [0x83] Output Control Flags - bit3-phase-control-3
+0xeee	T	r4 is copy of [0x83] Output Control Flags - bit3-phase-control-3
+0xf10	T	r4 is copy of [0x83] Output Control Flags - bit3-phase-control-3
+0xf38	T	r4 is copy of [0x83] Output Control Flags - bit2-phase-control-2
+0xf4e	T	r4 is copy of [0x83] Output Control Flags - bit3-phase-control-3
+0xf58	T	r4 is copy of [0x83] Output Control Flags - bit2-phase-control-2
+0xf6e	T	r4 is copy of [0x83] Output Control Flags - bit3-phase-control-3
+0xf8c	T	r4 is copy of [0x83] Output Control Flags - bit3-phase-control-3
+0x1024	T	r4 is copy of [0x83] Output Control Flags - bit2-phase-control-2
+0x1040	T	r4 is copy of [0x83] Output Control Flags - bit2-phase-control-2
+0x10ba	T	r4 is copy of [0x83] bit6-mono-mode.  If we're in audio1 mode, ignore ADC7 and copy ADC6 to ADC7
+
 0x768	T	r26 is 0x7b-$407b-current-mode
 
 0x72	T	is output A in an audio mode (r5[bit6-is-an-audio-mode])? yes then update the intensity_modulation_value
@@ -678,6 +679,17 @@
 0xf66	T	r5 is [x90] Channel A: Current Gate Value (bit4)
 0xf6a	T	r5 is [x90] Channel A: Current Gate Value (bit4)
 0x18a6	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
+
+0x10b2	T	0x0f-$400f r15[bit0-disable-pots]
+0x1648	T	0x0f-$400f r15[bit0-disable-pots]
+0x454	T	0x0f-$400f if r15[bit1-unknown] is set, unset it, and calltable_22 with [0x4084]
+0x424	T	write our registers (r4-9 or r10-r14) to the serial port (or 0's if r15[bit2-unknown] isn't set)
+0x63e	T	0x0f-$400f unset r15[bit2-unknown] 
+0x6a4	T	0x0f-$400f set r15[bit2-unknown] (mode Rhythm, Audio1/2/3)
+0x6ec	T	0x0f-$400f unset r15[bit2-unknown]
+0x722	T	0x0f-$400f set r15[bit2-unknown] (mode Phase1/2/3, User1-7)
+0xd50	T	0x0f-$400f set r15[bit2-unknown]
+0x1092	T	0x0f-$400f if r15[bit3-ignore-MA-knob] is set, ignore the MA pot
 
 0xf2a	T	enable int1 (audio A digital input)
 0xf26	T	Probably only audio3 mode
