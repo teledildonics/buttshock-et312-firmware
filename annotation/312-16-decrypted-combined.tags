@@ -605,7 +605,7 @@
 0x1032	T	set r16[bit7-unknown]
 0x1044	T	r16[bit3-unknown]
 0x1048	T	r16[bit4-unknown]
-0x104c	T	set r16[bit7-unknown]
+0x104e	T	set r16[bit7-unknown]
 
 0xa46	T	menu 0xd2 is "ramp level"
 0xa4e	T	menu 0xd4 is "depth"
@@ -781,14 +781,14 @@
 0x2ac	T	r5 is [x90] Channel A: Current Gate Value (bit3)
 0x53a	T	r5 is [x90] Channel A: Current Gate Value (look at bits 0 1 2)
 0xe94	T	r5 is [x90] Channel A: Current Gate Value (bit4)
-0xeb0	T	r5 is [x90] Channel A: Current Gate Value (bit4)
-0xec6	T	r5 is [x90] Channel A: Current Gate Value (bit3)
-0xf1e	T	r5 is [x90] Channel A: Current Gate Value (bit5) - is set when audio3 mode
+0xeb2	T	r5 is [x90] Channel A: Current Gate Value (bit4)
+0xec8	T	r5 is [x90] Channel A: Current Gate Value (bit3)
+0xf20	T	r5 is [x90] Channel A: Current Gate Value (bit5) - is set when audio3 mode
 0xf22	T	r5 is [x90] Channel A: Current Gate Value (bit7)
-0xf34	T	r5 is [x90] Channel A: Current Gate Value (bit0-output-is-gated)
+0xf36	T	r5 is [x90] Channel A: Current Gate Value (bit0-output-is-gated)
 0xf47	T	r5 is [x90] Channel A: Current Gate Value (bit4)
 0xf4a	T	r5 is [x90] Channel A: Current Gate Value (bit4)
-0xf54	T	r5 is [x90] Channel A: Current Gate Value (bit0-output-is-gated)
+0xf56	T	r5 is [x90] Channel A: Current Gate Value (bit0-output-is-gated)
 0xf66	T	r5 is [x90] Channel A: Current Gate Value (bit4) set r16[bit3-unknown]
 0xf6a	T	r5 is [x90] Channel A: Current Gate Value (bit4)
 0x18a6	T	r5 is [x90] Channel A: Current Gate Value (0 when no output)
@@ -916,3 +916,7 @@
 0x1524	T	setup serial port frequency (0x19) [8MHz at 19200], control reg: enable RX interrupt, rx and tx enable
 0x1530	T	setup timer interrupt mask: ocie1a, ocie1b, toie0 (overflow on timer 0), watchdog to 32k cycles
 0x1548	T	finished with the setup, goto main loop
+
+0x12ee	T	if string# < 0x64 then our string is displayed on the left, it's 16 chars long, and the address is 0x1cc8 + 16*string#
+0x12f0	T	if string# >= 0x64 and < 0xc8 then our string is displayed on the right, it's 8 characters, at 0x1dd8 + 16*string#
+0x12f2	T	if string# >= 0xc8 then string is on the left, it's 8 characters, at 0x1dd8 + 16*(string#-0x64)
